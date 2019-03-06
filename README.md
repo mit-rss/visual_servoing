@@ -26,7 +26,9 @@ With your modules in hand it is time to make your robot park in front of a cone.
 
 ### Computer Setup
 For this lab, you will need Opencv3. The virtual machines already have it, but are missing the opencv-contrib package (this is where some propietary algorithms were moved to in opencv3). On the VM, follow these steps:
+
 `sudo apt-get install python-pip`
+
 `pip install opencv-contrib-python`
 
 ### Analysis:
