@@ -64,6 +64,7 @@ Evaluation(include in presentation):
 - 1 point for explaining the homography transformation. How do we convert pixels to plane coordinates?
 - 1 point for demonstrating and explaining performance of the parking controller. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
 - 1 point for demonstrating and explaining performance of the line-follower. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
+
 Bonus:
 - +1 point for the fastest line follower on the circular track. Have a TA record your time. 
 
