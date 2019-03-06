@@ -1,0 +1,8 @@
+<launch>
+  <!-- Launch the parking controller in simulation. Launches controller node, and interactive marker node -->
+  <node pkg="lab4" name="parking_controller" type="parking_controller.py" output="screen">
+  </node>
+
+  <node pkg="lab4" name="cone_sim_marker" type="cone_sim_marker.py" output="screen">
+  </node>
+</launch>
