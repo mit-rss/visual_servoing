@@ -15,7 +15,7 @@ This lab has a lot in it, so we are encouraging parallelization by breaking up t
 - Module 3: Transforming pixels to a plane via Homography
 - Module 4: Writing a parking controller.
 
-Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Comparing different algorithms will give you a better feel for what is out there. Module 2 will teach you how to convert a pixel to a plane in the real world. Combining 1 and 2 will tell you where a cone is relative to your robot. Module 3 will park a robot in front of a simulated cone. Bring in modules 1 and 2 and put it on hardware to park in real life. Now make some modifications to follow a line instead!
+Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Comparing different algorithms will give you a better feel for what is out there. Module 3 will teach you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park a robot in front of a simulated cone. Bring in modules 1 and 3 and put it on hardware to park in real life. Now make some modifications to follow a line instead!
 
 ### Bringing it together:
 With your modules in hand it is time to make your robot park in front of a cone. Here are suggested steps:
@@ -70,15 +70,21 @@ Here are some helpful hints:
 - OpenCV contour functions can prove very helpful. cv2.findContours + cv2.boundingRect are a powerful combination. Just saying.
 
 Don’t forget conventions! Image indexing works like this (in this lab):
-# IMAGE
-### Evaluation: We are using the Intersection Over Union metric for evaluating bounding box success. Run **python cv_test.py cone color** to test your algorithm against our dataset. We print out the IOU values for you. We expect some sort of analysis involving this metric in your presentation.
+
+![](images/image_axis_convention.jpg)
+
+### Evaluation: 
+We are using the Intersection Over Union metric for evaluating bounding box success. Run **python cv_test.py cone color** to test your algorithm against our dataset. We print out the IOU values for you. We expect some sort of analysis involving this metric in your presentation.
 By the way- you won’t get them all (probably). But 100% accuracy is not necessary for a great parking controller.
 
-###Line Follower Extension:
+### Line Follower Extension:
 After you and your team put your modules together to park in front of a cone, a quick modification of your code will create a line follower. Like a donkey chasing a carrot, if you restrict the view of your robot to what is a little ahead of it you will follow an orange line.
 
 This works by setting a lookahead distance. See an example [here](https://gfycat.com/SeveralQueasyAmberpenshell)
-# Image
+
+![](images/orange_circle.jpg)
+![](images/blacked_out_circle.jpg)
+
 Check out [this](https://www.youtube.com/watch?v=uSGnbyWg3_g) demo of what your robot can do. 
 There will be several tape "courses" set up throughout the lab. Your racecar should be able to drive around them in a controlled manner - not getting lost or cutting corners. Once you can drive around the course, see how fast you can go. 
 
@@ -88,36 +94,42 @@ We’ve taught you some interesting ways to discover objects, and now it’s tim
 - Why these two algorithms fail to detect the cone super well
 
 Since the best learning comes from doing, we will be having you use each algorithm where it’s particularly effective. Check out **computer_vision/test_images_localization** and **computer_vision/test_images_citgo** to see pictures from two datasets. One dataset contains pictures of the Boston CITGO sign from various angles. The other contains scraps of the stata basement (2D) map.
-# IMAGE
-# IMAGE
+
+![](images/citgo.jpg)
+![](images/map_green_square.jpg)
+![](images/map_corner)
+
 **CITGO:** Imagine a drone, on a delivery mission. Your target, a workman, called for a sandwich while changing the bulbs in the C on Boston’s most iconic advert. He took a snapshot of the nearest landmark on his cellphone, and we are using that (template) to find him with our camera.
 **STATA:** A wheeled robot needs to find its location on a map. It takes a laser scan, and comes up with a local view of what it can see. It tries to locate the local (template) scan on a big map, knowing that the center pixel of the highest scoring bounding box will correspond to its current location. By converting from pixels to meters, the robot will know where it is.
 We have two algorithms to implement, SIFT and Template Matching. Each algorithm has strengths and weaknesses, and the goal for this lab will be to get a better feel for what they are.
 
 Check out **computer_vision/sift_template.py** in the lab4 folder. In there you will find two partially completed functions. Each function tries to find a templated image in a larger background image, and returns the bounding box coordinates of the target object in the background.
 
-**On implementing SIFT**
+**On implementing SIFT**      
 Test your algorithm against the CITGO dataset. This dataset should give you the stronger results. Run **python cv_test.py citgo sift**
 
-**On implementing Template Matching**
-Test your algorithm against the STATA dataset. Run **python cv_test.py map template**
-# Image
-We have implemented a few datasets for you to test your algorithms with. To run the Sift tests, type in (inside the **computer_vision** folder): 
+**On implementing Template Matching**        
+Test your algorithm against the STATA dataset. Run **python cv_test.py map template**        
+
+**Testing on Datasets**         
+We have implemented a few datasets for you to test your algorithms with.  To run the Sift tests, type in (inside the **computer_vision** folder): 
 - **python cone_detection_test.py cone sift**
 - **python cone_detection_test.py citgo sift**
-- **python cone_detection_test.py map sift**
+- **python cone_detection_test.py map sift**            
+
 To test your template matching:
 - **python cone_detection_test.py cone template**
 - **python cone_detection_test.py map template**
-- **python cone_detection_test.py citgo template**
-Some of these algorithm + dataset combination will not produce good results. Each algorithm has different strong suits. Do you see why?
+- **python cone_detection_test.py citgo template**            
+
+Some of these algorithm + dataset combinations will not produce good results. Each algorithm has different strong suits. Do you see why?
 
 # Module 3: Locating the cone via **Homography Transformation**
 In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car. 
 ### Launching the ZED Camera
 - On the car, use `roslaunch zed_wrapper zed.launch` to launch ZED
-- On your VM, run `runcar <carnum> rqt_image_view`
-The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/rgb/image_rect_color`. If your ZED camera is not working, try running this script `~/zed/compiled_samples/ZED_Camera_Conrtol`. 
+- See lab 1 for instructions on how to export ROS_MASTER, then run `rqt_image_view` from your host computer
+The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/rgb/image_rect_color`. If your ZED camera is not working, try running this script `~/zed/compiled_samples/ZED_Camera_Control`. 
 ### Accessing Image Data
 Write a ros subscriber for ZED camera topic.
 The ZED camera publishes message of type [Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) from sensor_msgs. 
@@ -127,7 +139,7 @@ The image data is in ROS message data-structure which is not directly recognized
 
 ### Converting pixel coordinates to x-y coordinates
 If you recall from lecture, a camera is a sensor that converts 3D points (x,y,z) into 2D pixels (u,v). If we put on our linear algebra hats, we can take a peek at the projection of a 3D point to a 2D point:
-# IMAGE
+![](images/homography.jpg)
 In robotics, we are generally concerned with the inverse problem. Given a 2D (image) point, how can we extract a 3D (world) point?
 We need some tools and tricks to make that sort of calculation, as we lost (depth) information projecting down to our 2D pixel. Stereo cameras, for example, coordinate points seen from two cameras to add information and retrieve the X-Y-Z coordinates.
 In this lab, we will use another interesting fact about linear transformations for back out X-Y positions of pixels.
@@ -138,17 +150,21 @@ This “function” is called a homography. Even though we can’t back out arbi
 
 Check out this illustration of a camera and world plane. There exists a linear transformation between the camera projection and the world plane, since the world plane has two dimensions like an image plane.
 
-# IMAGE
+![](images/camera_diagram.jpg)
 ### Find the Homography Matrix
 To find the homography matrix, you should first determine the pixel coordinates of several real world points. You should then measure the physical coordinates of these points on the 2D ground plane. If you gather enough of these point correspondences (at least 4), you have enough information to compute a homography matrix:
-# IMAGE
+
+![](images/homography2.jpg)
+
 Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findhomography) can be used to compute homography matrices. 
 
 `rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name), then `rqt_image_view` will publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`. Publish a marker to RVIZ using this pixel, and you should be able to quickly tell if your homography matrix is doing its job.
 
 # Module 4: Controller for Parking and Line Following
 While your teammates are putting together the computer vision algorithms and localizing the cone, you will also implement a parking controller for the robot. We want you to implement a parking controller that parks your robot in front of a cone at a given distance. The robot will start with the cone in the field of view of the camera and should drive directly to the cone and park in front of it (1.5 - 2 feet from the front). See an example video [here](https://gfycat.com/ObeseVioletIcelandicsheepdog).
-# Image
+
+![](images/parking_controller_diagram.jpg)
+
 The distance and angle don’t act independently so consider carefully how you should make them work together.
 
 Whenever possible, we want to develop controllers in simulation before deploying on real (breakable) hardware. That is what we’ll do here. After you download (and make) the lab 4 ros package, fire up your **roscore**, **simulator**, and **rviz**. 
@@ -175,7 +191,9 @@ A good parking controller will work in simulation even when the cone is behind t
 Please keep your desired velocities below 1 (meters/sec). Even though the simulator will behave at higher speeds, your real robot will not.
 
 The last thing for you to do is publish the x_error, y_error, and distance (sqrt(x**2 + y**2)) error. Fire up a terminal and type in: `rqt_plot`. A gui should emerge, which gives you the ability to view a live plot of (numerical) ros messages.
-# IMAGE
+
+![](images/rqt_plot.jpg)
+
 These plots are super useful in controller tuning/debugging (and any other time you need to plot some quantity over time).
 Tips: 
 - Type in the topic you want to graph in the top left of the gui.
