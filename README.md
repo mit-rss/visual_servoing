@@ -110,15 +110,19 @@ Test your algorithm against the CITGO dataset. This dataset should give you the 
 
 **On implementing Template Matching**
 Test your algorithm against the STATA dataset. Run **python cv_test.py map template**        
-We have implemented a few datasets for you to test your algorithms with. To run the Sift tests, type in (inside the **computer_vision** folder): 
+
+**Testing on Datasets**
+We have implemented a few datasets for you to test your algorithms with.  To run the Sift tests, type in (inside the **computer_vision** folder): 
 - **python cone_detection_test.py cone sift**
 - **python cone_detection_test.py citgo sift**
 - **python cone_detection_test.py map sift**            
+
 To test your template matching:
 - **python cone_detection_test.py cone template**
 - **python cone_detection_test.py map template**
 - **python cone_detection_test.py citgo template**            
-Some of these algorithm + dataset combination will not produce good results. Each algorithm has different strong suits. Do you see why?
+
+Some of these algorithm + dataset combinations will not produce good results. Each algorithm has different strong suits. Do you see why?
 
 # Module 3: Locating the cone via **Homography Transformation**
 In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car. 
