@@ -105,13 +105,13 @@ We have two algorithms to implement, SIFT and Template Matching. Each algorithm 
 
 Check out **computer_vision/sift_template.py** in the lab4 folder. In there you will find two partially completed functions. Each function tries to find a templated image in a larger background image, and returns the bounding box coordinates of the target object in the background.
 
-**On implementing SIFT**
+**On implementing SIFT**      
 Test your algorithm against the CITGO dataset. This dataset should give you the stronger results. Run **python cv_test.py citgo sift**
 
-**On implementing Template Matching**
+**On implementing Template Matching**        
 Test your algorithm against the STATA dataset. Run **python cv_test.py map template**        
 
-**Testing on Datasets**
+**Testing on Datasets**         
 We have implemented a few datasets for you to test your algorithms with.  To run the Sift tests, type in (inside the **computer_vision** folder): 
 - **python cone_detection_test.py cone sift**
 - **python cone_detection_test.py citgo sift**
