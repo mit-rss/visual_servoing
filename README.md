@@ -25,17 +25,14 @@ With your modules in hand it is time to make your robot park in front of a cone.
 4. Improve your line following controller to see how fast you can navigate a circular track. 
 
 ### Computer Setup
-For this lab, you will need Opencv3. The virtual machines already have it, but are missing the opencv-contrib package (this is where some propietary algorithms were moved to in opencv3). On the VM, follow these steps:
+For this lab, you will need Opencv3. The virtual machines already have it, but it likely needs to be updated to 3.4 and are missing the opencv-contrib package (this is where some propietary algorithms were moved to in opencv3). If you are running linux natively, depending on what you've done before you may or may not have the correct setup. Try running these commands as well, and the correct packages will install as needed.
+
+Steps:
 
 `sudo apt-get install python-pip`
-
-`pip install opencv-contrib-python`
-
-If you are running linux natively, you may need to install opencv3 proper as well.
-
-`pip install opencv-python`
-then:
-`pip install opencv-python-contrib`
+`pip install opencv-python==3.4.2.16`
+`pip install opencv-contrib-python==3.4.2.16`
+`pip install imutils`
 
 ### Analysis:
 We are also looking for a bit more in terms of experimental analysis in the lab than we have in the past. We are, in particular, looking for analysis of your vision algorithms and and controller.
