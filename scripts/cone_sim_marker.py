@@ -4,7 +4,7 @@ from geometry_msgs.msg import PointStamped
 import tf
 from tf.transformations import euler_from_quaternion
 import numpy as np
-from lab4.msg import cone_location
+from vision_lab.msg import cone_location
 from visualization_msgs.msg import Marker
 
 class SimMarker():
