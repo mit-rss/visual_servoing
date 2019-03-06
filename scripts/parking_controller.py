@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import rospy
-from vision_lab.msg import cone_location, parking_error
+from lab4.msg import cone_location, parking_error
 from ackermann_msgs.msg import AckermannDriveStamped
 import numpy as np
 
