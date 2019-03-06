@@ -30,8 +30,11 @@ For this lab, you will need Opencv3. The virtual machines already have it, but i
 Steps:
 
 `sudo apt-get install python-pip`
+
 `pip install opencv-python==3.4.2.16`
+
 `pip install opencv-contrib-python==3.4.2.16`
+
 `pip install imutils`
 
 ### Analysis:
