@@ -45,7 +45,8 @@ Technical implementation
 - 1 point for satisfactory completion of module 3
 - 1 point for satisfactory completion of module 4
 - 1 point for successful integration of the 4 components
-Evaluation(presentation):
+
+Evaluation(include in presentation):
 - 2 points for explaining vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
 - 1 point for explaining the homography transformation. How do we convert pixels to plane coordinates?
 - 1 point for demonstrating and explaining performance of the parking controller. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
