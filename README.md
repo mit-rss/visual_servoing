@@ -71,7 +71,7 @@ Here are some helpful hints:
 
 Don’t forget conventions! Image indexing works like this (in this lab):
 
-![](images/image_axis_convention.jpg)
+![](media/image_axis_convention.jpg)
 
 ### Evaluation: 
 We are using the Intersection Over Union metric for evaluating bounding box success. Run **python cv_test.py cone color** to test your algorithm against our dataset. We print out the IOU values for you. We expect some sort of analysis involving this metric in your presentation.
@@ -82,8 +82,8 @@ After you and your team put your modules together to park in front of a cone, a 
 
 This works by setting a lookahead distance. See an example [here](https://gfycat.com/SeveralQueasyAmberpenshell)
 
-![](images/orange_circle.jpg)
-![](images/blacked_out_circle.jpg)
+![](media/orange_circle.jpg)
+![](media/blacked_out_circle.jpg)
 
 Check out [this](https://www.youtube.com/watch?v=uSGnbyWg3_g) demo of what your robot can do. 
 There will be several tape "courses" set up throughout the lab. Your racecar should be able to drive around them in a controlled manner - not getting lost or cutting corners. Once you can drive around the course, see how fast you can go. 
@@ -95,11 +95,12 @@ We’ve taught you some interesting ways to discover objects, and now it’s tim
 
 Since the best learning comes from doing, we will be having you use each algorithm where it’s particularly effective. Check out **computer_vision/test_images_localization** and **computer_vision/test_images_citgo** to see pictures from two datasets. One dataset contains pictures of the Boston CITGO sign from various angles. The other contains scraps of the stata basement (2D) map.
 
-![](images/citgo.jpg)
-![](images/map_green_square.jpg)
-![](images/map_corner)
+![](media/citgo.jpg)
+![](media/map_green_square.jpg)
+![](media/map_corner)
 
 **CITGO:** Imagine a drone, on a delivery mission. Your target, a workman, called for a sandwich while changing the bulbs in the C on Boston’s most iconic advert. He took a snapshot of the nearest landmark on his cellphone, and we are using that (template) to find him with our camera.
+
 **STATA:** A wheeled robot needs to find its location on a map. It takes a laser scan, and comes up with a local view of what it can see. It tries to locate the local (template) scan on a big map, knowing that the center pixel of the highest scoring bounding box will correspond to its current location. By converting from pixels to meters, the robot will know where it is.
 We have two algorithms to implement, SIFT and Template Matching. Each algorithm has strengths and weaknesses, and the goal for this lab will be to get a better feel for what they are.
 
@@ -139,7 +140,7 @@ The image data is in ROS message data-structure which is not directly recognized
 
 ### Converting pixel coordinates to x-y coordinates
 If you recall from lecture, a camera is a sensor that converts 3D points (x,y,z) into 2D pixels (u,v). If we put on our linear algebra hats, we can take a peek at the projection of a 3D point to a 2D point:
-![](images/homography.jpg)
+![](media/homography.jpg)
 In robotics, we are generally concerned with the inverse problem. Given a 2D (image) point, how can we extract a 3D (world) point?
 We need some tools and tricks to make that sort of calculation, as we lost (depth) information projecting down to our 2D pixel. Stereo cameras, for example, coordinate points seen from two cameras to add information and retrieve the X-Y-Z coordinates.
 In this lab, we will use another interesting fact about linear transformations for back out X-Y positions of pixels.
@@ -150,11 +151,11 @@ This “function” is called a homography. Even though we can’t back out arbi
 
 Check out this illustration of a camera and world plane. There exists a linear transformation between the camera projection and the world plane, since the world plane has two dimensions like an image plane.
 
-![](images/camera_diagram.jpg)
+![](media/camera_diagram.jpg)
 ### Find the Homography Matrix
 To find the homography matrix, you should first determine the pixel coordinates of several real world points. You should then measure the physical coordinates of these points on the 2D ground plane. If you gather enough of these point correspondences (at least 4), you have enough information to compute a homography matrix:
 
-![](images/homography2.jpg)
+![](media/homography2.jpg)
 
 Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findhomography) can be used to compute homography matrices. 
 
@@ -163,7 +164,7 @@ Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/ca
 # Module 4: Controller for Parking and Line Following
 While your teammates are putting together the computer vision algorithms and localizing the cone, you will also implement a parking controller for the robot. We want you to implement a parking controller that parks your robot in front of a cone at a given distance. The robot will start with the cone in the field of view of the camera and should drive directly to the cone and park in front of it (1.5 - 2 feet from the front). See an example video [here](https://gfycat.com/ObeseVioletIcelandicsheepdog).
 
-![](images/parking_controller_diagram.jpg)
+![](media/parking_controller_diagram.jpg)
 
 The distance and angle don’t act independently so consider carefully how you should make them work together.
 
@@ -192,7 +193,7 @@ Please keep your desired velocities below 1 (meters/sec). Even though the simula
 
 The last thing for you to do is publish the x_error, y_error, and distance (sqrt(x**2 + y**2)) error. Fire up a terminal and type in: `rqt_plot`. A gui should emerge, which gives you the ability to view a live plot of (numerical) ros messages.
 
-![](images/rqt_plot.jpg)
+![](media/rqt_plot.jpg)
 
 These plots are super useful in controller tuning/debugging (and any other time you need to plot some quantity over time).
 Tips: 
