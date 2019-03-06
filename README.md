@@ -15,7 +15,7 @@ This lab has a lot in it, so we are encouraging parallelization by breaking up t
 - Module 3: Transforming pixels to a plane via Homography
 - Module 4: Writing a parking controller.
 
-Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Comparing different algorithms will give you a better feel for what is out there. Module 2 will teach you how to convert a pixel to a plane in the real world. Combining 1 and 2 will tell you where a cone is relative to your robot. Module 3 will park a robot in front of a simulated cone. Bring in modules 1 and 2 and put it on hardware to park in real life. Now make some modifications to follow a line instead!
+Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Comparing different algorithms will give you a better feel for what is out there. Module 3 will teach you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park a robot in front of a simulated cone. Bring in modules 1 and 3 and put it on hardware to park in real life. Now make some modifications to follow a line instead!
 
 ### Bringing it together:
 With your modules in hand it is time to make your robot park in front of a cone. Here are suggested steps:
@@ -109,15 +109,15 @@ Check out **computer_vision/sift_template.py** in the lab4 folder. In there you 
 Test your algorithm against the CITGO dataset. This dataset should give you the stronger results. Run **python cv_test.py citgo sift**
 
 **On implementing Template Matching**
-Test your algorithm against the STATA dataset. Run **python cv_test.py map template**
+Test your algorithm against the STATA dataset. Run **python cv_test.py map template**        
 We have implemented a few datasets for you to test your algorithms with. To run the Sift tests, type in (inside the **computer_vision** folder): 
 - **python cone_detection_test.py cone sift**
 - **python cone_detection_test.py citgo sift**
-- **python cone_detection_test.py map sift**
+- **python cone_detection_test.py map sift**            
 To test your template matching:
 - **python cone_detection_test.py cone template**
 - **python cone_detection_test.py map template**
-- **python cone_detection_test.py citgo template**
+- **python cone_detection_test.py citgo template**            
 Some of these algorithm + dataset combination will not produce good results. Each algorithm has different strong suits. Do you see why?
 
 # Module 3: Locating the cone via **Homography Transformation**
