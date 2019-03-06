@@ -31,6 +31,12 @@ For this lab, you will need Opencv3. The virtual machines already have it, but a
 
 `pip install opencv-contrib-python`
 
+If you are running linux natively, you may need to install opencv3 proper as well.
+
+`pip install opencv-python`
+then:
+`pip install opencv-python-contrib`
+
 ### Analysis:
 We are also looking for a bit more in terms of experimental analysis in the lab than we have in the past. We are, in particular, looking for analysis of your vision algorithms and and controller.
 
