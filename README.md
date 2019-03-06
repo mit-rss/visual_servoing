@@ -128,8 +128,8 @@ Some of these algorithm + dataset combinations will not produce good results. Ea
 In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car. 
 ### Launching the ZED Camera
 - On the car, use `roslaunch zed_wrapper zed.launch` to launch ZED
-- On your VM, run `runcar <carnum> rqt_image_view`
-The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/rgb/image_rect_color`. If your ZED camera is not working, try running this script `~/zed/compiled_samples/ZED_Camera_Conrtol`. 
+- See lab 1 for instructions on how to export ROS_MASTER, then run `rqt_image_view` from your host computer
+The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/rgb/image_rect_color`. If your ZED camera is not working, try running this script `~/zed/compiled_samples/ZED_Camera_Control`. 
 ### Accessing Image Data
 Write a ros subscriber for ZED camera topic.
 The ZED camera publishes message of type [Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) from sensor_msgs. 
