@@ -59,7 +59,7 @@ Technical implementation
 - 1 point for satisfactory completion of module 4
 - 1 point for successful integration of the 4 components
 
-Evaluation(include in presentation):
+Evaluation (include in presentation):
 - 2 points for explaining vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
 - 1 point for explaining the homography transformation. How do we convert pixels to plane coordinates?
 - 1 point for demonstrating and explaining performance of the parking controller. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
@@ -94,7 +94,7 @@ By the way- you won’t get them all (probably). But 100% accuracy is not necess
 ### Line Follower Extension:
 After you and your team put your modules together to park in front of a cone, a quick modification of your code will create a line follower. Like a donkey chasing a carrot, if you restrict the view of your robot to what is a little ahead of it you will follow an orange line.
 
-This works by setting a lookahead distance. See an example [here](https://gfycat.com/SeveralQueasyAmberpenshell)
+This works by setting a lookahead distance. See an example [here](https://gfycat.com/SeveralQueasyAmberpenshell).
 
 ![](media/orange_circle.jpg)
 ![](media/blacked_out_circle.jpg)
@@ -157,6 +157,7 @@ The image data is in ROS message data-structure which is not directly recognized
 ### Converting pixel coordinates to x-y coordinates
 If you recall from lecture, a camera is a sensor that converts 3D points (x,y,z) into 2D pixels (u,v). If we put on our linear algebra hats, we can take a peek at the projection of a 3D point to a 2D point:
 ![](media/homography.jpg)
+
 In robotics, we are generally concerned with the inverse problem. Given a 2D (image) point, how can we extract a 3D (world) point?
 We need some tools and tricks to make that sort of calculation, as we lost (depth) information projecting down to our 2D pixel. Stereo cameras, for example, coordinate points seen from two cameras to add information and retrieve the X-Y-Z coordinates.
 In this lab, we will use another interesting fact about linear transformations for back out X-Y positions of pixels.
@@ -208,7 +209,7 @@ A good parking controller will work in simulation even when the cone is behind t
 
 Please keep your desired velocities below 1 (meters/sec). Even though the simulator will behave at higher speeds, your real robot will not.
 
-The last thing for you to do is publish the x_error, y_error, and distance (sqrt(x**2 + y**2)) error. Fire up a terminal and type in: `rqt_plot`. A gui should emerge, which gives you the ability to view a live plot of (numerical) ros messages.
+The last thing for you to do is publish the x_error, y_error, and distance (`sqrt(x**2 + y**2)`) error. Fire up a terminal and type in: `rqt_plot`. A gui should emerge, which gives you the ability to view a live plot of (numerical) ros messages.
 
 ![](media/rqt_plot.jpg)
 
