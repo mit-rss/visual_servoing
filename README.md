@@ -129,14 +129,14 @@ Test your algorithm against the STATA dataset. Run **python cv_test.py map templ
 
 **Testing on Datasets**         
 We have implemented a few datasets for you to test your algorithms with.  To run the Sift tests, type in (inside the **computer_vision** folder): 
-- **python cone_detection_test.py cone sift**
-- **python cone_detection_test.py citgo sift**
-- **python cone_detection_test.py map sift**            
+- **python cv_test.py cone sift**
+- **python cv_test.py citgo sift**
+- **python cv_test.py map sift**            
 
 To test your template matching:
-- **python cone_detection_test.py cone template**
-- **python cone_detection_test.py map template**
-- **python cone_detection_test.py citgo template**            
+- **python cv_test.py cone template**
+- **python cv_test.py map template**
+- **python cv_test.py citgo template**            
 
 Some of these algorithm + dataset combinations will not produce good results. Each algorithm has different strong suits. Do you see why?
 
