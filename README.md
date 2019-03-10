@@ -174,8 +174,8 @@ Check out this illustration of a camera and world plane. There exists a linear t
 To find the homography matrix, you should first determine the pixel coordinates of several real world points. You should then measure the physical coordinates of these points on the 2D ground plane. If you gather enough of these point correspondences (at least 4), you have enough information to compute a homography matrix:
 
 #### Notes for finding the homography matrix:
--The opencv findhomography implementation expects 3X1 data points in homogenous coordinates [X,Y,1].
--You may need to rescale the homography output X',Y',Z' such that Z' = 1.
+- The opencv findhomography implementation expects 3X1 data points in homogenous coordinates [X,Y,1].
+- You may need to rescale the homography output X',Y',Z' such that Z' = 1.
 
 ![](media/homography2.jpg)
 
