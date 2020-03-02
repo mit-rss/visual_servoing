@@ -9,7 +9,7 @@ In this lab, your team will do the following:
 - Extend your parking controller into a line following controller
 
 ### Lab Modules
-This lab has a lot in it, so we are encouraging parallelization by breaking up the components of the lab into 4 distinct modules, which you will combine together. Each module tackles an interesting problem in computer vision/controls, and is designed to be implemented (initially) by itself. 
+This lab has a lot in it, so we are encouraging parallelization by breaking up the components of the lab into 4 distinct modules, which you will combine together. Each module tackles an interesting problem in computer vision/controls, and is designed to be implemented (initially) by itself.  
 - Module 1: Cone Detection via Color Segmentation
 - Module 2: Object Detection via Template Matching and SIFT
 - Module 3: Transforming pixels to a plane via Homography
@@ -44,7 +44,7 @@ Vision Analysis:
 We wrote some code to test the Intersection over Union (IOU) scores of your vision algorithms on the three datasets provided. IOU is a measure of how accurate bounding boxes are, and is  a choice metric for analysis of object detection algorithms. Go into **computer_vision/**  and run:
 - python cv_test.py citgo
 - python cv_test.py cone
-- python cv_test.py map
+- python cv_test.py map  
 To test all three of your algorithms against our citgo, cone, and stata basement datasets respectively. Results will be outputted to .csv files in **scores/**. Some algorithms on some datasets won’t get any/good results. This is expected, and we would like to know why each works for what it does in your presentation.
 
 Controller analysis: 
