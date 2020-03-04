@@ -140,6 +140,8 @@ To test your template matching:
 
 Some of these algorithm + dataset combinations will not produce good results. Each algorithm has different strong suits. Do you see why?
 
+Note: The templates are all greyscale. We are not doing anything with color in these algorithms.  
+
 # Module 3: Locating the cone via **Homography Transformation**
 In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car. 
 ### Launching the ZED Camera
