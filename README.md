@@ -1,3 +1,7 @@
+| Presentation Due Date (OPTIONAL)   | Sunday, March 15 at 7:00 PM EST     |
+|------------------------------------|-------------------------------------|
+| Lab Report Due Date (OPTIONAL)     | Sunday, March 15 at 7:00PM EST      |
+
 # Lab 4: Vision
 
 Welcome to Lab 4, where you will learn how to use the camera to allow the racecar to park in front of a colored cone and follow a line. 
