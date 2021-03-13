@@ -1,8 +1,22 @@
-| Presentation Due Date (OPTIONAL)   | Sunday, March 15 at 7:00 PM EST     |
-|------------------------------------|-------------------------------------|
-| Lab Report Due Date (OPTIONAL)     | Sunday, March 15 at 7:00PM EST      |
 
-# Lab 4: Vision
+# Lab 4: Vision (In-Person)
+
+| Deliverable | Due Date              |
+|---------------|----------------------------------------------------------------------------|
+| Briefing   | Wednesday, March 24th at 1:00PM EST     |
+| [Team Member Assessment](todo link here)  | Friday, March 26th at 11:59PM EST |
+
+Lab 3 will be supported by three in-person lab sessions:
+
+| Lab Session   | Date  | Remote Prep | Goals |
+|-------------------------|------------------------------------|------------------------------------|------------------------------------|
+| 3.1   | Tuesday, March 9, 8:00-11:00 AM EST  | None |  Become familiar with the racecar platform. Access the onboard computer via SSH and connect to RViz. Drive the car with the joystick (teleoperation). Record bagfiles from teleoperation and transfer them to your local machine. |
+| 3.2   | Wednesday, March 10, 8:00-11:00 AM EST  | Complete Lab 2 (wall follower working in simulation). Read about the safety controller below and create a team plan to implement it. | Install your wall follower on the racecar and tune its performance in the real world. Begin to implement and test your safety controller. |
+| 3.3   | Monday, March 15, 8:00-11:00 AM EST  |  Prepare your wall follower and safety controller for deployment and data collection. |  Collect all necessary data (rosbag & video) to compile your presentation and lab report (due dates below). |
+
+(On the morning of Wednesday, March 17, we will begin Lab 4.)
+
+## Introduction
 
 Welcome to Lab 4, where you will learn how to use the camera to allow the racecar to park in front of a colored cone and follow a line. 
 
@@ -28,6 +42,58 @@ With your modules in hand it is time to make your robot park in front of a cone.
 3. Modify module 1 such that your robot can follow a line instead of a cone. Details in the module 1 handout.
 4. Improve your line following controller to see how fast you can navigate a circular track. 
 
+### COVID Safety
+
+For Spring 2021, we ask that you observe the following procedures at Johnson Track:
+- Truthfully complete your **attestation** on [covidpass](https://covidpass.mit.edu/) the evening before EACH lab; also, review the MIT rules on COVID testing and ensure you are compliant. If you are denied access due to symptoms or possible exposure, let the staff know and we will make appropriate accommodations for remote work.
+- Do all possible **remote prep** before lab (with the exception of the first lab on Tuesday), arriving ready to efficiently use your time with the real robot.
+- Arrive around 8:15am at the Johnson track; labs are announced and start at **8:30 sharp**. Wear a mask.
+- Each team will be allocated a **workspace**, marked by tape on the ground; all teammates are asked to remain within their workspace during lab time except with TA permission.
+- Maintain 6 feet of **social distance** from all others, including team members. _No sharing computers_.
+- You will be given an orange cone that you can use to request help from the TAs.
+- Clean your team's workspace by 10:55am.
+
+
+## Submission and Grading
+
+Lab 4 will require a briefing, but **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](INSERT LINK) (INSERT LINK). See the deliverables chart at the top of this page for due dates and times.
+
+You can view the rubric for the [briefing](https://docs.google.com/document/d/1NmqQP7n1omI9bIshF1Y-MP70gfDkgEeoMjpWv8hjfsY/edit?usp=sharing) for more details on specific grading criteria. You will receive a grade out of 10 points. Your final lab grade will also be out of 10 points, based on the following weights:
+
+| Deliverable Grade | Weighting              |
+|---------------|----------------------------------------------------------------------------|
+| briefing grade (out of 10)  | 50% |
+| satisfactory completion of Module 1 | 10% |
+| satisfactory completion of Module 2 | 10% |
+| satisfactory completion of Module 3 | 10% |
+| satisfactory completion of Module 4 | 10% |
+| satisfactory integration of the 4 components | 10% |
+
+
+The elements you should include in your Lab 4 presentation include:
+- Explanation of vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
+- Explanation of the homography transformation. How do we convert pixels to plane coordinates?
+- Demonstration of parking controller performance. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
+- Demonstration of the line-follower. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
+
+Please include video, screen shots, data visualizations, etc. in your presentation as evidence of these deliverables. A good report will make quantitative and qualitative evaluations of your results.
+
+Here are some resources to help you present an effective analysis of your Lab 4 system:
+
+### Vision Analysis
+We've provided some code to test the Intersection over Union (IOU) scores of your vision algorithms on the three datasets provided. IOU is a measure of how accurate bounding boxes are, and is  a choice metric for analysis of object detection algorithms. Go into **computer_vision/**  and run:
+- python cv_test.py citgo
+- python cv_test.py cone
+- python cv_test.py map  
+To test all three of your algorithms against our citgo, cone, and stata basement datasets respectively. Results will be outputted to .csv files in **scores/**. Some algorithms on some datasets won’t get any/good results. This is expected, and we would like to know why each works for what it does in your presentation.
+
+### Controller Analysis 
+When you wrote the parking controller (module 4), you published error messages. Now it’s time to use **rqt_plot** to generate some plots. Try running the following experiments:
+- Put a cone directly in front of the car, ~3-5 meters away. Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error over time, and be prepared to discuss.
+- Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
+
+## Module 0: Setup
+
 ### Computer Setup
 For this lab, you will need Opencv3. The virtual machines already have it, but it likely needs to be updated to 3.4 and are missing the opencv-contrib package (this is where some propietary algorithms were moved to in opencv3). If you are running linux natively, depending on what you've done before you may or may not have the correct setup. Try running these commands as well, and the correct packages will install as needed.
 
@@ -41,36 +107,6 @@ Steps:
 
 `pip install imutils`
 
-### Analysis:
-We are also looking for a bit more in terms of experimental analysis in the lab than we have in the past. We are, in particular, looking for analysis of your vision algorithms and and controller.
-
-Vision Analysis:
-We wrote some code to test the Intersection over Union (IOU) scores of your vision algorithms on the three datasets provided. IOU is a measure of how accurate bounding boxes are, and is  a choice metric for analysis of object detection algorithms. Go into **computer_vision/**  and run:
-- python cv_test.py citgo
-- python cv_test.py cone
-- python cv_test.py map  
-To test all three of your algorithms against our citgo, cone, and stata basement datasets respectively. Results will be outputted to .csv files in **scores/**. Some algorithms on some datasets won’t get any/good results. This is expected, and we would like to know why each works for what it does in your presentation.
-
-Controller analysis: 
-When you wrote the parking controller (module 4), you published error messages. Now it’s time to use **rqt_plot** to generate some plots. Try running the following experiments:
-- Put a cone directly in front of the car, ~3-5 meters away. Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error over time, and be prepared to discuss.
-- Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
-### Grading: /10
-Technical implementation
-- 1 point for satisfactory completion of module 1
-- 1 point for satisfactory completion of module 2
-- 1 point for satisfactory completion of module 3
-- 1 point for satisfactory completion of module 4
-- 1 point for successful integration of the 4 components
-
-Evaluation (include in presentation):
-- 2 points for explaining vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
-- 1 point for explaining the homography transformation. How do we convert pixels to plane coordinates?
-- 1 point for demonstrating and explaining performance of the parking controller. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
-- 1 point for demonstrating and explaining performance of the line-follower. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
-
-Bonus:
-- +1 point for the fastest line follower on the circular track. Have a TA record your time. 
 
 # Module 1: Cone Detection Via Color Segmentation
 In lecture we learned lots of different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
