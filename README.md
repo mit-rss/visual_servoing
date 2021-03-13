@@ -141,7 +141,7 @@ This works by setting a lookahead distance. See an example [here](https://gfycat
 Check out [this](https://www.youtube.com/watch?v=uSGnbyWg3_g) demo of what your robot can do. 
 There will be several tape "courses" set up throughout the lab. Your racecar should be able to drive around them in a controlled manner - not getting lost or cutting corners. Once you can drive around the course, see how fast you can go. 
 
-## Module 2: Objection Detection via **SIFT** and **Template Matching**
+## Module 2: Object Detection via **SIFT** and **Template Matching**
 We’ve taught you some interesting ways to discover objects, and now it’s time to play with them. We want you walking away (to present to us) with two critical pieces of information from this module:
 - Why these two algorithms are super useful
 - Why these two algorithms fail to detect the cone super well
