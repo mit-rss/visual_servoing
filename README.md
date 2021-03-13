@@ -3,18 +3,17 @@
 
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Briefing   | Wednesday, March 24th at 1:00PM EST     |
-| [Team Member Assessment](todo link here)  | Friday, March 26th at 11:59PM EST |
+| Briefing   | Wednesday, March 31st at 1:00PM EST     |
+| [Team Member Assessment](todo link here)  | Friday, April 2nd at 11:59PM EST |
 
 Lab 3 will be supported by three in-person lab sessions:
 
 | Lab Session   | Date  | Remote Prep | Goals |
 |-------------------------|------------------------------------|------------------------------------|------------------------------------|
-| 3.1   | Tuesday, March 9, 8:00-11:00 AM EST  | None |  Become familiar with the racecar platform. Access the onboard computer via SSH and connect to RViz. Drive the car with the joystick (teleoperation). Record bagfiles from teleoperation and transfer them to your local machine. |
-| 3.2   | Wednesday, March 10, 8:00-11:00 AM EST  | Complete Lab 2 (wall follower working in simulation). Read about the safety controller below and create a team plan to implement it. | Install your wall follower on the racecar and tune its performance in the real world. Begin to implement and test your safety controller. |
-| 3.3   | Monday, March 15, 8:00-11:00 AM EST  |  Prepare your wall follower and safety controller for deployment and data collection. |  Collect all necessary data (rosbag & video) to compile your presentation and lab report (due dates below). |
+| 3.1   | Wednesday, March 17th, 8:30-11:00 AM EST  | None |  TBD  |
+| 3.2   | Wednesday, March 24th, 8:30-11:00 AM EST  | TBD |  TBD  |
 
-(On the morning of Wednesday, March 17, we will begin Lab 4.)
+Labs 5 and 6 will be conducted fully virtually; we will resume in-person labs on April 26 in preparation for the Final Challenge.
 
 ## Introduction
 
