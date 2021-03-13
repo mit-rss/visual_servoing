@@ -107,7 +107,7 @@ Steps:
 `pip install imutils`
 
 
-# Module 1: Cone Detection Via Color Segmentation
+## Module 1: Cone Detection Via Color Segmentation
 In lecture we learned lots of different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
 
 But sometimes simple algorithms are the correct choice, and for our purposes, identifying the cone by its distinctive color will prove most effective. Your job in this module will be identify cones (and other orange objects) and output bounding boxes containing them.
@@ -141,7 +141,7 @@ This works by setting a lookahead distance. See an example [here](https://gfycat
 Check out [this](https://www.youtube.com/watch?v=uSGnbyWg3_g) demo of what your robot can do. 
 There will be several tape "courses" set up throughout the lab. Your racecar should be able to drive around them in a controlled manner - not getting lost or cutting corners. Once you can drive around the course, see how fast you can go. 
 
-# Module 2: Objection Detection via **SIFT** and **Template Matching**
+## Module 2: Objection Detection via **SIFT** and **Template Matching**
 We’ve taught you some interesting ways to discover objects, and now it’s time to play with them. We want you walking away (to present to us) with two critical pieces of information from this module:
 - Why these two algorithms are super useful
 - Why these two algorithms fail to detect the cone super well
@@ -181,7 +181,7 @@ Some of these algorithm + dataset combinations will not produce good results. Ea
 
 Note: The templates are all greyscale. We are not doing anything with color in these algorithms.  
 
-# Module 3: Locating the cone via **Homography Transformation**
+## Module 3: Locating the cone via **Homography Transformation**
 In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car. 
 ### Launching the ZED Camera
 - On the car, use `roslaunch zed_wrapper zed.launch` to launch ZED
@@ -224,7 +224,7 @@ Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/ca
 
 `rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name), then `rqt_image_view` will publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`. Publish a marker to RVIZ using this pixel, and you should be able to quickly tell if your homography matrix is doing its job.
 
-# Module 4: Controller for Parking and Line Following
+## Module 4: Controller for Parking and Line Following
 While your teammates are putting together the computer vision algorithms and localizing the cone, you will also implement a parking controller for the robot. We want you to implement a parking controller that parks your robot in front of a cone at a given distance. The robot will start with the cone in the field of view of the camera and should drive directly to the cone and park in front of it (1.5 - 2 feet from the front). Parking means facing the cone at the correct distance, not just stopping at the correct distance. See an example video [here](https://gfycat.com/ObeseVioletIcelandicsheepdog).
 
 ![](media/parking_controller_diagram.jpg)
