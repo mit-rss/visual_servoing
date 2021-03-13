@@ -266,8 +266,8 @@ Tips:
 You will be using these plots to demonstrate controller performance for your presentation. 
 
 ### General Tips/FAQ:
-Camera Resolution:  
+**Camera Resolution**  
 If you are noticing problems with data rate from the camera, the ZED camera is publishing higher resolution photos than you need. We can turn down the image quality to VGA quality by modifying the resolution parameter in zed_camera.launch to 3.
 
-Debugging cone detection on the car:  
+**Debugging cone detection on the car**  
 The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. (You are already converting ros images to opencv images, simply reverse that conversion with cv2_to_imgmsg. Now publish that Image over a debug publisher and you should be able to pull up the live image stream in rqt_image_view/rviz.)  
