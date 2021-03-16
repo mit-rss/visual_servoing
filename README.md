@@ -6,7 +6,7 @@
 | Briefing   | Wednesday, March 24th at 1:00PM EST     |
 | [Team Member Assessment](https://forms.gle/q596G7Lucn7vzVov6)  | Friday, March 26th at 11:59PM EST |
 
-Lab 2 will be supported by two in-person lab sessions:
+Lab 4 will be supported by two in-person lab sessions:
 
 | Lab Session   | Date  | Remote Prep | Goals |
 |-------------------------|------------------------------------|------------------------------------|------------------------------------|
