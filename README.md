@@ -49,9 +49,9 @@ You can see how your modules will fit together in the following rqt graphs --
 **Deployment** (after launching `parking_deployment.launch`):
 ![](media/deployment_graph.png)
 - Now, the cone is localized relative to the real car using your vision algorithm and homography transform.
-- Camera data is read from the car and the pixel location of the cone is extracted by the `/cone_detector` and published to `/relative_cone_px`.
-- The `/homography_transformer` node converts `/relative_cone_px` to the robot frame and publishes it to `/relative_cone` (the same info we had in simulation!). 
-- The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command. 
+- The `/cone_detector` node reads frames from the Zed camera and applies your computer vision algorithm to extract a cone location in pixels. The pixel cone location is published to `/relative_cone_px`.
+- The `/homography_transformer` node converts `/relative_cone_px` from the image (pixel) frame to the robot frame and publishes it to `/relative_cone`.
+- The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command (just like in simulation!).
 - _Deployed parking requires completion of modules 1 and 3 (perception) as well as 4 (control)_
 
 Here are some suggestions:
