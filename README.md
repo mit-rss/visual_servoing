@@ -3,15 +3,15 @@
 
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Briefing   | Wednesday, March 31st at 1:00PM EST     |
-| [Team Member Assessment](todo link here)  | Friday, April 2nd at 11:59PM EST |
+| Briefing   | Wednesday, March 24th at 1:00PM EST     |
+| [Team Member Assessment](https://forms.gle/q596G7Lucn7vzVov6)  | Friday, March 26th at 11:59PM EST |
 
 Lab 3 will be supported by three in-person lab sessions:
 
 | Lab Session   | Date  | Remote Prep | Goals |
 |-------------------------|------------------------------------|------------------------------------|------------------------------------|
-| 3.1   | Wednesday, March 17th, 8:30-11:00 AM EST  | None |  TBD  |
-| 3.2   | Wednesday, March 24th, 8:30-11:00 AM EST  | TBD |  TBD  |
+| 3.1   | Wednesday, March 17th, 8:30-11:00 AM EST  | None |  Agree on distribution of work among team. Perception: Collect correspondence points and test out homography performance. Control: Design a parking algorithm and test it in simulation. Synthesis: test the combined behavior to park in front of a cone! |
+| 3.2   | Wednesday, March 24th, 8:30-11:00 AM EST  | Implement SIFT & Template-Matching (Module 2 can be done fully virtually). Design a method to extend your autonomous parking pipeline to the line following task, and implement it. Try out line following at home if you can! (We'll give you orange tape) |  Final data collection on the official line following racecourse. Prepare your presentation!  |
 
 Labs 5 and 6 will be conducted fully virtually; we will resume in-person labs on April 26 in preparation for the Final Challenge.
 
@@ -58,8 +58,9 @@ You can see how your modules will fit together in the following rqt graphs --
 1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
 2. You can verify your parking controller independently as well by running `parking_sim.launch` and placing cones in RViz using the PublishPoint tool. In simulation, your car may observe that a cone is behind it or off to the side; in practice, the car will only know the cone's location when it is in the camera frame. You should design a parking controller that works in all cases!
 3. When both perception and control work independently, run them together on the car using `parking_deployment.launch`. Congratulations are in order when you can park successfully. 
-4. Modify module 1 such that your robot can follow a line instead of a cone -- this should require minimal modification to your parking code! Details in the module 1 handout.
-5. Improve your line following controller to see how fast you can navigate a circular track. 
+5. Modify module 1 such that your robot can follow a line instead of a cone -- this should require minimal modification to your parking code! Details in the module 1 handout.
+6. Improve your line following controller to see how fast you can navigate a circular track. 
+7. Optionally: extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance. 
 
 
 
@@ -162,6 +163,8 @@ This works by setting a lookahead distance. See an example [here](https://gfycat
 
 Check out [this](https://www.youtube.com/watch?v=uSGnbyWg3_g) demo of what your robot can do. 
 There will be several tape "courses" set up throughout the lab. Your racecar should be able to drive around them in a controlled manner - not getting lost or cutting corners. Once you can drive around the course, see how fast you can go. 
+
+You are required to demonstrate successful line following for the orange line. If you have time, you can optionally extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance.  
 
 ## Module 2: Object Detection via **SIFT** and **Template Matching**
 We’ve taught you some interesting ways to discover objects, and now it’s time to play with them. We want you walking away (to present to us) with two critical pieces of information from this module:
