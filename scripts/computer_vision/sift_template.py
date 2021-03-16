@@ -7,7 +7,7 @@ import pdb
 # 0,0  X  > > > > >
 #
 #  Y
-# 
+#
 #  v  This is the image. Y increases downwards, X increases rightwards
 #  v  Please return bounding boxes as ((xmin, ymin), (xmax, ymax))
 #  v
@@ -68,8 +68,8 @@ def cd_sift_ransac(img, template):
 		pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
 
 		########## YOUR CODE STARTS HERE ##########
-		
-		
+
+		x_min = y_min = x_max = y_max = 0
 
 		########### YOUR CODE ENDS HERE ###########
 
@@ -92,7 +92,7 @@ def cd_template_matching(img, template):
 				(x1, y1) is the bottom left of the bbox and (x2, y2) is the top right of the bbox
 	"""
 	template_canny = cv2.Canny(template, 50, 200)
-	
+
 	# Perform Canny Edge detection on test image
 	grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 	img_canny = cv2.Canny(grey_img, 50, 200)
@@ -111,15 +111,16 @@ def cd_template_matching(img, template):
 		# Check to see if test image is now smaller than template image
 		if resized_template.shape[0] > img_height or resized_template.shape[1] > img_width:
 			continue
-		
+
 		########## YOUR CODE STARTS HERE ##########
-		
-		
+		# Use OpenCV template matching functions to find the best match
+		# across template scales.
+
 		########### YOUR CODE ENDS HERE ###########
 	# Use best fitting match and locate object using ratio
 	if best_match is not None:
 		(max_val, max_loc, ratio, h, w) = best_match
-		
+
 		bb_start = max_loc[0], max_loc[1]
 		bb_end = bb_start[0] + w, bb_start[1] + h
 
