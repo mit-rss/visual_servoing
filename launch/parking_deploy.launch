@@ -1,0 +1,15 @@
+<launch>
+
+  <!-- Launch the parking controller on the real robot. Launches controller node, cone detection node, and the homography transformer -->
+
+  <node pkg="visual_servoing" name="parking_controller" type="parking_controller.py" output="screen">
+  	<param name="drive_topic" value="/vesc/ackermann_cmd_mux/input/navigation" />
+  </node>
+
+  <node pkg="visual_servoing" name="cone_detector" type="cone_detector.py" output="screen">
+  </node>
+
+  <node pkg="visual_servoing" name="homography_transformer" type="homography_transformer.py" output="screen">
+  </node>
+
+</launch>

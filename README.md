@@ -34,12 +34,25 @@ This lab has a lot in it, so we are encouraging parallelization by breaking up t
 
 Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Comparing different algorithms will give you a better feel for what is out there. Module 3 will teach you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park a robot in front of a simulated cone. Bring in modules 1 and 3 and put it on hardware to park in real life. Now make some modifications to follow a line instead!
 
-### Bringing it together:
-With your modules in hand it is time to make your robot park in front of a cone. Here are suggested steps:
-1. Write a ros node using Modules 1 and 3 that publishes the relative location of a cone in view of the ZED Camera. Make sure you can see the cone in rviz before trying to do control. You should now be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to publish a Marker to RVIZ representing the cone. The rviz cone should appear where the real cone does.
+### Bringing it together
+With your modules in hand, it is time to make your robot park in front of a cone and follow a line.
+
+Here are suggested steps:
+1. Write a ros node using Modules 1 and 3 that publishes the relative location of a cone in view of the ZED Camera. Make sure you can see the cone in rviz before trying to do control. You should now be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
 2. Now bring in Module 4. Listen to the relative cone location and publish drive commands. Congratulations are in order when you can park successfully. 
 3. Modify module 1 such that your robot can follow a line instead of a cone. Details in the module 1 handout.
 4. Improve your line following controller to see how fast you can navigate a circular track. 
+
+
+You can see how your modules will fit together in the following rqt graphs --
+
+**Simulation** (after launching parking_sim.launch):
+![](media/sim_graph.png)
+*Summary*: When you use the PublishPoint tool in RViz, its global location is published to `/clicked_point`. The `/cone_sim_marker` node converts this to the robot frame and publishes it to `/relative_cone`. The `/parking_controller` node converts the cone location into an appropriate drive command.
+
+**Deployment** (after launching parking_deployment.launch):
+![](media/deployment_graph.png)
+*Summary*: Now, the cone is localized relative to the real car using your vision algorithm and homography transform. Camera data is read from the car and the pixel location of the cone is extracted by the `/cone_detector` and published to `/relative_cone_px`.   The `/homography_transformer` node converts this to the robot frame and publishes it to `/relative_cone` (just like in simulation!). The `/parking_controller` node converts the cone location into an appropriate drive command.
 
 ### COVID Safety
 
@@ -214,13 +227,9 @@ Check out this illustration of a camera and world plane. There exists a linear t
 ### Find the Homography Matrix
 To find the homography matrix, you should first determine the pixel coordinates of several real world points. You should then measure the physical coordinates of these points on the 2D ground plane. If you gather enough of these point correspondences (at least 4), you have enough information to compute a homography matrix:
 
-#### Notes for finding the homography matrix:
-- The opencv findhomography implementation expects 3X1 data points in homogenous coordinates [X,Y,1].
-- You may need to rescale the homography output X',Y',Z' such that Z' = 1.
-
 ![](media/homography2.jpg)
 
-Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findhomography) can be used to compute homography matrices. 
+Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findhomography) can be used to compute homography matrices. In `scripts/homography_transformer.py`, you've been provided a node that calls this function for you and makes the conversion between pixel-frame and robot-frame coordinates. You just need to fill in the point correspondences measured from your system.
 
 `rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name), then `rqt_image_view` will publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`. Publish a marker to RVIZ using this pixel, and you should be able to quickly tell if your homography matrix is doing its job.
 

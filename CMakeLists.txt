@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(lab4)
+project(visual_servoing)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -53,8 +53,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   cone_location.msg
-   parking_error.msg
+   ConeLocationPixel.msg
+   ConeLocation.msg
+   ParkingError.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -109,7 +110,7 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES lab4
+#  LIBRARIES visual_servoing
   CATKIN_DEPENDS ackermann_msgs geometry_msgs rospy sensor_msgs std_msgs visualization_msgs message_runtime
 #  DEPENDS system_lib
 )
@@ -127,7 +128,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/lab4.cpp
+#   src/${PROJECT_NAME}/visual_servoing.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -138,7 +139,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/lab4_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/visual_servoing_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -195,7 +196,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_lab4.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_visual_servoing.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

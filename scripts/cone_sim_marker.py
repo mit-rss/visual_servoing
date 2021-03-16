@@ -1,11 +1,14 @@
 #!/usr/bin/env python
+
 import rospy
-from geometry_msgs.msg import PointStamped
+import numpy as np
+
 import tf
 from tf.transformations import euler_from_quaternion
-import numpy as np
-from lab4.msg import cone_location
+
+from visual_servoing.msg import ConeLocation
 from visualization_msgs.msg import Marker
+from geometry_msgs.msg import PointStamped
 
 class SimMarker():
     """
@@ -22,7 +25,7 @@ class SimMarker():
         self.message_frame = "map"
 
         self.cone_pub = rospy.Publisher("/relative_cone", 
-            cone_location,queue_size=1)
+            ConeLocation,queue_size=1)
         self.marker_pub = rospy.Publisher("/cone_marker",
             Marker, queue_size=1)
         self.tf_listener = tf.TransformListener()
@@ -53,7 +56,7 @@ class SimMarker():
             msg_frame_pos[1]+np.cos(yaw)*self.message_y+np.sin(yaw)*self.message_x
         
         # Publish relative cone location
-        relative_cone = cone_location()
+        relative_cone = ConeLocation()
         relative_cone.x_pos = cone_relative_baselink_x
         relative_cone.y_pos = cone_relative_baselink_y
         self.cone_pub.publish(relative_cone)

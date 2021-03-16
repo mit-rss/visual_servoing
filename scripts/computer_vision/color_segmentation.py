@@ -36,7 +36,6 @@ def cd_color_segmentation(img, template):
 	"""
 	########## YOUR CODE STARTS HERE ##########
 
-	bounding_box = ((0,0),(0,0))
 
 	########### YOUR CODE ENDS HERE ###########
 
