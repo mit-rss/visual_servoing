@@ -41,7 +41,7 @@ You can see how your modules will fit together in the following rqt graphs --
 
 **Simulation** (after launching `parking_sim.launch`):
 ![](media/sim_graph.png)
-- When you use the PublishPoint tool in RViz, its global location is published to `/clicked_point`. 
+- When you use the PublishPoint tool in RViz, a global location is published to `/clicked_point`. 
 - The `/cone_sim_marker` node converts `/clicked_point` to the robot frame and publishes it to `/relative_cone`. 
 - The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command. 
 - _Simulated parking only requires completion of module 4 (control)_
