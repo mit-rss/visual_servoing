@@ -255,7 +255,7 @@ Tips:
 
 You will be using these plots to demonstrate controller performance for your presentation. 
 
-## Bringing it together <a name="synthesis"></a>
+## Synthesis: Bringing it together <a name="synthesis"></a>
 With your modules in hand, it is time to make your robot park in front of a cone and follow a line.
 
 You can see how your modules will fit together in the following rqt graphs --
