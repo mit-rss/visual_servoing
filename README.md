@@ -10,8 +10,8 @@ Lab 4 will be supported by two in-person lab sessions:
 
 | Lab Session   | Date  | Remote Prep | Goals |
 |-------------------------|------------------------------------|------------------------------------|------------------------------------|
-| 3.1   | Wednesday, March 17th, 8:30-11:00 AM EST  | Read over the lab handout. |  Perception: Write your color segmentation algorithm and test it on an orange cone. Collect correspondence points and test out homography performance. Control: Design a parking algorithm and test it in simulation. Synthesis: test the combined behavior to park in front of a cone! |
-| 3.2   | Wednesday, March 24th, 8:30-11:00 AM EST  | Implement SIFT & Template-Matching (Module 2 can be done fully virtually). Design a method to extend your autonomous parking pipeline to the line following task, and implement it. Start testing your line follower! (We'll give you orange tape to take home.) |  Complete data collection on the official line following racecourse. Prepare your presentation!  |
+| 4.1   | Wednesday, March 17th, 8:30-11:00 AM EST  | Read over the lab handout. |  Perception: Write your color segmentation algorithm and test it on an orange cone. Collect correspondence points and test out homography performance. Control: Design a parking algorithm and test it in simulation. Synthesis: test the combined behavior to park in front of a cone! |
+| 4.2   | Wednesday, March 24th, 8:30-11:00 AM EST  | Implement SIFT & Template-Matching (Module 2 can be done fully virtually). Design a method to extend your autonomous parking pipeline to the line following task, and implement it. Start testing your line follower! (We'll give you orange tape to take home.) |  Complete data collection on the official line following racecourse. Prepare your presentation!  |
 
 Labs 5 and 6 will be conducted fully virtually; we will resume in-person labs on April 26 in preparation for the Final Challenge.
 
