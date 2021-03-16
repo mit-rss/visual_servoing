@@ -7,7 +7,7 @@ import pdb
 # 0,0  X  > > > > >
 #
 #  Y
-# 
+#
 #  v  This is the image. Y increases downwards, X increases rightwards
 #  v  Please return bounding boxes as ((xmin, ymin), (xmax, ymax))
 #  v
@@ -36,6 +36,7 @@ def cd_color_segmentation(img, template):
 	"""
 	########## YOUR CODE STARTS HERE ##########
 
+	bounding_box = ((0,0),(0,0))
 
 	########### YOUR CODE ENDS HERE ###########
 
