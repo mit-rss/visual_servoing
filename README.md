@@ -37,13 +37,6 @@ Here’s how they fit together. Modules 1 and 2 cover object detection algorithm
 ### Bringing it together
 With your modules in hand, it is time to make your robot park in front of a cone and follow a line.
 
-Here are suggested steps:
-1. Write a ros node using Modules 1 and 3 that publishes the relative location of a cone in view of the ZED Camera. Make sure you can see the cone in rviz before trying to do control. You should now be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
-2. Now bring in Module 4. Listen to the relative cone location and publish drive commands. Congratulations are in order when you can park successfully. 
-3. Modify module 1 such that your robot can follow a line instead of a cone. Details in the module 1 handout.
-4. Improve your line following controller to see how fast you can navigate a circular track. 
-
-
 You can see how your modules will fit together in the following rqt graphs --
 
 **Simulation** (after launching parking_sim.launch):
@@ -53,6 +46,15 @@ You can see how your modules will fit together in the following rqt graphs --
 **Deployment** (after launching parking_deployment.launch):
 ![](media/deployment_graph.png)
 *Summary*: Now, the cone is localized relative to the real car using your vision algorithm and homography transform. Camera data is read from the car and the pixel location of the cone is extracted by the `/cone_detector` and published to `/relative_cone_px`.   The `/homography_transformer` node converts this to the robot frame and publishes it to `/relative_cone` (just like in simulation!). The `/parking_controller` node converts the cone location into an appropriate drive command.
+
+Here are some suggestions:
+1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
+2. You can verify your parking controller independently as well by running `parking_sim.launch` and placing cones in RViz using the PublishPoint tool. In simulation, your car may observe that a cone is behind it or off to the side; in practice, the car will only know the cone's location when it is in the camera frame. You should design a parking controller that works in all cases!
+3. When both perception and control work independently, run them together on the car using `parking_deployment.launch`. Congratulations are in order when you can park successfully. 
+4. Modify module 1 such that your robot can follow a line instead of a cone -- this should require minimal modification to your parking code! Details in the module 1 handout.
+5. Improve your line following controller to see how fast you can navigate a circular track. 
+
+
 
 ### COVID Safety
 
