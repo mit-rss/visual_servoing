@@ -26,7 +26,7 @@ In this lab, your team will do the following:
 - Extend your parking controller into a **line following controller**
 
 ### Lab Modules
-This lab has a lot in it, so we are encouraging parallelization by breaking up the components of the lab into 4 distinct modules, which you will combine together. Each module tackles an interesting problem in computer vision/controls, and is designed to be implemented (initially) by itself.  
+This lab has a lot in it, so we are encouraging parallelization by breaking up the components of the lab into 4 distinct modules, which you will combine together. Each module tackles an interesting problem in computer vision/controls, and is designed to be implemented (initially) by itself, then finally combined into a working visual navigation algorithm.  
 
 - [Module 1](#module1): Cone Detection via Color Segmentation
 - [Module 2](#module2): Object Detection via Template Matching and SIFT
