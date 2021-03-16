@@ -41,11 +41,11 @@ You can see how your modules will fit together in the following rqt graphs --
 
 **Simulation** (after launching parking_sim.launch):
 ![](media/sim_graph.png)
-*Summary*: When you use the PublishPoint tool in RViz, its global location is published to `/clicked_point`. The `/cone_sim_marker` node converts this to the robot frame and publishes it to `/relative_cone`. The `/parking_controller` node converts the cone location into an appropriate drive command.
+*Summary*: When you use the PublishPoint tool in RViz, its global location is published to `/clicked_point`. The `/cone_sim_marker` node converts this to the robot frame and publishes it to `/relative_cone`. The `/parking_controller` node converts the cone location into an appropriate drive command. *Simulated parking only requires completion of module 4 (control)*
 
 **Deployment** (after launching parking_deployment.launch):
 ![](media/deployment_graph.png)
-*Summary*: Now, the cone is localized relative to the real car using your vision algorithm and homography transform. Camera data is read from the car and the pixel location of the cone is extracted by the `/cone_detector` and published to `/relative_cone_px`.   The `/homography_transformer` node converts this to the robot frame and publishes it to `/relative_cone` (just like in simulation!). The `/parking_controller` node converts the cone location into an appropriate drive command.
+*Summary*: Now, the cone is localized relative to the real car using your vision algorithm and homography transform. Camera data is read from the car and the pixel location of the cone is extracted by the `/cone_detector` and published to `/relative_cone_px`.   The `/homography_transformer` node converts this to the robot frame and publishes it to `/relative_cone` (just like in simulation!). The `/parking_controller` node converts the cone location into an appropriate drive command. *Deployed parking requires completion of modules 1 and 3 (perception) as well as 4 (control)*
 
 Here are some suggestions:
 1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
