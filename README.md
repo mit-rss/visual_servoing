@@ -180,7 +180,7 @@ Since the best learning comes from doing, we will be having you use each algorit
 
 We have two algorithms to implement, SIFT and Template Matching. Each algorithm has strengths and weaknesses, and the goal for this lab will be to get a better feel for what they are.
 
-Check out **computer_vision/sift_template.py** in the lab4 folder. In there you will find two partially completed functions. Each function tries to find a templated image in a larger background image, and returns the bounding box coordinates of the target object in the background.
+Check out **computer_vision/sift_template.py** in the `scripts` folder. In there you will find two partially completed functions. Each function tries to find a templated image in a larger background image, and returns the bounding box coordinates of the target object in the background.
 
 **On implementing SIFT**      
 Test your algorithm against the CITGO dataset. This dataset should give you the stronger results. Run **python cv_test.py citgo sift**
@@ -251,7 +251,7 @@ The distance and angle don’t act independently so consider carefully how you s
 
 Whenever possible, we want to develop controllers in simulation before deploying on real (breakable) hardware. That is what we’ll do here. After you download (and make) the lab 4 ros package, fire up your **roscore**, **simulator**, and **rviz**. 
 
-Now run `roslaunch lab4 parking_sim.launch`
+Now run `roslaunch visual_servoing parking_sim.launch`
 
 In rviz, press **publish point**(top options bar) and watch our representation of a cone appear. 
 Notes
@@ -260,7 +260,7 @@ Notes
 
 If you `rostopic echo /relative_cone`, you should be able to see the relative coordinates of the cone in the 'base_link' (control) frame.
 
-Open up `scripts/parking_controller.py`, We’ve subscribed to the “/relative_cone” topic for you, and have set up the publisher/callback as well. Your job is to take the cone_location message (either print or use a `rosmsg show lab4/cone_location` to find out what is in it), and write a control policy that parks in front of the cone. Publish desired steering angles and velocity just like in lab2.
+Open up `scripts/parking_controller.py`, We’ve subscribed to the “/relative_cone” topic for you, and have set up the publisher/callback as well. Your job is to take the ConeLocation message (either print or use a `rosmsg show visual_servoing/ConeLocation` to find out what is in it), and write a control policy that parks in front of the cone. Publish desired steering angles and velocity just like in lab2.
 
 We aren’t aiming to give you a specific algorithm to run your controller, and we encourage you to play around. Try answering these questions:
 - What should the robot do if the cone is far in front?
