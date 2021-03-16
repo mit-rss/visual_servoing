@@ -95,8 +95,8 @@ You can view the rubric for the [briefing](https://docs.google.com/document/d/1N
 The elements you should include in your Lab 4 presentation include:
 - Explanation of vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
 - Explanation of the homography transformation. How do we convert pixels to plane coordinates?
-- Demonstration of parking controller performance. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
-- Demonstration of the line-follower. Make sure you mention your method for tuning the controller gains. Hint: include error plots from **rqt_plot**
+- Demonstration of parking controller performance. Make sure you explain and justify the design choices you made in your controller. Hint: include error plots from **rqt_plot**
+- Demonstration of the line-follower. Describe any adjustments you needed to make to your perception and control modules in order to follow lines. Hint: include error plots from **rqt_plot**
 
 Please include video, screen shots, data visualizations, etc. in your presentation as evidence of these deliverables. A good report will make quantitative and qualitative evaluations of your results.
 
