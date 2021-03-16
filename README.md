@@ -6,7 +6,7 @@
 | Briefing   | Wednesday, March 24th at 1:00PM EST     |
 | [Team Member Assessment](https://forms.gle/q596G7Lucn7vzVov6)  | Friday, March 26th at 11:59PM EST |
 
-Lab 3 will be supported by three in-person lab sessions:
+Lab 2 will be supported by two in-person lab sessions:
 
 | Lab Session   | Date  | Remote Prep | Goals |
 |-------------------------|------------------------------------|------------------------------------|------------------------------------|
@@ -20,48 +20,21 @@ Labs 5 and 6 will be conducted fully virtually; we will resume in-person labs on
 Welcome to Lab 4, where you will learn how to use the camera to allow the racecar to park in front of a colored cone and follow a line. 
 
 In this lab, your team will do the following:
-- Experiment/Prototype with several types of object detection algorithms
-- Learn how to transform a pixel from an image to a real world plane
-- Develop a parking controller to park your robot in front of an orange cone
-- Extend your parking controller into a line following controller
+- Experiment/Prototype with several types of **object detection** algorithms
+- Learn how to transform a pixel from an image to a real world plane using **homography**
+- Develop a **parking controller** to park your robot in front of an orange cone
+- Extend your parking controller into a **line following controller**
 
 ### Lab Modules
 This lab has a lot in it, so we are encouraging parallelization by breaking up the components of the lab into 4 distinct modules, which you will combine together. Each module tackles an interesting problem in computer vision/controls, and is designed to be implemented (initially) by itself.  
-- Module 1: Cone Detection via Color Segmentation
-- Module 2: Object Detection via Template Matching and SIFT
-- Module 3: Transforming pixels to a plane via Homography
-- Module 4: Writing a parking controller.
+
+- [Module 1](#module1): Cone Detection via Color Segmentation
+- [Module 2](#module2): Object Detection via Template Matching and SIFT
+- [Module 3](#module3): Transforming pixels to a plane via Homography
+- [Module 4](#module4): Writing a parking controller.
+- [Synthesis](#synthesis): Deploying all components together; Application to line following.
 
 Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Comparing different algorithms will give you a better feel for what is out there. Module 3 will teach you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park a robot in front of a simulated cone. Bring in modules 1 and 3 and put it on hardware to park in real life. Now make some modifications to follow a line instead!
-
-### Bringing it together
-With your modules in hand, it is time to make your robot park in front of a cone and follow a line.
-
-You can see how your modules will fit together in the following rqt graphs --
-
-**Simulation** (after launching `parking_sim.launch`):
-![](media/sim_graph.png)
-- When you use the PublishPoint tool in RViz, a global location is published to `/clicked_point`. 
-- The `/cone_sim_marker` node converts `/clicked_point` to the robot frame and publishes it to `/relative_cone`. 
-- The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command. 
-- _Simulated parking only requires completion of module 4 (control)_
-
-**Deployment** (after launching `parking_deployment.launch`):
-![](media/deployment_graph.png)
-- Now, the cone is localized relative to the real car using your vision algorithm and homography transform.
-- The `/cone_detector` node reads frames from the Zed camera and applies your computer vision algorithm to extract a cone location in pixels. The pixel cone location is published to `/relative_cone_px`.
-- The `/homography_transformer` node converts `/relative_cone_px` from the image (pixel) frame to the robot frame and publishes it to `/relative_cone`.
-- The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command (just like in simulation!).
-- _Deployed parking requires completion of modules 1 and 3 (perception) as well as 4 (control)_
-
-**General Suggestions**:
-1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
-2. You can verify your parking controller independently as well by running `parking_sim.launch` and placing cones in RViz using the PublishPoint tool. In simulation, your car may observe that a cone is behind it or off to the side; in practice, the car will only know the cone's location when it is in the camera frame. You should design a parking controller that works in all cases!
-3. When both perception and control work independently, run them together on the car using `parking_deployment.launch`. Congratulations are in order when you can park successfully. 
-5. Modify module 1 such that your robot can follow a line instead of a cone -- this should require minimal modification to your parking code! Some suggestions are in the module 1 section below.
-6. Improve your line following controller to see how fast you can navigate a circular track. 
-7. Optionally: extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance. 
-
 
 
 ### COVID Safety
@@ -84,12 +57,8 @@ You can view the rubric for the [briefing](https://docs.google.com/document/d/1N
 
 | Deliverable Grade | Weighting              |
 |---------------|----------------------------------------------------------------------------|
-| briefing grade (out of 10)  | 50% |
-| satisfactory completion of Module 1 | 10% |
-| satisfactory completion of Module 2 | 10% |
-| satisfactory completion of Module 3 | 10% |
-| satisfactory completion of Module 4 | 10% |
-| satisfactory integration of the 4 components | 10% |
+| briefing grade (out of 10)  | 80% |
+| technical grade (satisfactory completion of all modules) | 20% |
 
 
 The elements you should include in your Lab 4 presentation include:
@@ -114,7 +83,7 @@ When you wrote the parking controller (module 4), you published error messages. 
 - Put a cone directly in front of the car, ~3-5 meters away. Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error over time, and be prepared to discuss.
 - Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
 
-## Module 0: Setup
+## Module 0: Setup <a name="module0"></a>
 
 ### Computer Setup
 For this lab, you will need Opencv3. The virtual machines already have it, but it likely needs to be updated to 3.4 and are missing the opencv-contrib package (this is where some propietary algorithms were moved to in opencv3). If you are running linux natively, depending on what you've done before you may or may not have the correct setup. Try running these commands as well, and the correct packages will install as needed.
@@ -130,7 +99,7 @@ Steps:
 `pip install imutils`
 
 
-## Module 1: Cone Detection Via Color Segmentation
+## Module 1: Cone Detection Via Color Segmentation <a name="module1"></a>
 In lecture we learned lots of different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
 
 But sometimes simple algorithms are the correct choice, and for our purposes, identifying the cone by its distinctive color will prove most effective. Your job in this module will be identify cones (and other orange objects) and output bounding boxes containing them.
@@ -166,7 +135,7 @@ There will be several tape "courses" set up throughout the lab. Your racecar sho
 
 You are required to demonstrate successful line following for the orange line. If you have time, you can optionally extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance.  
 
-## Module 2: Object Detection via **SIFT** and **Template Matching**
+## Module 2: Object Detection via **SIFT** and **Template Matching** <a name="module2"></a>
 We’ve taught you some interesting ways to discover objects, and now it’s time to play with them. We want you walking away (to present to us) with two critical pieces of information from this module:
 - Why these two algorithms are super useful
 - Why these two algorithms fail to detect the cone super well
@@ -206,7 +175,7 @@ Some of these algorithm + dataset combinations will not produce good results. Ea
 
 Note: The templates are all greyscale. We are not doing anything with color in these algorithms.  
 
-## Module 3: Locating the cone via **Homography Transformation**
+## Module 3: Locating the cone via **Homography Transformation** <a name="module3"></a>
 In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car. 
 ### Launching the ZED Camera
 - On the car, use `roslaunch zed_wrapper zed.launch` to launch ZED
@@ -245,7 +214,7 @@ Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/ca
 
 `rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name), then `rqt_image_view` will publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`. Publish a marker to RVIZ using this pixel, and you should be able to quickly tell if your homography matrix is doing its job.
 
-## Module 4: Controller for Parking and Line Following
+## Module 4: Controller for Parking and Line Following <a name="module4"></a>
 While your teammates are putting together the computer vision algorithms and localizing the cone, you will also implement a parking controller for the robot. We want you to implement a parking controller that parks your robot in front of a cone at a given distance. The robot will start with the cone in the field of view of the camera and should drive directly to the cone and park in front of it (1.5 - 2 feet from the front). Parking means facing the cone at the correct distance, not just stopping at the correct distance. See an example video [here](https://gfycat.com/ObeseVioletIcelandicsheepdog).
 
 ![](media/parking_controller_diagram.jpg)
@@ -286,7 +255,36 @@ Tips:
 
 You will be using these plots to demonstrate controller performance for your presentation. 
 
-### General Tips/FAQ:
+## Bringing it together <a name="synthesis"></a>
+With your modules in hand, it is time to make your robot park in front of a cone and follow a line.
+
+You can see how your modules will fit together in the following rqt graphs --
+
+**Simulation** (after launching `parking_sim.launch`):
+![](media/sim_graph.png)
+- When you use the PublishPoint tool in RViz, a global location is published to `/clicked_point`. 
+- The `/cone_sim_marker` node converts `/clicked_point` to the robot frame and publishes it to `/relative_cone`. 
+- The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command. 
+- _Simulated parking only requires completion of module 4 (control)_
+
+**Deployment** (after launching `parking_deployment.launch`):
+![](media/deployment_graph.png)
+- Now, the cone is localized relative to the real car using your vision algorithm and homography transform.
+- The `/cone_detector` node reads frames from the Zed camera and applies your computer vision algorithm to extract a cone location in pixels. The pixel cone location is published to `/relative_cone_px`.
+- The `/homography_transformer` node converts `/relative_cone_px` from the image (pixel) frame to the robot frame and publishes it to `/relative_cone`.
+- The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command (just like in simulation!).
+- _Deployed parking requires completion of modules 1 and 3 (perception) as well as 4 (control)_
+
+### General Suggestions
+1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
+2. You can verify your parking controller independently as well by running `parking_sim.launch` and placing cones in RViz using the PublishPoint tool. In simulation, your car may observe that a cone is behind it or off to the side; in practice, the car will only know the cone's location when it is in the camera frame. You should design a parking controller that works in all cases!
+3. When both perception and control work independently, run them together on the car using `parking_deployment.launch`. Congratulations are in order when you can park successfully. 
+5. Modify module 1 such that your robot can follow a line instead of a cone -- this should require minimal modification to your parking code! Some suggestions are in the module 1 section below.
+6. Improve your line following controller to see how fast you can navigate a circular track. 
+7. Optionally: extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance. 
+
+
+### Other Tips/FAQ:
 **Camera Resolution**  
 If you are noticing problems with data rate from the camera, the ZED camera is publishing higher resolution photos than you need. We can turn down the image quality to VGA quality by modifying the resolution parameter in zed_camera.launch to 3.
 
