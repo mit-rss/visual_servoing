@@ -54,7 +54,7 @@ You can see how your modules will fit together in the following rqt graphs --
 - The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command (just like in simulation!).
 - _Deployed parking requires completion of modules 1 and 3 (perception) as well as 4 (control)_
 
-Here are some suggestions:
+**General Suggestions**:
 1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
 2. You can verify your parking controller independently as well by running `parking_sim.launch` and placing cones in RViz using the PublishPoint tool. In simulation, your car may observe that a cone is behind it or off to the side; in practice, the car will only know the cone's location when it is in the camera frame. You should design a parking controller that works in all cases!
 3. When both perception and control work independently, run them together on the car using `parking_deployment.launch`. Congratulations are in order when you can park successfully. 
