@@ -103,7 +103,7 @@ Please include video, screen shots, data visualizations, etc. in your presentati
 Here are some resources to help you present an effective analysis of your Lab 4 system:
 
 ### Vision Analysis
-We've provided some code to test the Intersection over Union (IOU) scores of your vision algorithms on the three datasets provided. IOU is a measure of how accurate bounding boxes are, and is  a choice metric for analysis of object detection algorithms. Go into **computer_vision/**  and run:
+We've provided some code to test the Intersection over Union (IOU) scores of your vision algorithms on the three datasets provided. IOU is a measure of how accurate bounding boxes are, and is  a choice metric for analysis of object detection algorithms. Go into **scripts/computer_vision/**  and run:
 - python cv_test.py citgo
 - python cv_test.py cone
 - python cv_test.py map  
