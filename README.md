@@ -78,7 +78,7 @@ For Spring 2021, we ask that you observe the following procedures at Johnson Tra
 
 ## Submission and Grading
 
-Lab 4 will require a briefing, but **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](INSERT LINK) (INSERT LINK). See the deliverables chart at the top of this page for due dates and times.
+Lab 4 will require a briefing, but **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](https://forms.gle/q596G7Lucn7vzVov6). See the deliverables chart at the top of this page for due dates and times.
 
 You can view the rubric for the [briefing](https://docs.google.com/document/d/1NmqQP7n1omI9bIshF1Y-MP70gfDkgEeoMjpWv8hjfsY/edit?usp=sharing) for more details on specific grading criteria. You will receive a grade out of 10 points. Your final lab grade will also be out of 10 points, based on the following weights:
 
