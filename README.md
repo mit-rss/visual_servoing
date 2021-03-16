@@ -121,19 +121,7 @@ Don’t forget conventions! Image indexing works like this (in this lab):
 ### Evaluation: 
 We are using the Intersection Over Union metric for evaluating bounding box success. Run **python cv_test.py cone color** to test your algorithm against our dataset. We print out the IOU values for you. We expect some sort of analysis involving this metric in your presentation.
 By the way- you won’t get them all (probably). But 100% accuracy is not necessary for a great parking controller.
-
-### Line Follower Extension:
-After you and your team put your modules together to park in front of a cone, a quick modification of your code will create a line follower. Like a donkey chasing a carrot, if you restrict the view of your robot to what is a little ahead of it you will follow an orange line.
-
-This works by setting a lookahead distance. See an example [here](https://gfycat.com/SeveralQueasyAmberpenshell).
-
-![](media/orange_circle.jpg)
-![](media/blacked_out_circle.jpg)
-
-Check out [this](https://www.youtube.com/watch?v=uSGnbyWg3_g) demo of what your robot can do. 
-There will be several tape "courses" set up throughout the lab. Your racecar should be able to drive around them in a controlled manner - not getting lost or cutting corners. Once you can drive around the course, see how fast you can go. 
-
-You are required to demonstrate successful line following for the orange line. If you have time, you can optionally extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance.  
+ 
 
 ## Module 2: Object Detection via **SIFT** and **Template Matching** <a name="module2"></a>
 We’ve taught you some interesting ways to discover objects, and now it’s time to play with them. We want you walking away (to present to us) with two critical pieces of information from this module:
@@ -255,7 +243,7 @@ Tips:
 
 You will be using these plots to demonstrate controller performance for your presentation. 
 
-## Synthesis: Bringing it together <a name="synthesis"></a>
+## Synthesis: Bringing it together; Line Following<a name="synthesis"></a>
 With your modules in hand, it is time to make your robot park in front of a cone and follow a line.
 
 You can see how your modules will fit together in the following rqt graphs --
@@ -274,6 +262,20 @@ You can see how your modules will fit together in the following rqt graphs --
 - The `/homography_transformer` node converts `/relative_cone_px` from the image (pixel) frame to the robot frame and publishes it to `/relative_cone`.
 - The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command (just like in simulation!).
 - _Deployed parking requires completion of modules 1 and 3 (perception) as well as 4 (control)_
+
+### Line Following
+
+Now that you and your team have put your modules together to park in front of a cone, a quick modification of your code will create a line follower. The idea is to make the parking controller think that there is always a cone a fixed distance ahead, positioned on the line you want to follow! Like a donkey chasing a carrot, if you restrict the view of your robot to what is a little ahead of it, your parking controller will follow an orange line.
+
+This works by setting a lookahead distance that is greater than your desired parking distance. See an example [here](https://gfycat.com/SeveralQueasyAmberpenshell).
+
+![](media/orange_circle.jpg)
+![](media/blacked_out_circle.jpg)
+
+Check out [this](https://www.youtube.com/watch?v=uSGnbyWg3_g) demo of what your robot can do. 
+There will be several tape "courses" set up throughout the lab. Your racecar should be able to drive around them in a controlled manner - not getting lost or cutting corners. Once you can drive around the course, see how fast you can go. 
+
+You are required to demonstrate successful line following for the orange line. If you have time, you can optionally extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance. 
 
 ### General Suggestions
 1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
