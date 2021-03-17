@@ -32,7 +32,7 @@ def cd_color_segmentation(img, template):
 		template_file_path; Not required, but can optionally be used to automate setting hue filter values.
 	Return:
 		bbox: ((x1, y1), (x2, y2)); the bounding box of the cone, unit in px
-				(x1, y1) is the bottom left of the bbox and (x2, y2) is the top right of the bbox
+				(x1, y1) is the top left of the bbox and (x2, y2) is the bottom right of the bbox
 	"""
 	########## YOUR CODE STARTS HERE ##########
 
