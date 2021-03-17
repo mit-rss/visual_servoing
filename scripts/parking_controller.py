@@ -13,16 +13,16 @@ class ParkingController():
     Can be used in the simulator and on the real robot.
     """
     def __init__(self):
-        rospy.Subscriber("/relative_cone", ConeLocation, 
-            self.relative_cone_callback)    
+        rospy.Subscriber("/relative_cone", ConeLocation,
+            self.relative_cone_callback)
 
-        DRIVE_TOPIC = rospy.get_param("~drive_topic") # set in launch file; different for simulator or racecar
-        self.drive_pub = rospy.Publisher(DRIVE_TOPIC, 
+        DRIVE_TOPIC = rospy.get_param("~drive_topic") # set in launch file; different for simulator vs racecar
+        self.drive_pub = rospy.Publisher(DRIVE_TOPIC,
             AckermannDriveStamped, queue_size=10)
         self.error_pub = rospy.Publisher("/parking_error",
             ParkingError, queue_size=10)
 
-        self.parking_distance = .75 #meters
+        self.parking_distance = .75 # meters; try playing with this number!
         self.relative_x = 0
         self.relative_y = 0
 
@@ -31,11 +31,12 @@ class ParkingController():
         self.relative_y = msg.y_pos
         drive_cmd = AckermannDriveStamped()
 
-        
-        '''
-        YOUR CODE HERE -- set the drive command
-        '''
+        #################################
 
+        # YOUR CODE HERE
+        # Use relative position and your control law to set drive_cmd
+
+        #################################
 
         self.drive_pub.publish(drive_cmd)
         self.error_publisher()
@@ -46,13 +47,14 @@ class ParkingController():
         with rqt_plot to plot the success of the controller
         """
         error_msg = ParkingError()
-        
-        # Your Code Here
+
+        #################################
+
+        # YOUR CODE HERE
         # Populate error_msg with relative_x, relative_y, sqrt(x^2+y^2)
-        error_msg.x_error = self.relative_x-self.parking_distance
-        error_msg.y_error = self.relative_y
-        error_msg.distance_error = \
-            (self.relative_x**2 + self.relative_y**2)**.5-self.parking_distance
+
+        #################################
+        
         self.error_pub.publish(error_msg)
 
 if __name__ == '__main__':
