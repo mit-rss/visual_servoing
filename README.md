@@ -3,8 +3,8 @@
 
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Briefing   | Wednesday, March 24th at 1:00PM EST     |
-| [Team Member Assessment](https://forms.gle/q596G7Lucn7vzVov6)  | Friday, March 26th at 11:59PM EST |
+| Briefing (also link on team site)   | Wednesday, March 31st at 1:00PM EST     |
+| [Team Member Assessment](https://forms.gle/q596G7Lucn7vzVov6)  | Friday, April 2nd at 11:59PM EST |
 
 Lab 4 will be supported by two in-person lab sessions:
 
