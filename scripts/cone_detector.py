@@ -28,7 +28,7 @@ class ConeDetector():
         # Subscribe to ZED camera RGB frames
         self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.ros_image_callback)
         self.cone_pub = rospy.Publisher("/relative_cone_px", ConeLocationPixel, queue_size=10)
-        self.bridge = CvBridge() #Converts between ROS images and OpenCV Images
+        self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
 
     def ros_image_callback(self, ros_image_msg):
         # Apply your imported color segmentation function (cd_color_segmentation) to the image msg here
@@ -37,9 +37,9 @@ class ConeDetector():
         # publish this pixel (u, v) to the /relative_cone_px topic; the homography transformer will
         # convert it to the car frame.
 
-        '''
-        YOUR CODE HERE -- detect the cone and publish its pixel location in the image
-        '''
+        #################################
+        # YOUR CODE HERE -- detect the cone and publish its pixel location in the image
+        #################################
 
 
 if __name__ == '__main__':
@@ -49,4 +49,3 @@ if __name__ == '__main__':
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
-
