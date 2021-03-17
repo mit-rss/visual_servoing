@@ -17,7 +17,7 @@ Labs 5 and 6 will be conducted fully virtually; we will resume in-person labs on
 
 ## Introduction
 
-Welcome to Lab 4, where you will learn how to use the camera to allow the racecar to park in front of a colored cone and follow a line. 
+Welcome to Lab 4, where you will learn how to use the camera to allow the racecar to park in front of a colored cone and follow a line.
 
 In this lab, your team will do the following:
 - Experiment/Prototype with several types of **object detection** algorithms
@@ -78,7 +78,7 @@ We've provided some code to test the Intersection over Union (IOU) scores of you
 - python cv_test.py map  
 To test all three of your algorithms against our citgo, cone, and stata basement datasets respectively. Results will be outputted to .csv files in **scores/**. Some algorithms on some datasets won’t get any/good results. This is expected, and we would like to know why each works for what it does in your presentation.
 
-### Controller Analysis 
+### Controller Analysis
 When you wrote the parking controller (module 4), you published error messages. Now it’s time to use **rqt_plot** to generate some plots. Try running the following experiments:
 - Put a cone directly in front of the car, ~3-5 meters away. Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error over time, and be prepared to discuss.
 - Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
@@ -118,10 +118,10 @@ Don’t forget conventions! Image indexing works like this (in this lab):
 
 ![](media/image_axis_convention.jpg)
 
-### Evaluation: 
+### Evaluation:
 We are using the Intersection Over Union metric for evaluating bounding box success. Run **python cv_test.py cone color** to test your algorithm against our dataset. We print out the IOU values for you. We expect some sort of analysis involving this metric in your presentation.
 By the way- you won’t get them all (probably). But 100% accuracy is not necessary for a great parking controller.
- 
+
 
 ## Module 2: Object Detection via **SIFT** and **Template Matching** <a name="module2"></a>
 We’ve taught you some interesting ways to discover objects, and now it’s time to play with them. We want you walking away (to present to us) with two critical pieces of information from this module:
@@ -149,7 +149,7 @@ Test your algorithm against the CITGO dataset. This dataset should give you the 
 Test your algorithm against the STATA dataset. Run **python cv_test.py map template**        
 
 **Testing on Datasets**         
-We have implemented a few datasets for you to test your algorithms with.  To run the Sift tests, type in (inside the **computer_vision** folder): 
+We have implemented a few datasets for you to test your algorithms with.  To run the Sift tests, type in (inside the **computer_vision** folder):
 - **python cv_test.py cone sift**
 - **python cv_test.py citgo sift**
 - **python cv_test.py map sift**            
@@ -164,16 +164,16 @@ Some of these algorithm + dataset combinations will not produce good results. Ea
 Note: The templates are all greyscale. We are not doing anything with color in these algorithms.  
 
 ## Module 3: Locating the cone via **Homography Transformation** <a name="module3"></a>
-In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car. 
+In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car.
 ### Launching the ZED Camera
 - On the car, use `roslaunch zed_wrapper zed.launch` to launch ZED
 - See lab 1 for instructions on how to export ROS_MASTER, then run `rqt_image_view` from your host computer
-The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/rgb/image_rect_color`. If your ZED camera is not working, try running this script `~/zed/compiled_samples/ZED_Camera_Control`. 
+The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/rgb/image_rect_color`. If your ZED camera is not working, try running this script `~/zed/compiled_samples/ZED_Camera_Control`.
 
 ### Accessing Image Data
 Write a ros subscriber for ZED camera topic.
-The ZED camera publishes message of type [Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) from sensor_msgs. 
-Learn about this message with the rosmsg command, `rosmsg show sensor_msgs/Image`. 
+The ZED camera publishes message of type [Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) from sensor_msgs.
+Learn about this message with the rosmsg command, `rosmsg show sensor_msgs/Image`.
 The image data is in ROS message data-structure which is not directly recognized by OpenCV, you might have also learned that OpenCV image representations are sometimes unique and bizarre(e.g. BGR instead of RGB). To convert between CV image data structures(mat) to ROS image representations(ROS Message structures) you may find [CV bridge](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython) helpful.
 **NOTE: The velodyne cameras are upside down (fix with imutils.rotate() or similar)**
 
@@ -200,7 +200,7 @@ To find the homography matrix, you should first determine the pixel coordinates 
 
 Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findhomography) can be used to compute homography matrices. In `scripts/homography_transformer.py`, you've been provided a node that calls this function for you and makes the conversion between pixel-frame and robot-frame coordinates. You just need to fill in the point correspondences measured from your system.
 
-`rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name), then `rqt_image_view` will publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`. Publish a marker to RVIZ using this pixel, and you should be able to quickly tell if your homography matrix is doing its job.
+`rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name), then `rqt_image_view` will publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`. Publish a marker to RVIZ using this pixel (we've provided you with a function `draw_marker` in `scripts/homography_transformer.py`), and you should be able to quickly tell if your homography matrix is doing its job.
 
 ## Module 4: Controller for Parking and Line Following <a name="module4"></a>
 While your teammates are putting together the computer vision algorithms and localizing the cone, you will also implement a parking controller for the robot. We want you to implement a parking controller that parks your robot in front of a cone at a given distance. The robot will start with the cone in the field of view of the camera and should drive directly to the cone and park in front of it (1.5 - 2 feet from the front). Parking means facing the cone at the correct distance, not just stopping at the correct distance. See an example video [here](https://gfycat.com/ObeseVioletIcelandicsheepdog).
@@ -209,11 +209,11 @@ While your teammates are putting together the computer vision algorithms and loc
 
 The distance and angle don’t act independently so consider carefully how you should make them work together.
 
-Whenever possible, we want to develop controllers in simulation before deploying on real (breakable) hardware. That is what we’ll do here. After you download (and make) the lab 4 ros package, fire up your **roscore**, **simulator**, and **rviz**. 
+Whenever possible, we want to develop controllers in simulation before deploying on real (breakable) hardware. That is what we’ll do here. After you download (and make) the lab 4 ros package, fire up your **roscore**, **simulator**, and **rviz**.
 
 Now run `roslaunch visual_servoing parking_sim.launch`
 
-In rviz, press **publish point**(top options bar) and watch our representation of a cone appear. 
+In rviz, press **publish point**(top options bar) and watch our representation of a cone appear.
 Notes
 - Make sure to add the marker “/cone_marker” to rviz
 - In this lab, make sure you are in the “Map” frame or things might get weird.
@@ -228,7 +228,7 @@ We aren’t aiming to give you a specific algorithm to run your controller, and 
 - What if the robot isn’t too close or far, but the cone isn’t directly in front of the robot?
 - How can we keep the cone in frame when we are using our real camera?
 
-A good parking controller will work in simulation even when the cone is behind the robot. Of course, when we put this module together with the rest of the lab on the real robot, you won’t have the luxury of knowing the cone location when the camera can’t see it. 
+A good parking controller will work in simulation even when the cone is behind the robot. Of course, when we put this module together with the rest of the lab on the real robot, you won’t have the luxury of knowing the cone location when the camera can’t see it.
 
 Please keep your desired velocities below 1 (meters/sec). Even though the simulator will behave at higher speeds, your real robot will not.
 
@@ -237,11 +237,11 @@ The last thing for you to do is publish the x_error, y_error, and distance (`sqr
 ![](media/rqt_plot.jpg)
 
 These plots are super useful in controller tuning/debugging (and any other time you need to plot some quantity over time).
-Tips: 
+Tips:
 - Type in the topic you want to graph in the top left of the gui.
 - Adjust the axes with the icon that looks like a green checkmark (top left menu bar).
 
-You will be using these plots to demonstrate controller performance for your presentation. 
+You will be using these plots to demonstrate controller performance for your presentation.
 
 ## Synthesis: Bringing it together; Line Following<a name="synthesis"></a>
 With your modules in hand, it is time to make your robot park in front of a cone and follow a line.
@@ -250,9 +250,9 @@ You can see how your modules will fit together in the following rqt graphs --
 
 **Simulation** (after launching `parking_sim.launch`):
 ![](media/sim_graph.png)
-- When you use the PublishPoint tool in RViz, a global location is published to `/clicked_point`. 
-- The `/cone_sim_marker` node converts `/clicked_point` to the robot frame and publishes it to `/relative_cone`. 
-- The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command. 
+- When you use the PublishPoint tool in RViz, a global location is published to `/clicked_point`.
+- The `/cone_sim_marker` node converts `/clicked_point` to the robot frame and publishes it to `/relative_cone`.
+- The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command.
 - _Simulated parking only requires completion of module 4 (control)_
 
 **Deployment** (after launching `parking_deployment.launch`):
@@ -272,18 +272,18 @@ This works by setting a lookahead distance that is greater than your desired par
 ![](media/orange_circle.jpg)
 ![](media/blacked_out_circle.jpg)
 
-Check out [this](https://www.youtube.com/watch?v=uSGnbyWg3_g) demo of what your robot can do. 
-There will be several tape "courses" set up throughout the lab. Your racecar should be able to drive around them in a controlled manner - not getting lost or cutting corners. Once you can drive around the course, see how fast you can go. 
+Check out [this](https://www.youtube.com/watch?v=uSGnbyWg3_g) demo of what your robot can do.
+There will be several tape "courses" set up throughout the lab. Your racecar should be able to drive around them in a controlled manner - not getting lost or cutting corners. Once you can drive around the course, see how fast you can go.
 
-You are required to demonstrate successful line following for the orange line. If you have time, you can optionally extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance. 
+You are required to demonstrate successful line following for the orange line. If you have time, you can optionally extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance.
 
 ### General Suggestions
 1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
 2. You can verify your parking controller independently as well by running `parking_sim.launch` and placing cones in RViz using the PublishPoint tool. In simulation, your car may observe that a cone is behind it or off to the side; in practice, the car will only know the cone's location when it is in the camera frame. You should design a parking controller that works in all cases!
-3. When both perception and control work independently, run them together on the car using `parking_deployment.launch`. Congratulations are in order when you can park successfully. 
+3. When both perception and control work independently, run them together on the car using `parking_deployment.launch`. Congratulations are in order when you can park successfully.
 5. Modify module 1 such that your robot can follow a line instead of a cone -- this should require minimal modification to your parking code! Some suggestions are in the module 1 section below.
-6. Improve your line following controller to see how fast you can navigate a circular track. 
-7. Optionally: extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance. 
+6. Improve your line following controller to see how fast you can navigate a circular track.
+7. Optionally: extend your line follower to follow the white lines of the track around Johnson! This will require a few tweaks to your vision algorithm; with many lines in parallel circling the track, your car will become confused about which one to follow without additional guidance.
 
 
 ### Other Tips/FAQ:

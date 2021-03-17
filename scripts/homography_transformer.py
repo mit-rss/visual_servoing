@@ -62,7 +62,6 @@ class HomographyTransformer:
         np_pts_image = np.float32(np_pts_image[:, np.newaxis, :])
 
         self.h, err = cv2.findHomography(np_pts_image, np_pts_ground)
-        #rospy.loginfo(self.h)
 
     def cone_detection_callback(self, msg):
         #Extract information from message
@@ -72,39 +71,38 @@ class HomographyTransformer:
         #Call to main function
         x, y = self.transformUvToXy(u, v)
 
-        #rospy.loginfo("-> Relative XY:")
-        #rospy.loginfo((x, y))
-
         #Publish relative xy position of object in real world
         relative_xy_msg = ConeLocation()
         relative_xy_msg.x_pos = x
         relative_xy_msg.y_pos = y
-        #relative_xy_msg.z = don't care
 
         self.cone_pub.publish(relative_xy_msg)
 
-    #u and v are pixel coordinates
-    #top left pixel is origin, u axis increases to right, v axis increases down
-    #the camera topic that uv came from is /zed/zed_node/rgb/image_rect_color
-    #
-    #returns a normal non-np 1x2 matrix of xy displacement vector
-    #from the camera to the point on the ground plane
-    #camera points along positive x axis
-    #y axis increases to the left of the camera
-    #units are in meters
+
     def transformUvToXy(self, u, v):
+        """
+        u and v are pixel coordinates.
+        The top left pixel is the origin, u axis increases to right, and v axis
+        increases down.
+
+        Returns a normal non-np 1x2 matrix of xy displacement vector from the
+        camera to the point on the ground plane.
+        Camera points along positive x axis and y axis increases to the left of
+        the camera.
+
+        Units are in meters.
+        """
         homogeneous_point = np.array([[u], [v], [1]])
         xy = np.dot(self.h, homogeneous_point)
         scaling_factor = 1.0 / xy[2, 0]
         homogeneous_xy = xy * scaling_factor
         x = homogeneous_xy[0, 0]
         y = homogeneous_xy[1, 0]
-        #xy = xy / METERS_PER_INCH #Converts output to inches
         return x, y
 
     def draw_marker(self, cone_x, cone_y, message_frame):
         """
-        Publish a marker to represent the cone in rviz
+        Publish a marker to represent the cone in rviz.
         (Call this function if you want)
         """
         marker = Marker()
