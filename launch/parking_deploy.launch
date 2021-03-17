@@ -1,6 +1,9 @@
 <launch>
 
-  <!-- Launch the parking controller on the real robot. Launches controller node, cone detection node, and the homography transformer -->
+  <!-- Launch the parking controller on the real robot. Launches safety controller, controller node, cone detection node, and the homography transformer -->
+  <!-- Edit this to launch your safety controller you implemented in Lab 3! -->
+  <node pkg="wall_follower" name="safety_controller" type="safety_controller.py" output="screen">
+  </node>
 
   <node pkg="visual_servoing" name="parking_controller" type="parking_controller.py" output="screen">
   	<param name="drive_topic" value="/vesc/ackermann_cmd_mux/input/navigation" />

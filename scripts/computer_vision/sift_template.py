@@ -116,20 +116,9 @@ def cd_template_matching(img, template):
 		# Use OpenCV template matching functions to find the best match
 		# across template scales.
 
+		# Remember to resize the bounding box using the highest scoring scale
+		# x1,y1 pixel will be accurate, but x2,y2 needs to be correctly scaled
+		bounding_box = ((0,0),(0,0))
 		########### YOUR CODE ENDS HERE ###########
-	# Use best fitting match and locate object using ratio
-	if best_match is not None:
-		(max_val, max_loc, ratio, h, w) = best_match
-
-		bb_start = max_loc[0], max_loc[1]
-		bb_end = bb_start[0] + w, bb_start[1] + h
-
-		# Create bounding box
-		bounding_box = (bb_start, bb_end)
-		cv2.rectangle(img,bb_start,bb_end,(0,255,0),3)
-	else:
-		# No match found
-		print "template match: No Match Found"
-		bounding_box = ((0,0), (0,0))
 
 	return bounding_box
