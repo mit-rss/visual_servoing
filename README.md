@@ -1,5 +1,5 @@
 
-# Lab 4: Vision (In-Person)
+# Lab 4: Vision
 
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
@@ -60,14 +60,12 @@ When you wrote the parking controller (module 4), you published error messages. 
 - Put a cone directly in front of the car, ~3-5 meters away. Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error over time, and be prepared to discuss.
 - Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
 
-## Module 0: Setup <a name="module0"></a>
-
 ## Module 1: Cone Detection Via Color Segmentation <a name="module1"></a>
 In lecture we learned lots of different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
 
 But sometimes simple algorithms are the correct choice, and for our purposes, identifying the cone by its distinctive color will prove most effective. Your job in this module will be identify cones (and other orange objects) and output bounding boxes containing them.
 
-Take a peek at **cone_detection/color_segmentation.py**. Here you will find your starter code, though there is very little of it. There is a considerable degree of freedom in implementing your segmentation algorithm, and we will try to guide you at a high level. When it comes to opencv functions and examples, googling will not disappoint. Keywords like “python” and “opencv3” will help you avoid c++ and older opencv versions of functions.
+Take a peek at `scripts/computer_vision/color_segmentation.py`. Here you will find your starter code, though there is very little of it. There is a considerable degree of freedom in implementing your segmentation algorithm, and we will try to guide you at a high level. When it comes to opencv functions and examples, googling will not disappoint. Keywords like “python” and “opencv3” will help you avoid c++ and older opencv versions of functions.
 
 The cool thing about this module is that you can build up your algorithm incrementally. Display the original image. Modify, convert, filter, etc. and see what it looks like. Try a different opencv function. See what that does to the already changed image.
 
@@ -140,7 +138,8 @@ The image data is in ROS message data-structure which is not directly recognized
 **NOTE: The velodyne cameras are upside down (fix with imutils.rotate() or similar)**
 
 ### Converting pixel coordinates to x-y coordinates
-If you recall from lecture, a camera is a sensor that converts 3D points (x,y,z) into 2D pixels (u,v). If we put on our linear algebra hats, we can take a peek at the projection of a 3D point to a 2D point:
+If you recall from lecture, a camera is a sensor that converts 3D points (x,y,z) into 2D pixels (u,v). If we put on our linear algebra hats, we can project a 3D point onto a 2D plane as follows:
+
 ![](media/homography.jpg)
 
 In robotics, we are generally concerned with the inverse problem. Given a 2D (image) point, how can we extract a 3D (world) point?
@@ -150,7 +149,7 @@ In this lab, we will use another interesting fact about linear transformations f
 ### Coordinate space conversion
 The racecar can’t roll over or fly (no matter how cool it might look), so the ZED camera will always have a fixed placement with respect to the ground plane. By determining exactly what that placement is, we can compute a function that takes in image pixel coordinates (u, v) and returns the coordinates of the point on the floor (x, y) relative to the car that projects onto the pixel (u, v).
 
-This “function” is called a homography. Even though we can’t back out arbitrary 3D points from 2D pixels without lots of extra work, we can back out 2D world points if those points lie on a plane (and can therefore be thought of as 2D) that is fixed with respect to our camera.
+This “function” is called a homography. Even though we can’t determine arbitrary 3D points from 2D pixels without lots of extra work, we can back out 2D world points if those points lie on a plane (and can therefore be thought of as 2D) that is fixed with respect to our camera.
 
 Check out this illustration of a camera and world plane. There exists a linear transformation between the camera projection and the world plane, since the world plane has two dimensions like an image plane.
 
@@ -162,7 +161,7 @@ To find the homography matrix, you should first determine the pixel coordinates 
 
 Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findhomography) can be used to compute homography matrices. In `scripts/homography_transformer.py`, you've been provided a node that calls this function for you and makes the conversion between pixel-frame and robot-frame coordinates. You just need to fill in the point correspondences measured from your system.
 
-`rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name), then `rqt_image_view` will publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`. Publish a marker to RVIZ using this pixel (we've provided you with a function `draw_marker` in `scripts/homography_transformer.py`), and you should be able to quickly tell if your homography matrix is doing its job.
+`rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name), then `rqt_image_view` will publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`. Publish a marker to RVIZ using this pixel (we've provided you with a function `draw_marker` in `scripts/homography_transformer.py`), and you should be able to quickly tell if your homography matrix is doing its job. Note that publishing messages from your local computer to the car's ROS master can be finicky depending on your OS, so you may need to record a ROS bag of camera data and do this testing locally.
 
 ## Module 4: Controller for Parking and Line Following <a name="module4"></a>
 While your teammates are putting together the computer vision algorithms and localizing the cone, you will also implement a parking controller for the robot. We want you to implement a parking controller that parks your robot in front of a cone at a given distance. The robot will start with the cone in the field of view of the camera and should drive directly to the cone and park in front of it (1.5 - 2 feet from the front). Parking means facing the cone at the correct distance, not just stopping at the correct distance. See an example video [here](https://gfycat.com/ObeseVioletIcelandicsheepdog).
@@ -250,7 +249,8 @@ You are required to demonstrate successful line following for the orange line. I
 
 ### Other Tips/FAQ:
 **Camera Resolution**  
-If you are noticing problems with data rate from the camera, the ZED camera is publishing higher resolution photos than you need. We can turn down the image quality to VGA quality by modifying the resolution parameter in zed_camera.launch to 3.
+If you are noticing problems with data rate from the camera, the ZED camera may be publishing higher resolution photos than you need. We can turn down the image quality to VGA quality by modifying the resolution parameter in zed_camera.launch to 3.
+If the data rate is fast on the car but slow to visualize on your computer in `rviz`, you can publish a compressed image by following [this tutorial](http://wiki.ros.org/rospy_tutorials/Tutorials/WritingImagePublisherSubscriber).
 
 **Debugging cone detection on the car**  
-The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. (You are already converting ros images to opencv images, simply reverse that conversion with cv2_to_imgmsg. Now publish that Image over a debug publisher and you should be able to pull up the live image stream in rqt_image_view/rviz.)  
+The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. (You are already converting ros images to opencv images, simply reverse that conversion with cv2_to_imgmsg. Now publish that Image over a debug publisher and you should be able to pull up the live image stream in rqt_image_view/rviz.) Again, use a [compressed image publisher](http://wiki.ros.org/rospy_tutorials/Tutorials/WritingImagePublisherSubscriber) to make this work in realtime.

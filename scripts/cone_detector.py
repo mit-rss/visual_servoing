@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
-#import imutils
 import numpy as np
 import rospy
 
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image, CompressedImage
 from geometry_msgs.msg import Point #geometry_msgs not in CMake file
 from visual_servoing.msg import ConeLocationPixel
 
@@ -26,8 +25,9 @@ class ConeDetector():
         self.LineFollower = False
 
         # Subscribe to ZED camera RGB frames
-        self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.ros_image_callback)
         self.cone_pub = rospy.Publisher("/relative_cone_px", ConeLocationPixel, queue_size=10)
+        self.debug_pub = rospy.Publisher("/cone_debug_img", CompressedImage, queue_size=10)
+        self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.ros_image_callback)
         self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
 
     def ros_image_callback(self, ros_image_msg):
@@ -38,9 +38,24 @@ class ConeDetector():
         # convert it to the car frame.
 
         #################################
-        # YOUR CODE HERE -- detect the cone and publish its pixel location in the image
+        # YOUR CODE HERE
+        # detect the cone and publish its
+        # pixel location in the image.
+        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
         #################################
 
+        img = self.bridge.imgmsg_to_cv2(ros_image_msg, "bgr8")
+        debug_img = img
+
+        #################################
+        # Publish the debug image
+        #################################
+
+        debug_msg = CompressedImage()
+        debug_msg.header.stamp = rospy.Time.now()
+        debug_msg.format = "jpeg"
+        debug_msg.data = np.array(cv2.imencode('.jpg', debug_img)[1]).tostring()
+        self.debug_pub.publish(debug_msg)
 
 if __name__ == '__main__':
     try:
