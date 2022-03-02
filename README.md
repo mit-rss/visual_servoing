@@ -60,6 +60,22 @@ When you wrote the parking controller (module 4), you published error messages. 
 - Put a cone directly in front of the car, ~3-5 meters away. Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error over time, and be prepared to discuss.
 - Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
 
+## Setup
+
+If you're using the docker image, pull the latest version. This will take a couple minutes so read through more of the lab while it's downloading.
+
+    cd racecar_docker
+    docker compose down
+    git stash
+    git pull
+    docker compose pull
+    docker compose up
+
+If you're using another setup you may need to install some additional packages:
+
+    sudo apt install python-pip ros-melodic-compressed-image-transport
+    sudo pip install imutils
+
 ## Module 1: Cone Detection Via Color Segmentation <a name="module1"></a>
 In lecture we learned lots of different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
 
@@ -250,4 +266,4 @@ You are required to demonstrate successful line following for the orange line. I
 ### Other Tips/FAQ:
 
 **Debugging cone detection on the car**  
-The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. We have included a basic debug pipeline already in the template code. We also have included a node in the `parking_deploy.launch` file that compresses the image so it can streamed to your computer at a **much** higher rate. So in `rqt_image_view` select the `cone_debug_img_compressed/compressed` topic. This requires the `compressed-image-transport` package which you can install via `sudo apt install ros-melodic-compressed-image-transport` or by pulling the latest version of the docker image.
+The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. We have included a basic debug pipeline already in the template code. We also have included a node in the `parking_deploy.launch` file that compresses the image so it can streamed to your computer at a **much** higher rate. In `rqt_image_view` select `cone_debug_img_compressed/compressed` to view the compressed topic.
