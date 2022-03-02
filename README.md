@@ -3,17 +3,8 @@
 
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Briefing (also link on team site)   | Wednesday, March 31st at 1:00PM EST     |
-| [Team Member Assessment](https://forms.gle/q596G7Lucn7vzVov6)  | Friday, April 2nd at 11:59PM EST |
-
-Lab 4 will be supported by two in-person lab sessions:
-
-| Lab Session   | Date  | Remote Prep | Goals |
-|-------------------------|------------------------------------|------------------------------------|------------------------------------|
-| 4.1   | Wednesday, March 17th, 8:30-11:00 AM EST  | Read over the lab handout. |  Perception: Write your color segmentation algorithm and test it on an orange cone. Collect correspondence points and test out homography performance. Control: Design a parking algorithm and test it in simulation. Synthesis: test the combined behavior to park in front of a cone! |
-| 4.2   | Wednesday, March 24th, 8:30-11:00 AM EST  | Implement SIFT & Template-Matching (Module 2 can be done fully virtually). Design a method to extend your autonomous parking pipeline to the line following task, and implement it. Start testing your line follower! (We'll give you orange tape to take home.) |  Complete data collection on the official line following racecourse. Prepare your presentation!  |
-
-Labs 5 and 6 will be conducted fully virtually; we will resume in-person labs on April 26 in preparation for the Final Challenge.
+| Briefing (and link to slides on team site)   | Wednesday, March 9st at 1:00PM EST     |
+| [Team Member Assessment](https://forms.gle/q596G7Lucn7vzVov6)  | Friday, March 11th at 11:59PM EST |
 
 ## Introduction
 
@@ -36,19 +27,6 @@ This lab has a lot in it, so we are encouraging parallelization by breaking up t
 
 Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Comparing different algorithms will give you a better feel for what is out there. Module 3 will teach you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park a robot in front of a simulated cone. Bring in modules 1 and 3 and put it on hardware to park in real life. Now make some modifications to follow a line instead!
 
-
-### COVID Safety
-
-For Spring 2021, we ask that you observe the following procedures at Johnson Track:
-- Truthfully complete your **attestation** on [covidpass](https://covidpass.mit.edu/) the evening before EACH lab; also, review the MIT rules on COVID testing and ensure you are compliant. If you are denied access due to symptoms or possible exposure, let the staff know and we will make appropriate accommodations for remote work.
-- Do all possible **remote prep** before lab (with the exception of the first lab on Tuesday), arriving ready to efficiently use your time with the real robot.
-- Arrive around 8:15am at the Johnson track; labs are announced and start at **8:30 sharp**. Wear a mask.
-- Each team will be allocated a **workspace**, marked by tape on the ground; all teammates are asked to remain within their workspace during lab time except with TA permission.
-- Maintain 6 feet of **social distance** from all others, including team members. _No sharing computers_.
-- You will be given an orange cone that you can use to request help from the TAs.
-- Clean your team's workspace by 10:55am.
-
-
 ## Submission and Grading
 
 Lab 4 will require a briefing, but **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](https://forms.gle/q596G7Lucn7vzVov6). See the deliverables chart at the top of this page for due dates and times.
@@ -59,7 +37,6 @@ You can view the rubric for the [briefing](https://docs.google.com/document/d/1N
 |---------------|----------------------------------------------------------------------------|
 | briefing grade (out of 10)  | 80% |
 | technical grade (satisfactory completion of all modules) | 20% |
-
 
 The elements you should include in your Lab 4 presentation include:
 - Explanation of vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
@@ -84,20 +61,6 @@ When you wrote the parking controller (module 4), you published error messages. 
 - Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
 
 ## Module 0: Setup <a name="module0"></a>
-
-### Computer Setup
-For this lab, you will need Opencv3. The virtual machines already have it, but it likely needs to be updated to 3.4 and are missing the opencv-contrib package (this is where some propietary algorithms were moved to in opencv3). If you are running linux natively, depending on what you've done before you may or may not have the correct setup. Try running these commands as well, and the correct packages will install as needed.
-
-Steps:
-
-`sudo apt-get install python-pip`
-
-`pip install opencv-python==3.4.2.16`
-
-`pip install opencv-contrib-python==3.4.2.16`
-
-`pip install imutils`
-
 
 ## Module 1: Cone Detection Via Color Segmentation <a name="module1"></a>
 In lecture we learned lots of different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
@@ -166,8 +129,8 @@ Note: The templates are all greyscale. We are not doing anything with color in t
 ## Module 3: Locating the cone via **Homography Transformation** <a name="module3"></a>
 In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car.
 ### Launching the ZED Camera
-- On the car, use `roslaunch zed_wrapper zed.launch` to launch ZED
-- See Lab 2 (wall_follower) for instructions on how to export ROS_MASTER, then run `rqt_image_view` in the racecar terminal window.
+- On the car, use `roslaunch zed_wrapper zed.launch` to launch ZED. If the camera says that it is searching for a calibration file, make sure your router is connected to the internet and try again. It should be able to download the file.
+- Run `rqt_image_view` in the racecar terminal window. If it's not working, check that your ROS_MASTER_URI is set correctly (see the wall follower lab).
 The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/rgb/image_rect_color`. If your ZED camera is not working, try running this script `~/zed/compiled_samples/ZED_Camera_Control`.
 
 ### Accessing Image Data
