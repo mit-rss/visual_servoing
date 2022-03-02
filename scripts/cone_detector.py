@@ -6,7 +6,7 @@ import rospy
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
-from sensor_msgs.msg import Image, CompressedImage
+from sensor_msgs.msg import Image
 from geometry_msgs.msg import Point #geometry_msgs not in CMake file
 from visual_servoing.msg import ConeLocationPixel
 
@@ -26,11 +26,11 @@ class ConeDetector():
 
         # Subscribe to ZED camera RGB frames
         self.cone_pub = rospy.Publisher("/relative_cone_px", ConeLocationPixel, queue_size=10)
-        self.debug_pub = rospy.Publisher("/cone_debug_img", CompressedImage, queue_size=10)
-        self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.ros_image_callback)
+        self.debug_pub = rospy.Publisher("/cone_debug_img", Image, queue_size=10)
+        self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.image_callback)
         self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
 
-    def ros_image_callback(self, ros_image_msg):
+    def image_callback(self, image_msg):
         # Apply your imported color segmentation function (cd_color_segmentation) to the image msg here
         # From your bounding box, take the center pixel on the bottom
         # (We know this pixel corresponds to a point on the ground plane)
@@ -44,18 +44,11 @@ class ConeDetector():
         # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
         #################################
 
-        img = self.bridge.imgmsg_to_cv2(ros_image_msg, "bgr8")
-        debug_img = img
+        image = self.bridge.imgmsg_to_cv2(image_msg, "bgr8")
 
-        #################################
-        # Publish the debug image
-        #################################
-
-        debug_msg = CompressedImage()
-        debug_msg.header.stamp = rospy.Time.now()
-        debug_msg.format = "jpeg"
-        debug_msg.data = np.array(cv2.imencode('.jpg', debug_img)[1]).tostring()
+        debug_msg = self.bridge.cv2_to_imgmsg(image, "bgr8")
         self.debug_pub.publish(debug_msg)
+
 
 if __name__ == '__main__':
     try:

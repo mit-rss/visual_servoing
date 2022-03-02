@@ -248,9 +248,6 @@ You are required to demonstrate successful line following for the orange line. I
 
 
 ### Other Tips/FAQ:
-**Camera Resolution**  
-If you are noticing problems with data rate from the camera, the ZED camera may be publishing higher resolution photos than you need. We can turn down the image quality to VGA quality by modifying the resolution parameter in zed_camera.launch to 3.
-If the data rate is fast on the car but slow to visualize on your computer in `rviz`, you can publish a compressed image by following [this tutorial](http://wiki.ros.org/rospy_tutorials/Tutorials/WritingImagePublisherSubscriber).
 
 **Debugging cone detection on the car**  
-The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. (You are already converting ros images to opencv images, simply reverse that conversion with cv2_to_imgmsg. Now publish that Image over a debug publisher and you should be able to pull up the live image stream in rqt_image_view/rviz.) Again, use a [compressed image publisher](http://wiki.ros.org/rospy_tutorials/Tutorials/WritingImagePublisherSubscriber) to make this work in realtime.
+The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. We have included a basic debug pipeline already in the template code. We also have included a node in the `parking_deploy.launch` file that compresses the image so it can streamed to your computer at a **much** higher rate. So in `rqt_image_view` select the `cone_debug_img_compressed/compressed` topic. This requires the `compressed-image-transport` package which you can install via `sudo apt install ros-melodic-compressed-image-transport` or by pulling the latest version of the docker image.
