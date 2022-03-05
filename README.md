@@ -267,3 +267,9 @@ You are required to demonstrate successful line following for the orange line. I
 
 **Debugging cone detection on the car**  
 The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. We have included a basic debug pipeline already in the template code. We also have included a node in the `parking_deploy.launch` file that compresses the image so it can streamed to your computer at a **much** higher rate. In `rqt_image_view` select `cone_debug_img_compressed/compressed` to view the compressed topic.
+
+**Fixing missing packages**
+If you get errors about certain packages not existing in Docker or that OpenCV doesn't have certain objects, methods, or attributes that our code skeleton assumes exists, run the following:
+1. `sudo apt install python-pip` (if you haven't already)
+2. `pip install imutils` (and any other packages that are missing)
+3. `pip install opencv-python==3.3.0.10 opencv-contrib-python==3.3.0.10`  (solution from https://stackoverflow.com/questions/37039224/attributeerror-module-object-has-no-attribute-xfeatures2d-python-opencv-2, fixes xfeatures2d attribute not existing)
