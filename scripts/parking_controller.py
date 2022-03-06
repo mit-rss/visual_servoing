@@ -53,7 +53,8 @@ class ParkingController():
             
 
         # PP
-        elif self.relative_x > self.parking_distance
+        elif self.relative_x > self.parking_distance and \
+            np.sqrt(self.relative_x**2 + self.relative_y**2) > self.parking_distance:
 
             # PP to that location
             waypoints = np.array([0, 0],[self.relative_x, self.relative_y]) ## Current location, Cone location
