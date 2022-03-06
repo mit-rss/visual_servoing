@@ -30,6 +30,7 @@ def image_print(img):
 def cd_sift_ransac(img, template):
 	"""
 	Implement the cone detection using SIFT + RANSAC algorithm
+	Notes: needs to be good contrast between the feature and background/good for rotation changes
 	Input:
 		img: np.3darray; the input image with a cone to be detected
 	Return:
@@ -87,12 +88,16 @@ def cd_sift_ransac(img, template):
 def cd_template_matching(img, template):
 	"""
 	Implement the cone detection using template matching algorithm
+	Notes: doesn't work well with scale/rotation changes, good for detecting edges
 	Input:
 		img: np.3darray; the input image with a cone to be detected
 	Return:
 		bbox: ((x1, y1), (x2, y2)); the bounding box of the cone, unit in px
 				(x1, y1) is the bottom left of the bbox and (x2, y2) is the top right of the bbox
 	"""
+	# methods = ['cv.TM_CCOEFF', 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR',
+    #         'cv.TM_CCORR_NORMED', 'cv.TM_SQDIFF', 'cv.TM_SQDIFF_NORMED']
+
 	template_canny = cv2.Canny(template, 50, 200)
 
 	# Perform Canny Edge detection on test image
@@ -105,6 +110,8 @@ def cd_template_matching(img, template):
 	# Keep track of best-fit match
 	best_match = None
 
+	best_score = 0
+
 	# Loop over different scales of image
 	for scale in np.linspace(1.5, .5, 50):
 		# Resize the image
@@ -114,13 +121,15 @@ def cd_template_matching(img, template):
 		if resized_template.shape[0] > img_height or resized_template.shape[1] > img_width:
 			continue
 
-		########## YOUR CODE STARTS HERE ##########
-		# Use OpenCV template matching functions to find the best match
-		# across template scales.
+		res = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCOEFF_NORMED)
+		res_score = np.max(res)
+		if res_score > best_score:
+			best_score = res_score
 
-		# Remember to resize the bounding box using the highest scoring scale
-		# x1,y1 pixel will be accurate, but x2,y2 needs to be correctly scaled
-		bounding_box = ((0,0),(0,0))
-		########### YOUR CODE ENDS HERE ###########
+			loc = np.where(res == res_score)
+			x_min, y_min = loc[0][0], loc[1][0]
+			#TODO: should we rescale w, h back? i think not
+			x_max, y_max = x_min + w, y_min + h
+			bounding_box = ((x_min, y_min), (x_max, y_max))
 
 	return bounding_box
