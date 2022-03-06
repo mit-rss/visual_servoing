@@ -17,66 +17,67 @@ class ParkingController():
     DRIVE_TOPIC = rospy.get_param("~drive_topic") # set in launch file; different for simulator vs racecar
     
     # PP Stuff
-    LIDAR_TO_BASE_AXEL = -0.15 # Temporary parameter
+    LIDAR_TO_BASE_AXEL = -0.35 # Temporary parameter
     LOOKAHEAD_DISTANCE = 0.5 # Should be smaller than parking distance
-    L = 0.25
+    L = 0.375
 
     # Controller Stuff
-    EPS = .1 # Buffer of "ok" locations
-    ANG_EPS = np.pi / 6 # In radians
+    EPS = 0.1 # Buffer of "ok" locations
+    BACKUP_BUFFER = 2 * L # 3 Point turn distance to work with
+    ANG_EPS = np.pi / 12 # In radians
+
+    PARK_DIST = .75 # meters; try playing with this number!
+    VEL = 1
 
     def __init__(self):
 
         rospy.Subscriber("/relative_cone", ConeLocation, self.relative_cone_callback)
         self.drive_pub = rospy.Publisher(self.DRIVE_TOPIC, AckermannDriveStamped, queue_size=10)
         self.error_pub = rospy.Publisher("/parking_error", ParkingError, queue_size=10)
-
-        self.parking_distance = .75 # meters; try playing with this number!
-        self.veloity = 1
+        
         self.relative_x = 0
         self.relative_y = 0
+        self.backward = False
+
 
     def relative_cone_callback(self, msg):
         self.relative_x = msg.x_pos
         self.relative_y = msg.y_pos
-        drive_cmd = AckermannDriveStamped()
-        msg.header.stamp = rospy.Time.now()
-        msg.header.frame_id = "base_link"
-
+        
         # Are we here
-        if abs(self.relative_x - .75) <= self.EPS and abs(self.relative_y - .75) <= self.EPS \
+        if abs(self.relative_x - self.PARK_DIST) <= self.EPS and abs(self.relative_y - self.PARK_DIST) <= self.EPS \
             and abs(np.tan(self.relative_y / self.relative_x)) <= self.ANG_EPS:
             
             ## DONE
             eta = 0
             vel = 0
-            
 
-        # PP
-        elif self.relative_x > self.parking_distance and \
-            np.sqrt(self.relative_x**2 + self.relative_y**2) > self.parking_distance:
+        else:
 
-            # PP to that location
-            waypoints = np.array([0, 0],[self.relative_x, self.relative_y]) ## Current location, Cone location
-            eta, vel = purepursuit(self.LOOKAHEAD_DISTANCE, self.L, self.velocity, 0, 0, \
+            ## Do we need to define a line and stick with it, or can we re-define every timestep?
+
+            waypoints = np.array([self.LIDAR_TO_BASE_AXEL, 0], \
+                [self.LIDAR_TO_BASE_AXEL + self.relative_x, self.relative_y])
+
+            eta, vel = purepursuit(self.LOOKAHEAD_DISTANCE, self.L, self.VEL, 0, 0, \
                 self.LIDAR_TO_BASE_AXEL, waypoints)
-
-        else: # Backup control logic (## Room to make this interesting -- could derive backwards PP)
             
-            # # Bang-bang backwards 
-            # if self.relative_y > 0
-            #     eta = -.025 # Some eta nominal
-            # else:
-            #     seta = 0.025
+            # Backward PP if we are close
+            if (self.relative_x**2 + self.relative_y**2) < self.PARK_DIST:
+                self.backward = True
 
-            eta = 0
+            # Forward PP if we are far
+            if (self.relative_x**2 + self.relative_y**2) > self.PARK_DIST + self.BACKUP_BUFFER:
+                self.backward = False
 
-            vel = -1 * self.velocity
-
-        msg.drive.steering_angle = eta
-        msg.drive.speed = vel
-        self.drive_pub.publish(drive_cmd)
+            # Reverse PP
+            if self.backward:
+                eta = -1 * eta
+                vel = -1 * vel
+                
+        self.send_drive(eta, vel)
         self.error_publisher()
+
 
     def error_publisher(self):
         """
@@ -90,6 +91,20 @@ class ParkingController():
         error_msg.distance_error = np.sqrt(self.relative_x**2 + self.relative_y**2)
         
         self.error_pub.publish(error_msg)
+
+
+    def send_drive(self, eta, vel):
+        """
+        Helper function
+        Sends AckermannDrive msg w/ eta, vel values
+        """
+        msg = AckermannDriveStamped()
+        msg.header.stamp = rospy.Time.now()
+        msg.header.frame_id = "base_link"
+        msg.drive.steering_angle = eta
+        msg.drive.speed = vel
+        self.drive_pub.publish(drive_cmd)
+
 
 if __name__ == '__main__':
     try:
