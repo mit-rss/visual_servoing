@@ -5,7 +5,7 @@ import numpy as np
 
 from visual_servoing.msg import ConeLocation, ParkingError
 from ackermann_msgs.msg import AckermannDriveStamped
-from purepursuit.py import *
+from purepursuit import *
 
 class ParkingController():
     """
@@ -14,25 +14,24 @@ class ParkingController():
     Can be used in the simulator and on the real robot.
     """
 
-    DRIVE_TOPIC = rospy.get_param("~drive_topic") # set in launch file; different for simulator vs racecar
-    
     # PP Stuff
     LIDAR_TO_BASE_AXEL = -0.35 # Temporary parameter
     LOOKAHEAD_DISTANCE = 0.5 # Should be smaller than parking distance
     L = 0.375
 
     # Controller Stuff
-    EPS = 0.1 # Buffer of "ok" locations
+    EPS = 0.2 # Buffer of "ok" locations
     BACKUP_BUFFER = 2 * L # 3 Point turn distance to work with
-    ANG_EPS = np.pi / 12 # In radians
+    ANG_EPS = np.pi / 18 # In radians
 
     PARK_DIST = .75 # meters; try playing with this number!
     VEL = 1
 
     def __init__(self):
 
+        DRIVE_TOPIC = rospy.get_param("~drive_topic")    
         rospy.Subscriber("/relative_cone", ConeLocation, self.relative_cone_callback)
-        self.drive_pub = rospy.Publisher(self.DRIVE_TOPIC, AckermannDriveStamped, queue_size=10)
+        self.drive_pub = rospy.Publisher(DRIVE_TOPIC, AckermannDriveStamped, queue_size=10)
         self.error_pub = rospy.Publisher("/parking_error", ParkingError, queue_size=10)
         
         self.relative_x = 0
@@ -45,8 +44,7 @@ class ParkingController():
         self.relative_y = msg.y_pos
         
         # Are we here
-        if abs(self.relative_x - self.PARK_DIST) <= self.EPS and abs(self.relative_y - self.PARK_DIST) <= self.EPS \
-            and abs(np.tan(self.relative_y / self.relative_x)) <= self.ANG_EPS:
+        if abs(np.sqrt(self.relative_x**2 + self.relative_y**2) - self.PARK_DIST) <= self.EPS and abs(np.arctan(self.relative_y / self.relative_x)) <= self.ANG_EPS:
             
             ## DONE
             eta = 0
@@ -56,18 +54,18 @@ class ParkingController():
 
             ## Do we need to define a line and stick with it, or can we re-define every timestep?
 
-            waypoints = np.array([self.LIDAR_TO_BASE_AXEL, 0], \
-                [self.LIDAR_TO_BASE_AXEL + self.relative_x, self.relative_y])
+            waypoints = np.array(([-self.LIDAR_TO_BASE_AXEL, 0], \
+                [-self.LIDAR_TO_BASE_AXEL + self.relative_x, self.relative_y]))
 
             eta, vel = purepursuit(self.LOOKAHEAD_DISTANCE, self.L, self.VEL, 0, 0, \
                 self.LIDAR_TO_BASE_AXEL, waypoints)
             
             # Backward PP if we are close
-            if (self.relative_x**2 + self.relative_y**2) < self.PARK_DIST:
+            if np.sqrt(self.relative_x**2 + self.relative_y**2) < self.PARK_DIST - self.EPS:
                 self.backward = True
 
             # Forward PP if we are far
-            if (self.relative_x**2 + self.relative_y**2) > self.PARK_DIST + self.BACKUP_BUFFER:
+            if np.sqrt(self.relative_x**2 + self.relative_y**2) > self.PARK_DIST + self.EPS:
                 self.backward = False
 
             # Reverse PP
@@ -103,7 +101,7 @@ class ParkingController():
         msg.header.frame_id = "base_link"
         msg.drive.steering_angle = eta
         msg.drive.speed = vel
-        self.drive_pub.publish(drive_cmd)
+        self.drive_pub.publish(msg)
 
 
 if __name__ == '__main__':
