@@ -51,27 +51,15 @@ def cd_color_segmentation(img, template=None, img_path=None):
 	light_orange = (1, 190, 200)
 	dark_orange = (25, 255, 255)
 
-	# light_orange = (18, 190, 200)
-	# dark_orange = (55, 255, 255)
-
-	#57.7500, 96.3855, 97.6471
-	#f7f40b
-	#59, 94, 97
-	#49, 100, 100
-	#45, 100, 100
-	#34, 100, 100
-
-	#yellow: 62, 255, 255
-
 	mask = cv2.inRange(img_hsv, light_orange, dark_orange)
 	result = cv2.bitwise_and(img_rgb, img_rgb, mask=mask)
 
-	result= cv2.GaussianBlur(result, (7,7), 0)
+	result= cv2.GaussianBlur(result, (7,7), 0) #helps with getting bottom edges of the cone
 
+	## IN PROGRESS: TRYING TO WORK WITH CONTOURS ##
 	# color_cone_x, color_cone_y, _ = np.nonzero(result)
-	# color_bounding_box = ((np.min(color_cone_y), np.min(color_cone_x)), (np.max(color_cone_y), np.max(color_cone_x))) #np.max(cone_y)))
-	
-	
+	# color_bounding_box = ((np.min(color_coney), np.min(color_cone_x)), (np.max(color_cone_y), np.max(color_cone_x))) #np.max(cone_y)))
+
 	# img_bb = cv2.rectangle(img_rgb, bounding_box[0], bounding_box[1], (255,0,0), 2)
 
 	# im_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -79,8 +67,8 @@ def cd_color_segmentation(img, template=None, img_path=None):
 	# contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 
-	cone_x, cone_y, _ = np.nonzero(result)
-	bounding_box = ((np.min(cone_y), np.min(cone_x)), (np.max(cone_y), np.max(cone_x))) #np.max(cone_y)))
+	color_cone_x, color_cone_y, _ = np.nonzero(result)
+	bounding_box = ((np.min(color_cone_y), np.min(color_cone_x)), (np.max(color_cone_y), np.max(color_cone_x)))
 	img_bb = cv2.rectangle(img_rgb, bounding_box[0], bounding_box[1], (255,0,0), 2)
 
 
