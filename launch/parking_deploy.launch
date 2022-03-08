@@ -7,6 +7,7 @@
 
   <node pkg="visual_servoing" name="parking_controller" type="parking_controller.py" output="screen">
   	<param name="drive_topic" value="/vesc/ackermann_cmd_mux/input/navigation" />
+    <rosparam command="load" file="$(find visual_servoing)/config/parking_params.yaml"/>
   </node>
 
   <node pkg="visual_servoing" name="cone_detector" type="cone_detector.py" output="screen">

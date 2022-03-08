@@ -2,6 +2,7 @@
   <!-- Launch the parking controller in simulation. Launches controller node, and interactive marker node -->
   <node pkg="visual_servoing" name="parking_controller" type="parking_controller.py" output="screen">
   	<param name="drive_topic" value="/drive" />
+  	<rosparam command="load" file="$(find visual_servoing)/config/parking_params.yaml"/>
   </node>
 
   <node pkg="visual_servoing" name="cone_sim_marker" type="cone_sim_marker.py" output="screen">

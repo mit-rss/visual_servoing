@@ -14,18 +14,18 @@ class ParkingController():
     Can be used in the simulator and on the real robot.
     """
 
+    PARK_DIST = rospy.get_param("parking_controller/parking_distance") # meters; try playing with this number!
+    VEL = rospy.get_param("parking_controller/velocity")  
+
     # PP Stuff
     LIDAR_TO_BASE_AXEL = -0.35 # Temporary parameter
-    LOOKAHEAD_DISTANCE = 0.5 # Should be smaller than parking distance
+    LOOKAHEAD_DISTANCE = PARK_DIST / 1.5 # Should be smaller than parking distance
     L = 0.375
 
     # Controller Stuff
-    EPS = 0.2 # Buffer of "ok" locations
-    BACKUP_BUFFER = 2 * L # 3 Point turn distance to work with
-    ANG_EPS = np.pi / 18 # In radians
-
-    PARK_DIST = .75 # meters; try playing with this number!
-    VEL = 1
+    GOOD_EPS = rospy.get_param("parking_controller/goal_range")
+    PARK_TOL = rospy.get_param("parking_controller/y_tolerance")  
+    ANG_EPS = abs(np.arctan(PARK_TOL / PARK_DIST))
 
     def __init__(self):
 
@@ -44,7 +44,7 @@ class ParkingController():
         self.relative_y = msg.y_pos
         
         # Are we here
-        if abs(np.sqrt(self.relative_x**2 + self.relative_y**2) - self.PARK_DIST) <= self.EPS and abs(np.arctan(self.relative_y / self.relative_x)) <= self.ANG_EPS:
+        if abs(self.distance() - self.PARK_DIST) <= self.GOOD_EPS and abs(self.angle()) <= self.ANG_EPS:
             
             ## DONE
             eta = 0
@@ -54,18 +54,18 @@ class ParkingController():
 
             ## Do we need to define a line and stick with it, or can we re-define every timestep?
 
-            waypoints = np.array(([-self.LIDAR_TO_BASE_AXEL, 0], \
-                [-self.LIDAR_TO_BASE_AXEL + self.relative_x, self.relative_y]))
+            waypoints = np.array(([self.LIDAR_TO_BASE_AXEL, 0], \
+                [self.LIDAR_TO_BASE_AXEL + self.relative_x, self.relative_y]))
 
-            eta, vel = purepursuit(self.LOOKAHEAD_DISTANCE, self.L, self.VEL, 0, 0, \
-                self.LIDAR_TO_BASE_AXEL, waypoints)
+            eta, vel = purepursuit(self.LOOKAHEAD_DISTANCE, self.L, self.VEL, 
+                self.LIDAR_TO_BASE_AXEL, 0, 0, waypoints)
             
             # Backward PP if we are close
-            if np.sqrt(self.relative_x**2 + self.relative_y**2) < self.PARK_DIST - self.EPS:
+            if self.distance() < self.PARK_DIST - self.GOOD_EPS:
                 self.backward = True
 
             # Forward PP if we are far
-            if np.sqrt(self.relative_x**2 + self.relative_y**2) > self.PARK_DIST + self.EPS:
+            if self.distance() > self.PARK_DIST + self.GOOD_EPS:
                 self.backward = False
 
             # Reverse PP
@@ -86,7 +86,7 @@ class ParkingController():
 
         error_msg.x_error = self.relative_x
         error_msg.y_error = self.relative_y
-        error_msg.distance_error = np.sqrt(self.relative_x**2 + self.relative_y**2)
+        error_msg.distance_error = self.distance()
         
         self.error_pub.publish(error_msg)
 
@@ -103,6 +103,11 @@ class ParkingController():
         msg.drive.speed = vel
         self.drive_pub.publish(msg)
 
+    def distance(self):
+        return np.sqrt(self.relative_x**2 + self.relative_y**2)
+
+    def angle(self):
+        return np.arctan(self.relative_y / self.relative_x)
 
 if __name__ == '__main__':
     try:
