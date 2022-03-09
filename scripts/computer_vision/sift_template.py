@@ -121,14 +121,21 @@ def cd_template_matching(img, template):
 		if resized_template.shape[0] > img_height or resized_template.shape[1] > img_width:
 			continue
 
-		res = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCOEFF_NORMED)
-		res_score = np.max(res)
-		if res_score > best_score:
-			best_score = res_score
+		# res = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCORR)
+		# res_score = np.max(res)
+		# if res_score > best_score:
+		# 	best_score = res_score
 
-			loc = np.where(res == res_score)
-			x_min, y_min = loc[0][0], loc[1][0]
-			#TODO: should we rescale w, h back? i think not
+		# 	loc = np.where(res == res_score)
+		# 	x_min, y_min = loc[0][0], loc[1][0]
+		# 	x_max, y_max = x_min + w, y_min + h
+		# 	bounding_box = ((x_min, y_min), (x_max, y_max))
+		res = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCORR)
+		min_v, max_v, min_pt, max_pt = cv2.minMaxLoc(res)
+		if max_v > best_score:
+			best_score = max_v
+
+			x_min, y_min = max_pt[0], max_pt[1]
 			x_max, y_max = x_min + w, y_min + h
 			bounding_box = ((x_min, y_min), (x_max, y_max))
 
