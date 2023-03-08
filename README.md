@@ -3,8 +3,8 @@
 
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Briefing (and link to slides on team site)   | Wednesday, March 9st at 1:00PM EST     |
-| [Team Member Assessment](https://forms.gle/q596G7Lucn7vzVov6)  | Friday, March 11th at 11:59PM EST |
+| Briefing (and link to slides on team site)   | Friday, March 17th at 1:00PM EST     |
+| [Team Member Assessment](https://forms.gle/Rcg1j11pwGrZT2up7)  | Monday, March 20th at 11:59PM EST |
 
 ## Introduction
 
@@ -29,9 +29,9 @@ Here’s how they fit together. Modules 1 and 2 cover object detection algorithm
 
 ## Submission and Grading
 
-Lab 4 will require a briefing, but **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](https://forms.gle/q596G7Lucn7vzVov6). See the deliverables chart at the top of this page for due dates and times.
+Lab 4 will require a briefing, but **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](https://forms.gle/Rcg1j11pwGrZT2up7). See the deliverables chart at the top of this page for due dates and times.
 
-You can view the rubric for the [briefing](https://docs.google.com/document/d/1NmqQP7n1omI9bIshF1Y-MP70gfDkgEeoMjpWv8hjfsY/edit?usp=sharing) for more details on specific grading criteria. You will receive a grade out of 10 points. Your final lab grade will also be out of 10 points, based on the following weights:
+You can view the rubric for the [briefing](https://docs.google.com/document/d/1dGBsSiT4_HnIwpF9Xghsw_nbOH6Ebm37/edit?usp=sharing&ouid=115663859078057501704&rtpof=true&sd=true) for more details on specific grading criteria. You will receive a grade out of 10 points. Your final lab grade will also be out of 10 points, based on the following weights:
 
 | Deliverable Grade | Weighting              |
 |---------------|----------------------------------------------------------------------------|
@@ -232,7 +232,7 @@ You can see how your modules will fit together in the following rqt graphs --
 - The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command.
 - _Simulated parking only requires completion of module 4 (control)_
 
-**Deployment** (after launching `parking_deployment.launch`):
+**Deployment** (after launching `parking_deploy.launch`):
 ![](media/deployment_graph.png)
 - Now, the cone is localized relative to the real car using your vision algorithm and homography transform.
 - The `/cone_detector` node reads frames from the Zed camera; copy over your color segmentation algorithm to extract a cone location in pixels. The pixel cone location is published to `/relative_cone_px`.
