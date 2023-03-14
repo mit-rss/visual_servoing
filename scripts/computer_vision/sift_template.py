@@ -68,10 +68,20 @@ def cd_sift_ransac(img, template):
 		pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
 
 		########## YOUR CODE STARTS HERE ##########
-
-		x_min = y_min = x_max = y_max = 0
+		x_min, y_min = pts[2][0]
+		x_max, y_max = pts[0][0]
+		
+		#one pass min max finder
+		for ind in range(len(dst_pts)):
+			#for each pts, if it matches the mask then include it in bounding box
+			if matchesMask[ind] == 1:
+				x_max = max(x_max, dst_pts[ind][0][0])
+				x_min = min(x_min, dst_pts[ind][0][0])
+				y_max = max(y_max, dst_pts[ind][0][1])
+				y_min = min(y_min, dst_pts[ind][0][1])
 
 		########### YOUR CODE ENDS HERE ###########
+		print(((x_min, y_min), (x_max, y_max)))
 
 		# Return bounding box
 		return ((x_min, y_min), (x_max, y_max))
@@ -115,10 +125,22 @@ def cd_template_matching(img, template):
 		########## YOUR CODE STARTS HERE ##########
 		# Use OpenCV template matching functions to find the best match
 		# across template scales.
+		results = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCOEFF)
+
+		#find best result
+		(minVal, maxVal, minLoc, maxLoc) = cv2.minMaxLoc(results)
+
+		if best_match == None or best_match[1] < maxVal:
+			best_match = (maxLoc, maxVal, (h,w))
+
 
 		# Remember to resize the bounding box using the highest scoring scale
 		# x1,y1 pixel will be accurate, but x2,y2 needs to be correctly scaled
-		bounding_box = ((0,0),(0,0))
+	#best match now stores the best spot for the bounding box
+	x_min, y_min = best_match[0]
+	x_max = x_min + best_match[2][1] #w is in x axis
+	y_max = y_min + best_match[2][0] #h is in y axis
+	#now scale and update max values
 		########### YOUR CODE ENDS HERE ###########
 
-	return bounding_box
+	return ((x_min, y_min), (x_max, y_max))
