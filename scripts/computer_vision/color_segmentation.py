@@ -41,3 +41,11 @@ def cd_color_segmentation(img, template):
 
 	# Return bounding box
 	return bounding_box
+
+
+# TODO: Remove this after testing
+if __name__ == "__main__":
+	test1 = "./test_images_cone/test1.jpg"
+	img = cv2.imread(test1)
+	print("image shape: " + str(img.shape))
+	image_print(img)
