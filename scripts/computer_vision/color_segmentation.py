@@ -42,10 +42,10 @@ def cd_color_segmentation(img, template):
 	mask = cv2.inRange(hsv_img, lower_orange, upper_orange)
 
 	result = cv2.bitwise_and(img, img, mask=mask)
-	lowest_x = math.inf
-	lowest_y = math.inf
-	highest_x = -math.inf
-	highest_y = -math.inf
+	lowest_x = float('inf')
+	lowest_y = float('inf')
+	highest_x = -float('inf')
+	highest_y = -float('inf')
 	for i, row in enumerate(result):
 		# print(row)
 		# get the pixel values by iterating
