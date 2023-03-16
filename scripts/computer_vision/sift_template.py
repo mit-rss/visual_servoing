@@ -30,6 +30,7 @@ def image_print(img):
 def cd_sift_ransac(img, template):
 	"""
 	Implement the cone detection using SIFT + RANSAC algorithm
+	Notes: needs to be good contrast between the feature and background/good for rotation changes
 	Input:
 		img: np.3darray; the input image with a cone to be detected
 	Return:
@@ -67,12 +68,14 @@ def cd_sift_ransac(img, template):
 		h, w = template.shape
 		pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
 
-		########## YOUR CODE STARTS HERE ##########
-
-		x_min = y_min = x_max = y_max = 0
-
-		########### YOUR CODE ENDS HERE ###########
-
+		transformed_pts = cv2.perspectiveTransform(pts, M)
+		box = [np.int32(transformed_pts)]
+		x_s = [x[0][0] for x in box[0]]
+		y_s = [x[0][1] for x in box[0]]
+		x_min = min(x_s)
+		y_min = min(y_s)
+		x_max = max(x_s)
+		y_max = max(y_s)
 		# Return bounding box
 		return ((x_min, y_min), (x_max, y_max))
 	else:
@@ -85,12 +88,16 @@ def cd_sift_ransac(img, template):
 def cd_template_matching(img, template):
 	"""
 	Implement the cone detection using template matching algorithm
+	Notes: doesn't work well with scale/rotation changes, good for detecting edges
 	Input:
 		img: np.3darray; the input image with a cone to be detected
 	Return:
 		bbox: ((x1, y1), (x2, y2)); the bounding box of the cone, unit in px
 				(x1, y1) is the bottom left of the bbox and (x2, y2) is the top right of the bbox
 	"""
+	# methods = ['cv.TM_CCOEFF', 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR',
+    #         'cv.TM_CCORR_NORMED', 'cv.TM_SQDIFF', 'cv.TM_SQDIFF_NORMED']
+
 	template_canny = cv2.Canny(template, 50, 200)
 
 	# Perform Canny Edge detection on test image
@@ -103,6 +110,8 @@ def cd_template_matching(img, template):
 	# Keep track of best-fit match
 	best_match = None
 
+	best_score = 0
+
 	# Loop over different scales of image
 	for scale in np.linspace(1.5, .5, 50):
 		# Resize the image
@@ -112,13 +121,22 @@ def cd_template_matching(img, template):
 		if resized_template.shape[0] > img_height or resized_template.shape[1] > img_width:
 			continue
 
-		########## YOUR CODE STARTS HERE ##########
-		# Use OpenCV template matching functions to find the best match
-		# across template scales.
+		# res = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCORR)
+		# res_score = np.max(res)
+		# if res_score > best_score:
+		# 	best_score = res_score
 
-		# Remember to resize the bounding box using the highest scoring scale
-		# x1,y1 pixel will be accurate, but x2,y2 needs to be correctly scaled
-		bounding_box = ((0,0),(0,0))
-		########### YOUR CODE ENDS HERE ###########
+		# 	loc = np.where(res == res_score)
+		# 	x_min, y_min = loc[0][0], loc[1][0]
+		# 	x_max, y_max = x_min + w, y_min + h
+		# 	bounding_box = ((x_min, y_min), (x_max, y_max))
+		res = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCORR)
+		min_v, max_v, min_pt, max_pt = cv2.minMaxLoc(res)
+		if max_v > best_score:
+			best_score = max_v
+
+			x_min, y_min = max_pt[0], max_pt[1]
+			x_max, y_max = x_min + w, y_min + h
+			bounding_box = ((x_min, y_min), (x_max, y_max))
 
 	return bounding_box
