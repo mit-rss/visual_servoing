@@ -2,3 +2,4 @@
 .idea*
 *.DS_Store
 scripts/computer_vision/.DS_Store
+*.pyc

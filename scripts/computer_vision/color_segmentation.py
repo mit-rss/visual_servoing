@@ -23,7 +23,9 @@ def image_print(img):
 	"""
 	cv2.imshow("image", img)
 	cv2.waitKey(0)
-	cv2.destroyAllWindows()
+	# cv2.destroyAllWindows()
+
+counter = 0
 
 def cd_color_segmentation(img, template):
 	"""
@@ -35,11 +37,44 @@ def cd_color_segmentation(img, template):
 		bbox: ((x1, y1), (x2, y2)); the bounding box of the cone, unit in px
 				(x1, y1) is the top left of the bbox and (x2, y2) is the bottom right of the bbox
 	"""
+	global counter
 	########## YOUR CODE STARTS HERE ##########
-	lower_orange = np.array([5, 220, 220])
-	upper_orange = np.array([20, 255, 255])
-	hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+	# lower_orange = np.array([5, 220, 220])
+	# upper_orange = np.array([20, 255, 255])
+	# lower_orange = np.array([5, 220, 220])
+	# upper_orange = np.array([50, 255, 255])
+	# lower_orange = np.array([5, 220, 220])
+	# upper_orange = np.array([75, 255, 255])
+	# lower_orange = np.array([5, 220, 170])
+	# upper_orange = np.array([50, 255, 255])
+	# dilation
+	# lower_orange = np.array([5, 235, 235])
+	# upper_orange = np.array([20, 255, 255])
+	# dilation on img
+	lower_orange = np.array([5, 220, 180])
+	upper_orange = np.array([30, 255, 255])
+
+	# NOTE: dilation on hsv
+	# hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+	# print("HSV_IMAGE Shape: " + str(hsv_img.shape))
+	# print("ORIGINAL_IMAGE Shape: " + str(img.shape))
+	# kernel = np.ones((2, 2), np.uint8)
+	# img_dilation = cv2.dilate(hsv_img, kernel, iterations=1)
+
+	# NOTE: dilation on img
+	kernel = np.ones((3, 3), np.uint8)
+	img_dilation = cv2.dilate(img, kernel, iterations=2)
+	hsv_img = cv2.cvtColor(img_dilation, cv2.COLOR_BGR2HSV)
+
+	# NOTE: erosion + dilation on hsv
+	# hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+	# kernel = np.ones((4, 4), np.uint8)
+	# img_erosion = cv2.erode(hsv_img, kernel, iterations=2)
+	# img_dilation = cv2.dilate(img_erosion, kernel, iterations=3)
+
 	mask = cv2.inRange(hsv_img, lower_orange, upper_orange)
+	# mask = cv2.inRange(img_dilation, lower_orange, upper_orange)
+	# mask = cv2.inRange(hsv_img, lower_orange, upper_orange)
 
 	result = cv2.bitwise_and(img, img, mask=mask)
 	lowest_x = float('inf')
@@ -65,7 +100,42 @@ def cd_color_segmentation(img, template):
 				if j > highest_y:
 					highest_y = j
 
-	bounding_box = ((lowest_x, lowest_y), (highest_x, highest_y))
+	# TODO: Remove testing code
+	image_print(img)
+	image_print(hsv_img)
+	# image_print(img_erosion)
+	image_print(img_dilation)
+	image_print(result)
+	result[lowest_x][lowest_y] = [255, 255, 255] # Top Left
+	result[highest_x][highest_y] = [255, 255, 255] # Bottom Right
+	matrix_bounding_box = ((lowest_x, lowest_y), (highest_x, highest_y))
+	bounding_box = ((lowest_y, lowest_x), (highest_y, highest_x))
+	# print("Dimensions: " + +)
+	print("Matrix Bounding Box counter=" + str(counter) + ", bounding_box=" + str(matrix_bounding_box))
+	print("Answer Bounding Box counter=" + str(counter) + ", bounding_box=" + str(bounding_box))
+	# print("HSV_IMAGE Shape: " + str(hsv_img.shape))
+	# print("RESULT_IMAGE Shape: " + str(result.shape))
+	image_print(result)
+	pixel_x = 0
+	pixel_y = 0
+	while pixel_x != -1:
+		print(hsv_img[pixel_x][pixel_y])
+		prev_val = result[pixel_x][pixel_y]
+		prev_x = pixel_x
+		prev_y = pixel_y
+		result[pixel_x][pixel_y] = [0, 0, 255]
+		# cv2.destroyAllWindows()
+		# cv2.imshow("image", result)
+		image_print(result)
+		print("Input x pixel (-1 to quit):")
+		pixel_x = int(input())
+		print("Input y pixel (-1 to quit):")
+		pixel_y = int(input())
+		cv2.destroyAllWindows()
+		result[prev_x][prev_y] = prev_val
+	cv2.destroyAllWindows()
+	counter += 1
+	# bounding_box = ((highest_x, highest_y), (lowest_x, lowest_y))
 
 	########### YOUR CODE ENDS HERE ###########
 
