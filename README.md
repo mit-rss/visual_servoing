@@ -64,19 +64,7 @@ When you wrote the parking controller (module 4), you published error messages. 
 
 ## Setup
 
-If you're using the docker image, pull the latest version. This will take a couple minutes so read through more of the lab while it's downloading.
-
-    cd racecar_docker
-    docker compose down
-    git stash
-    git pull
-    docker compose pull
-    docker compose up
-
-If you're using another setup you may need to install some additional packages:
-
-    sudo apt install python-pip ros-melodic-compressed-image-transport
-    sudo pip install imutils
+Before you begin, let's set up the ZED camera on the car. Please follow the instructions in the README [here](https://github.com/alany1/rss-hardware/tree/main/zed_settings). If you need, the `.conf` files are located there too. 
 
 ## Module 1: Cone Detection Via Color Segmentation <a name="module1"></a>
 In lecture we learned lots of different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
