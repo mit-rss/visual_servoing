@@ -30,14 +30,14 @@ Here’s how they fit together. Modules 1 and 2 cover object detection algorithm
 
 ## Submission and Grading
 
-Lab 4 will require a briefing and a report. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides and report to your github pages website, and submit a [team member assessment form](). See the deliverables chart at the top of this page for due dates and times.
+Lab 4 will require a briefing and **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](). See the deliverables chart at the top of this page for due dates and times.
 
-You can view the rubric for the [briefing](https://docs.google.com/document/d/1dGBsSiT4_HnIwpF9Xghsw_nbOH6Ebm37) and the [report](https://docs.google.com/document/d/1jBNWfzcvyJVGF9dx69imGzOkK_C6LvJl) for more details on specific grading criteria. You will receive a grade out of 10 points. Your final lab grade will also be out of 10 points, based on the following weights:
+You can view the rubric for the [briefing](https://docs.google.com/document/d/1dGBsSiT4_HnIwpF9Xghsw_nbOH6Ebm37) for more details on specific grading criteria. You will receive a grade out of 10 points. Your final lab grade will also be out of 10 points, based on the following weights:
 
 | Deliverable Grade | Weighting              |
 |---------------|----------------------------------------------------------------------------|
-| Briefing grade (out of 10)  | 50% |
-| Report grade (out of 10) | 50% |
+| Briefing grade (out of 10)  | 80% |
+| Technical Grade (satisfactory completion of all modules) | 20% |
 
 The elements you should include in your Lab 4 presentation include:
 - Explanation of vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
@@ -45,7 +45,7 @@ The elements you should include in your Lab 4 presentation include:
 - Demonstration of parking controller performance. Make sure you explain and justify the design choices you made in your controller. Hint: include error plots from **rqt plot**
 - Demonstration of the line-follower. Describe any adjustments you needed to make to your perception and control modules in order to follow lines. Hint: include error plots from **rqt plot**
 
-Please include video, screen shots, data visualizations, etc. in your presentation as evidence of these deliverables. A good report will make quantitative and qualitative evaluations of your results.
+Please include video, screen shots, data visualizations, etc. in your presentation as evidence of these deliverables. A good presentation will make quantitative and qualitative evaluations of your results.
 
 We provide you with some resources to help you present an effective analysis of your Lab 4 system:
 
