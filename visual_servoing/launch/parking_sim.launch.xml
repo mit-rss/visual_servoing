@@ -1,0 +1,9 @@
+<launch>
+  <!-- Launch the parking controller in simulation. Launches controller node, and interactive marker node -->
+  <node pkg="visual_servoing" name="parking_controller" exec="parking_controller" output="screen">
+  	<param name="drive_topic" value="/drive" />
+  </node>
+
+  <node pkg="visual_servoing" name="cone_sim_marker" exec="cone_sim_marker" output="screen">
+  </node>
+</launch>
