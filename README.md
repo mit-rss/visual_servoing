@@ -4,7 +4,6 @@
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
 | Briefing    | Wednesday, March 20th 3:00 - 5:00 PM EST     |
-| Lab Report | Friday, March 22nd at 11:59 PM EST |
 | [Team Member Assessment]() | Friday, March 22th at 11:59PM EST |
 
 ## Introduction
