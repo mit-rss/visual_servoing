@@ -47,7 +47,7 @@ The elements you should include in your Lab 4 presentation include:
 
 Please include video, screen shots, data visualizations, etc. in your presentation as evidence of these deliverables. A good report will make quantitative and qualitative evaluations of your results.
 
-Here are some resources to help you present an effective analysis of your Lab 4 system:
+We provide you with some resources to help you present an effective analysis of your Lab 4 system:
 
 ### Vision Analysis
 We've provided some code to test the Intersection over Union (IOU) scores of your vision algorithms on the three datasets provided. IOU is a measure of how accurate bounding boxes are, and is a choice metric for analysis of object detection algorithms. Go into **visual_servoing/computer_vision/**  and run:
@@ -57,7 +57,7 @@ We've provided some code to test the Intersection over Union (IOU) scores of you
 To test all three of your algorithms against our citgo, cone, and stata basement datasets respectively. Results will be outputted to .csv files in **scores/**. Some algorithms on some datasets won’t get any/good results. This is expected, and we would like to know why each works for what it does in your presentation.
 
 ### Controller Analysis
-When you wrote the parking controller (module 4), you published error messages. Now it’s time to use **rqt plot** to generate some plots. Try running the following experiments:
+When you write the parking controller (module 4), you will publish provided error messages. Use **rqt plot** to generate some plots. Try running the following experiments:
 - Put a cone directly in front of the car, ~3-5 meters away. Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error over time, and be prepared to discuss.
 - Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
 
