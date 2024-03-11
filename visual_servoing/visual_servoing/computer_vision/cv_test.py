@@ -119,7 +119,7 @@ def test_all_algorithms(csv_file_path, template_file_path, output_file_path, swa
             scores = test_algorithm(
                 lookup_dict[label], csv_file_path, 
                 template_file_path, swap=swap)
-            data = [[label, img, score] for img, score in scores.iteritems()]
+            data = [[label, img, score] for img, score in scores.items()]
         except:
             data = []
 
@@ -134,7 +134,7 @@ def test_all_algorithms(csv_file_path, template_file_path, output_file_path, swa
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        print "Argument/s required"
+        print("Argument/s required")
     elif len(sys.argv) == 2:
         arg = sys.argv[1]
         if arg == "cone":
@@ -147,7 +147,7 @@ if __name__ == '__main__':
           scores = test_all_algorithms(citgo_csv_path,
               citgo_template_path, citgo_score_path)         
         else:
-            print "Argument not recognized"
+            print("Argument not recognized")
 
     elif len(sys.argv) == 3:
         scores = None
@@ -164,10 +164,10 @@ if __name__ == '__main__':
                 swap = True
             scores = test_algorithm(algo_dict[args[1]],data_dict[args[0]][0],data_dict[args[0]][1], swap=swap)
         else:
-            print "Argument/s not recognized"
+            print("Argument/s not recognized")
 
         if scores:
-            for (img, val) in scores.iteritems():
+            for (img, val) in scores.items():
                 print((img, val))
     else:
         print("too many arguments")

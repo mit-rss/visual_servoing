@@ -1,9 +1,0 @@
-<launch>
-  <!-- Launch the parking controller in simulation. Launches controller node, and interactive marker node -->
-  <node pkg="visual_servoing" name="parking_controller" type="parking_controller.py" output="screen">
-  	<param name="drive_topic" value="/drive" />
-  </node>
-
-  <node pkg="visual_servoing" name="cone_sim_marker" type="cone_sim_marker.py" output="screen">
-  </node>
-</launch>

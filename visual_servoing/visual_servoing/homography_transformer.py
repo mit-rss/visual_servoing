@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import rospy
+import rclpy
+from rclpy.node import Node
 import numpy as np
 
 import cv2
@@ -10,7 +11,7 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from ackermann_msgs.msg import AckermannDriveStamped
 from visualization_msgs.msg import Marker
-from visual_servoing.msg import ConeLocation, ConeLocationPixel
+from vs_msgs.msg import ConeLocation, ConeLocationPixel
 
 #The following collection of pixel locations and corresponding relative
 #ground plane locations are used to compute our homography matrix
@@ -40,16 +41,16 @@ PTS_GROUND_PLANE = [[-1, -1],
 METERS_PER_INCH = 0.0254
 
 
-class HomographyTransformer:
+class HomographyTransformer(Node):
     def __init__(self):
-        self.cone_px_sub = rospy.Subscriber("/relative_cone_px", ConeLocationPixel, self.cone_detection_callback)
-        self.cone_pub = rospy.Publisher("/relative_cone", ConeLocation, queue_size=10)
+        super().__init__("homography_transformer")
 
-        self.marker_pub = rospy.Publisher("/cone_marker",
-            Marker, queue_size=1)
+        self.cone_pub = self.create_publisher(ConeLocation, "/relative_cone", 10)
+        self.marker_pub = self.create_publisher(Marker, "/cone_marker", 1)
+        self.cone_px_sub = self.create_subscription(ConeLocationPixel, "/relative_cone_px", self.cone_detection_callback, 1)
 
         if not len(PTS_GROUND_PLANE) == len(PTS_IMAGE_PLANE):
-            rospy.logerr("ERROR: PTS_GROUND_PLANE and PTS_IMAGE_PLANE should be of same length")
+            rclpy.logerr("ERROR: PTS_GROUND_PLANE and PTS_IMAGE_PLANE should be of same length")
 
         #Initialize data into a homography matrix
 
@@ -62,6 +63,8 @@ class HomographyTransformer:
         np_pts_image = np.float32(np_pts_image[:, np.newaxis, :])
 
         self.h, err = cv2.findHomography(np_pts_image, np_pts_ground)
+
+        self.get_logger().info("Homography Transformer Initialized")
 
     def cone_detection_callback(self, msg):
         #Extract information from message
@@ -120,8 +123,11 @@ class HomographyTransformer:
         marker.pose.position.y = cone_y
         self.marker_pub.publish(marker)
 
+def main(args=None):
+    rclpy.init(args=args)
+    homography_transformer = HomographyTransformer()
+    rclpy.spin(homography_transformer)
+    rclpy.shutdown()
 
 if __name__ == "__main__":
-    rospy.init_node('homography_transformer')
-    homography_transformer = HomographyTransformer()
-    rospy.spin()
+    main()

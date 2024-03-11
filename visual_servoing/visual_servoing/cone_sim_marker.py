@@ -1,39 +1,40 @@
 #!/usr/bin/env python
 
-import rospy
+import rclpy
+from rclpy.node import Node
 import numpy as np
 
-import tf
-from tf.transformations import euler_from_quaternion
+import tf2_ros
+from tf_transformations import euler_from_quaternion
 
-from visual_servoing.msg import ConeLocation
+from vs_msgs.msg import ConeLocation
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import PointStamped
 
-class SimMarker():
+class SimMarker(Node):
     """
     Rosnode for handling simulated cone. Listens for clicked point
     in rviz and publishes a marker. Publishes position of cone
     relative to robot for Parking Controller to park in front of.
     """
     def __init__(self):
+        super().__init__("cone_sim_marker")
         # Subscribe to clicked point messages from rviz    
-        rospy.Subscriber("/clicked_point", 
-            PointStamped, self.clicked_callback)
+        self.create_subscription(PointStamped,
+            "/clicked_point", self.clicked_callback, 1)
+
         self.message_x = None
         self.message_y = None
         self.message_frame = "map"
 
-        self.cone_pub = rospy.Publisher("/relative_cone", 
-            ConeLocation,queue_size=1)
-        self.marker_pub = rospy.Publisher("/cone_marker",
-            Marker, queue_size=1)
-        self.tf_listener = tf.TransformListener()
-        self.rate = rospy.Rate(10) #10 hz
-        
-        while not rospy.is_shutdown():
-            self.publish_cone()
-            self.rate.sleep()
+        self.cone_pub = self.create_publisher(ConeLocation, "/relative_cone", 1)
+        self.marker_pub = self.create_publisher(Marker, "/cone_marker", 1)
+
+        self.tfBuffer = tf2_ros.Buffer()
+        self.tf_listener = tf2_ros.TransformListener(self.tfBuffer, self)
+        self.cone_pub_timer = self.create_timer(0.1, self.publish_cone)
+
+        self.get_logger().info("Cone Sim Marker Initialized")
 
     def publish_cone(self):
         """
@@ -41,12 +42,21 @@ class SimMarker():
         """
         # Find out most recent relative location of cone
         if self.message_x is None:
+            # print("no message")
             return
         try:
-            msg_frame_pos, msg_frame_quat = self.tf_listener.lookupTransform(
-                "base_link", self.message_frame, rospy.Time(0))
+            t = self.tfBuffer.lookup_transform(
+                "base_link", self.message_frame, rclpy.time.Time())
+
+            msg_frame_pos = t.transform.translation
+            msg_frame_quat = t.transform.rotation
+            msg_frame_quat = [msg_frame_quat.x, msg_frame_quat.y,
+                            msg_frame_quat.z, msg_frame_quat.w]
+            msg_frame_pos = [msg_frame_pos.x, msg_frame_pos.y, msg_frame_pos.z]
         except:
+            # print("no transform")
             return
+
         # Using relative transformations, convert cone in whatever frame rviz
         # was in to cone in base link (which is the control frame)
         (roll, pitch, yaw) = euler_from_quaternion(msg_frame_quat)
@@ -83,8 +93,15 @@ class SimMarker():
 
     def clicked_callback(self, msg):
         # Store clicked point in the map frame
-        msg_frame_pos, msg_frame_quat = self.tf_listener.lookupTransform(
-               self.message_frame, msg.header.frame_id, rospy.Time(0))
+        t = self.tfBuffer.lookup_transform(
+            self.message_frame, msg.header.frame_id, rclpy.time.Time())
+        
+        msg_frame_pos = t.transform.translation
+        msg_frame_quat = t.transform.rotation
+        msg_frame_quat = [msg_frame_quat.x, msg_frame_quat.y,
+                          msg_frame_quat.z, msg_frame_quat.w]
+        msg_frame_pos = [msg_frame_pos.x, msg_frame_pos.y, msg_frame_pos.z]
+        
         (roll, pitch, yaw) = euler_from_quaternion(msg_frame_quat)
 
         self.message_x = \
@@ -98,10 +115,11 @@ class SimMarker():
         # Draw a marker for visualization
         self.draw_marker()
 
+def main(args=None):
+    rclpy.init(args=args)
+    sim_marker = SimMarker()
+    rclpy.spin(sim_marker)
+    rclpy.shutdown()
+
 if __name__ == '__main__':
-    try:
-        rospy.init_node('SimMarker', anonymous=True)
-        SimMarker()
-        rospy.spin()
-    except rospy.ROSInterruptException:
-        pass
+    main()

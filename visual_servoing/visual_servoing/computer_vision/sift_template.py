@@ -1,7 +1,6 @@
 import cv2
 import imutils
 import numpy as np
-import pdb
 
 #################### X-Y CONVENTIONS #########################
 # 0,0  X  > > > > >
@@ -37,7 +36,7 @@ def cd_sift_ransac(img, template):
 				(x1, y1) is the bottom left of the bbox and (x2, y2) is the top right of the bbox
 	"""
 	# Minimum number of matching features
-	MIN_MATCH = 10
+	MIN_MATCH = 10 # Adjust this value as needed
 	# Create SIFT
 	sift = cv2.xfeatures2d.SIFT_create()
 
@@ -77,7 +76,7 @@ def cd_sift_ransac(img, template):
 		return ((x_min, y_min), (x_max, y_max))
 	else:
 
-		print "[SIFT] not enough matches; matches: ", len(good)
+		print(f"[SIFT] not enough matches; matches: ", len(good))
 
 		# Return bounding box of area 0 if no match found
 		return ((0,0), (0,0))
