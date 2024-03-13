@@ -60,8 +60,9 @@ def cd_color_segmentation(img, template):
 	x, y, w, h = cv2.boundingRect(biggest_contour)
 	bounding_box = ((x, y), (x + w, y + h))
 
-	# cv2.rectangle(img, bounding_box[0], bounding_box[1], (0, 255, 0), 2)
-	# cv2.imshow('Contours', img)
+	cv2.rectangle(img, bounding_box[0], bounding_box[1], (0, 255, 0), 2)
+	#cv2.imshow('Contours', img)
+	cv2.imwrite("debug.jpg", img) 
 
 
 	########### YOUR CODE ENDS HERE ###########
