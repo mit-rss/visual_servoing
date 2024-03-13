@@ -42,8 +42,8 @@ def cd_color_segmentation(img, template):
 	#orange_low = (0, 100, 100)
 	#orange_high = (18, 255, 255)	
 
-	orange_low = (0, 80, 70)
-	orange_high = (18, 255, 255)	
+	orange_low = (0, 120, 150)
+	orange_high = (20, 255, 255)	
 
 	mask = cv2.inRange(hsv_img, orange_low, orange_high)
 
@@ -56,14 +56,16 @@ def cd_color_segmentation(img, template):
 	# returns list of contours and hiearchy, retr ignores inside countours, approx is for compression
 	contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 	# should only be one if its just cone
-	biggest_contour = max(contours, key = cv2.contourArea)
-	x, y, w, h = cv2.boundingRect(biggest_contour)
-	bounding_box = ((x, y), (x + w, y + h))
+	if len(contours) != 0:
+		biggest_contour = max(contours, key = cv2.contourArea)
+		x, y, w, h = cv2.boundingRect(biggest_contour)
+		bounding_box = ((x, y), (x + w, y + h))
+	else:
+		print("Cone not found.")
 
 	cv2.rectangle(img, bounding_box[0], bounding_box[1], (0, 255, 0), 2)
 	#cv2.imshow('Contours', img)
 	cv2.imwrite("debug.jpg", img) 
-
 
 	########### YOUR CODE ENDS HERE ###########
 
