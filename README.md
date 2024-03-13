@@ -184,7 +184,7 @@ The distance and angle don’t act independently so consider carefully how you s
 
 Whenever possible, we want to develop controllers in simulation before deploying on real (breakable) hardware. That is what we’ll do here. After you download (and make) the lab 4 ros package, fire up your **simulator**, and **rviz**.
 
-Now run `ros2 launch visual_servoing parking_sim.launch`
+Now run `ros2 launch visual_servoing parking_sim.launch.xml`
 
 In rviz, press **publish point**(top options bar) and watch our representation of a cone appear.
 Notes
