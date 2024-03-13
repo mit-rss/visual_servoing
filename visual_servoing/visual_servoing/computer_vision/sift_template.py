@@ -1,7 +1,6 @@
 import cv2
 import imutils
 import numpy as np
-import time
 
 #################### X-Y CONVENTIONS #########################
 # 0,0  X  > > > > >
@@ -40,8 +39,6 @@ def cd_sift_ransac(img, template, debug=False):
 		bbox: ((x1, y1), (x2, y2)); the bounding box of the cone, unit in px
 				(x1, y1) is the bottom left of the bbox and (x2, y2) is the top right of the bbox
 	"""
-	start_time = time.time()
-
 	# Minimum number of matching features
 	MIN_MATCH = 10 # Adjust this value as needed
 	# Create SIFT
@@ -57,28 +54,25 @@ def cd_sift_ransac(img, template, debug=False):
 
 	# Find and store good matches
 	good = []
-	try:
-		for m,n in matches:
-			if m.distance < 0.75*n.distance:
-				good.append(m)
-	except: 
-		print("no matches.")
-		return 0, 0
+	for m,n in matches:
+		if m.distance < 0.75*n.distance:
+			good.append(m)
 
 	# If enough good matches, find bounding box
-	if len(good) >= MIN_MATCH:
+	if len(good) > MIN_MATCH:
 		src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
 		dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
 
 		# M is homography matrix transforming from template to image
 		M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
-
 		matchesMask = mask.ravel().tolist()
 
 		h, w, _ = template.shape
 
 		# Location of bbox pts in template image
 		pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
+
+		print(M)
 
 		########## YOUR CODE STARTS HERE ##########
 		transformed_pts = cv2.perspectiveTransform(pts, M)
@@ -93,18 +87,16 @@ def cd_sift_ransac(img, template, debug=False):
 		if debug:
 			image_print(img, bbox1=(x_min, y_min), bbox2=(x_max, y_max))
 
-
-		runtime = time.time() - start_time
 		########### YOUR CODE ENDS HERE ###########
 
 		# Return bounding box
-		return ((x_min, y_min), (x_max, y_max)), runtime
+		return ((x_min, y_min), (x_max, y_max))
 	else:
 
-		print(f"[SIFT] not enough good matches; matches: {len(good)}")
+		print(f"[SIFT] not enough matches; matches: {len(good)}")
 
 		# Return bounding box of area 0 if no match found
-		return ((0,0), (0,0)), 0
+		return ((0,0), (0,0))
 
 def cd_template_matching(img, template, debug=False):
 	"""
@@ -115,25 +107,24 @@ def cd_template_matching(img, template, debug=False):
 		bbox: ((x1, y1), (x2, y2)); the bounding box of the cone, unit in px
 				(x1, y1) is the bottom left of the bbox and (x2, y2) is the top right of the bbox
 	"""
-	start_time = time.time()
 	template_canny = cv2.Canny(template, 50, 200)
 
 	# Perform Canny Edge detection on test image
 	grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 	img_canny = cv2.Canny(grey_img, 50, 200)
 
-	# Get dimensions of fixed image
+	# Get dimensions of template
 	(img_height, img_width) = img_canny.shape[:2]
 
 	# Keep track of best-fit match
 	best_match = None
 
-	# Loop over different scales of template
-	for scale in np.linspace(1.5, .5, 50):
-		# Resize the template
-		resized_template = imutils.resize(template_canny, width = int(template_canny.shape[1] * scale))
+	# Loop over different scales of image
+	for scale in np.linspace(1.5, .5, 500):
+		# Resize the image
+		resized_template = imutils.resize(template_canny, width = int(template_canny.shape[1]))
 		h, w = resized_template.shape[:2]
-		# Check that test image is not now smaller than template image
+		# Check to see if test image is now smaller than template image
 		if resized_template.shape[0] > img_height or resized_template.shape[1] > img_width:
 			continue
 
@@ -162,47 +153,15 @@ def cd_template_matching(img, template, debug=False):
 
 	bbox = ((startX, startY), (endX, endY))
 
-	runtime = time.time() - start_time
-
 	if debug:
 		image_print(template, winname="Template", destroy=False)
 		image_print(img, bbox1=bbox[0], bbox2=bbox[1])
 	########### YOUR CODE ENDS HERE ###########
 
-	return bbox, runtime
-	# return bbox
+	return bbox
 
 # pic_num = np.random.randint(1, 15)
 # cd_sift_ransac(cv2.imread(f"test_images_citgo/citgo{pic_num}.jpeg"), cv2.imread("test_images_citgo/citgo_template.png"), debug=True)
 
-# pic_num = np.random.randint(1, 10)
-# bbox, runtime = cd_template_matching(cv2.imread("test_images_localization/basement_fixed.png"), cv2.imread(f"test_images_localization/map_scrap{i+1}.png"), debug=True)
-
-
-### CONE RUNTIME TEST
-# total_runtime = 0
-# for i in range(20):
-# 	bbox, runtime = cd_sift_ransac(cv2.imread(f"test_images_cone/test{i+1}.jpg"), cv2.imread("test_images_cone/cone_template.png"), debug=False)
-# 	total_runtime += runtime
-# print(total_runtime / 20)
-
-### CITGO RUNTIME TEST
-# total_runtime = 0
-# for i in range(14):
-# 	bbox, runtime = cd_sift_ransac(cv2.imread(f"test_images_citgo/citgo{i+1}.jpeg"), cv2.imread("test_images_citgo/citgo_template.png"), debug=False)
-# 	total_runtime += runtime
-# print(total_runtime / 11)
-
-### MAP RUNTIME TEST
-total_runtime = 0
-for i in range(9):
-	bbox, runtime = cd_sift_ransac(cv2.imread(f"test_images_localization/map_scrap{i+1}.png"), cv2.imread("test_images_localization/basement_fixed.png"), debug=False)
-	total_runtime += runtime
-print(total_runtime / 9)
-
-### CONE RUNTIME TEST
-# total_runtime = 0
-# for i in range(20):
-# 	bbox, runtime = cd_template_matching(cv2.imread(f"test_images_cone/test{i+1}.jpg"), cv2.imread("test_images_cone/cone_template.png"), debug=False)
-# 	total_runtime += runtime
-# print(total_runtime / 20)
+pic_num = np.random.randint(1, 10)
+cd_template_matching(cv2.imread("test_images_localization/basement_fixed.png"), cv2.imread(f"test_images_localization/map_scrap{pic_num}.png"), debug=True)
