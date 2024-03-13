@@ -116,7 +116,7 @@ def cd_template_matching(img, template):
 		# across template scales.
 
 		#Apply template Matching (best seem like CCORR_NORMED or CCOEFF_NORMED)
-		res = cv2.matchTemplate(img_canny,resized_template,cv2.TM_CCOEFF_NORMED)
+		res = cv2.matchTemplate(img_canny,resized_template,cv2.TM_CCORR_NORMED)
 		min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
 		if max_val > best_match:
