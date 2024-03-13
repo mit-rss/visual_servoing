@@ -39,8 +39,11 @@ def cd_color_segmentation(img, template):
 
 	# orange color bounds in HSV
 	# Hue has values from 0 to 180, Saturation and Value from 0 to 255
-	orange_low = (0, 100, 100)
-	orange_high = (20, 255, 255)	
+	#orange_low = (0, 100, 100)
+	#orange_high = (18, 255, 255)	
+
+	orange_low = (0, 80, 70)
+	orange_high = (18, 255, 255)	
 
 	mask = cv2.inRange(hsv_img, orange_low, orange_high)
 
