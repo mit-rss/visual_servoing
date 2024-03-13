@@ -100,11 +100,11 @@ def cd_template_matching(img, template):
 	(img_height, img_width) = img_canny.shape[:2]
 
 	# Keep track of best-fit match
-	best_match = None
-
+	best_match = -float("inf")
+	bounding_box = ((0,0),(0,0))
 	# Loop over different scales of image
 	for scale in np.linspace(1.5, .5, 50):
-		# Resize the image
+		# Resize the template image
 		resized_template = imutils.resize(template_canny, width = int(template_canny.shape[1] * scale))
 		(h,w) = resized_template.shape[:2]
 		# Check to see if test image is now smaller than template image
@@ -115,9 +115,24 @@ def cd_template_matching(img, template):
 		# Use OpenCV template matching functions to find the best match
 		# across template scales.
 
+		#Apply template Matching (best seem like CCORR_NORMED or CCOEFF_NORMED)
+		res = cv2.matchTemplate(img_canny,resized_template,cv2.TM_CCOEFF_NORMED)
+		min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+
+		if max_val > best_match:
+			best_match = max_val
+			x1,y1 = max_loc
+			x2 = x1 + int(w/scale)
+			y2 = y1 + int(h/scale)
+			bounding_box = ((x1,y1),(x2,y2))
+		
+
+
+
+
 		# Remember to resize the bounding box using the highest scoring scale
 		# x1,y1 pixel will be accurate, but x2,y2 needs to be correctly scaled
-		bounding_box = ((0,0),(0,0))
+		#bounding_box = ((0,0),(0,0))
 		########### YOUR CODE ENDS HERE ###########
 
 	return bounding_box
