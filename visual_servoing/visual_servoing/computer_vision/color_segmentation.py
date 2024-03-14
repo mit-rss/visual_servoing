@@ -36,6 +36,7 @@ def cd_color_segmentation(img, template):
 
 	bounding_box = ((0,0),(0,0))
 	hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+	# cv2.imwrite("hsv.jpg", hsv_img) 
 
 	# orange color bounds in HSV
 	# Hue has values from 0 to 180, Saturation and Value from 0 to 255
@@ -46,12 +47,15 @@ def cd_color_segmentation(img, template):
 	orange_high = (20, 255, 255)	
 
 	mask = cv2.inRange(hsv_img, orange_low, orange_high)
+	# cv2.imwrite("mask.jpg", mask) 
 
 	# erode and dilate to get rid of noise
 	# structuring element is what erosion looks at - if everything inside is orange, then it will be kept
 	kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
 	mask = cv2.erode(mask, kernel, iterations=1)
-	mask = cv2.dilate(mask, kernel, iterations=1)
+	# cv2.imwrite("erode.jpg", mask) 
+	mask = cv2.dilate(mask, kernel, iterations=2)
+	# cv2.imwrite("dilate.jpg", mask) 
 
 	# returns list of contours and hiearchy, retr ignores inside countours, approx is for compression
 	contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -63,9 +67,9 @@ def cd_color_segmentation(img, template):
 	else:
 		print("Cone not found.")
 
-	cv2.rectangle(img, bounding_box[0], bounding_box[1], (0, 255, 0), 2)
-	#cv2.imshow('Contours', img)
-	cv2.imwrite("debug.jpg", img) 
+	# cv2.rectangle(img, bounding_box[0], bounding_box[1], (0, 0, 255), 2)
+	# cv2.imshow('Contours', img)
+	# cv2.imwrite("debug.jpg", img) 
 
 	########### YOUR CODE ENDS HERE ###########
 
