@@ -186,7 +186,7 @@ Whenever possible, we want to develop controllers in simulation before deploying
 
 First, run racecar simulator:
 
-`ros2 launch racecar_simulate simulate.launch.xml`.
+`ros2 launch racecar_simulator simulate.launch.xml`.
 
 Now run `ros2 launch visual_servoing parking_sim.launch.xml`
 
