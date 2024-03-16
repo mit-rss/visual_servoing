@@ -52,21 +52,35 @@ class ParkingController(Node):
         theta = np.tan(y/x)
         d = (x**2+y**2)**.5
 
-        critical_radius = (0.85**2+self.parking_distance**2)**0.5
+        min_turning_radius = self.L/np.tan(0.34)
+        min_turning_radius = min_turning_radius*1
 
-        if ((x**2 + (y-0.85)**2) < critical_radius**2) or (x**2 + (y+0.85**2) < critical_radius**2): #handles the case where the cone is in the dead area
+        critical_radius = (min_turning_radius**2+self.parking_distance**2)**0.5
+
+        if ((x**2 + (y-min_turning_radius)**2) < critical_radius**2) or (x**2 + (y+min_turning_radius**2) < critical_radius**2): #handles the case where the cone is in the dead area
             u_speed = -0.5
 
-            thetacontroller = PIDController(1,0,0,0)
+            thetacontroller = PIDController(2,0,0,0)
+            end_time = time.time()
+            dt = self.start_time-end_time
+            u_steering = thetacontroller.compute_control_signal(theta,dt)
+            #this section helps fix the annoying spots where it gets confused
+            if y > 0:
+                u_steering = -abs(u_steering)
+            elif y < 0:
+                u_steering = abs(u_steering)
+
+        else:
+            thetacontroller = PIDController(-2,0,0,0)
             end_time = time.time()
             dt = self.start_time-end_time
             u_steering = thetacontroller.compute_control_signal(theta,dt)
 
-        else:
-            thetacontroller = PIDController(-1,0,0,0)
-            end_time = time.time()
-            dt = self.start_time-end_time
-            u_steering = thetacontroller.compute_control_signal(theta,dt)
+            #this section helps fix the annoying spots where it gets confused
+            if y > 0:
+                u_steering = abs(u_steering)
+            elif y < 0:
+                u_steering = -abs(u_steering)
             
 
 
