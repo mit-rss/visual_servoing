@@ -29,6 +29,11 @@ class ParkingController(Node):
         self.relative_x = 0
         self.relative_y = 0
 
+        self.need_to_back_up = False
+        self.last_wheel_angle = 0.0
+        self.last_car_velocity = 0.0
+        self.approach_angle_delta = 0.2 # rad
+
         self.get_logger().info("Parking Controller Initialized")
 
     def relative_cone_callback(self, msg):
@@ -42,6 +47,47 @@ class ParkingController(Node):
         # Use relative position and your control law to set drive_cmd
 
         #################################
+        self.max_steering_angle = 0.34 # radians
+        self.wheelbase = 0.3302 # Wheelbase, meters
+        self.car_min_turning_radius = self.wheelbase / np.tan(self.max_steering_angle) # meters, ~ 0.9335
+
+        angle_to_cone = np.arctan2(self.relative_y, self.relative_x) # radians
+        distance_to_cone = np.sqrt(self.relative_x**2 + self.relative_y**2) # meters
+
+        self.forward_speed = np.sqrt(abs(distance_to_cone-self.parking_distance)/4) + 0.1
+        self.backward_speed = -(np.sqrt(abs(distance_to_cone-self.parking_distance)/4) + 0.1)
+
+        if abs(distance_to_cone - self.parking_distance) < 0.1 and abs(angle_to_cone) < self.approach_angle_delta:
+            self.get_logger().info(f'happy distance of {distance_to_cone - self.parking_distance}')
+            drive_cmd.drive.speed = 0.0
+            drive_cmd.drive.steering_angle = 0.0
+        
+        elif distance_to_cone > self.parking_distance:
+            self.get_logger().info(f'too far away: {distance_to_cone - self.parking_distance}')
+            if self.relative_y > 0: # left turn
+                cone_to_rad_center = np.sqrt((self.relative_x)**2 + (self.relative_y - self.car_min_turning_radius)**2)
+            else: # if  self.relative_y <= 0: # right turn
+                cone_to_rad_center = np.sqrt((self.relative_x)**2 + (self.relative_y + self.car_min_turning_radius)**2)
+            
+            tangent_length = np.sqrt(cone_to_rad_center**2 - self.car_min_turning_radius**2)
+
+            if tangent_length < self.parking_distance:
+                # need to reverse 1st
+                drive_cmd.drive.steering_angle = -angle_to_cone
+                drive_cmd.drive.speed = self.backward_speed
+                # Then can go forward 
+            else:
+                drive_cmd.drive.steering_angle = angle_to_cone
+                drive_cmd.drive.speed = self.forward_speed 
+            
+        
+        else: # if distance_to_cone < self.parking_distance or good distance but not facing the cone:
+            self.get_logger().info(f'too close: {distance_to_cone - self.parking_distance}')
+            drive_cmd.drive.steering_angle = -angle_to_cone
+            drive_cmd.drive.speed = self.backward_speed
+        
+        self.last_wheel_angle = drive_cmd.drive.steering_angle
+        self.last_car_velocity = drive_cmd.drive.speed
 
         self.drive_pub.publish(drive_cmd)
         self.error_publisher()
