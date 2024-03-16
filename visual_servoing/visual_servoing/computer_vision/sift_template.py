@@ -65,10 +65,27 @@ def cd_sift_ransac(img, template):
 
 		h, w = template.shape
 		pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
+		# print("pts",pts)
+		# print("pts.shape",pts.shape)
 
 		########## YOUR CODE STARTS HERE ##########
 
-		x_min = y_min = x_max = y_max = 0
+		x_min = y_min = x_max = y_max = -1
+		
+		for pt in pts:
+			# print("point",pt)
+			point=pt[0]
+			x=point[0]
+			y=point[1]
+
+			if x<x_min or x_min==-1:
+				x_min=x
+			if x>x_max or x_max==-1:
+				x_max=x
+			if y<y_min or y_min==-1:
+				y_min=y
+			if y>y_max or y_max==-1:
+				y_max=y
 
 		########### YOUR CODE ENDS HERE ###########
 

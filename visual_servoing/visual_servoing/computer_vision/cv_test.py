@@ -63,7 +63,7 @@ def iou_score(bbox1, bbox2):
 
     return score
 
-def test_algorithm(detection_func, csv_file_path, template_file_path, swap=False):
+def test_algorithm(detection_func, csv_file_path, template_file_path, swap=False,visual=False):
     """
     Test a cone detection function and return the average score based on all the test images
     Input:
@@ -95,7 +95,17 @@ def test_algorithm(detection_func, csv_file_path, template_file_path, swap=False
             # Detection bbox
             bbox_est = detection_func(img, template)
             score = iou_score(bbox_est, bbox_true)
-            
+
+            if visual:
+                # Draw ground truth bbox in green
+                cv2.rectangle(img, (bbox_true[0][0], bbox_true[0][1]), (bbox_true[1][0], bbox_true[1][1]), (0, 255, 0), 2)
+                # Draw estimated bbox red
+                cv2.rectangle(img, (bbox_est[0][0], bbox_est[0][1]), (bbox_est[1][0], bbox_est[1][1]), (0, 0, 255), 2)
+                # Show image
+                cv2.imwrite(f'{img_path.split("/")[-1].split(".")[0]}_result.jpg', img)
+
+                
+
             # Add score to dict
             scores[img_path] = score
 
@@ -169,5 +179,29 @@ if __name__ == '__main__':
         if scores:
             for (img, val) in scores.items():
                 print((img, val))
+
+    elif len(sys.argv) == 4:
+        scores = None
+        algo_dict = dict({"color":cd_color_segmentation,
+                            "sift":cd_sift_ransac,
+                            "template":cd_template_matching})
+        data_dict = dict({"cone":(cone_csv_path, cone_template_path),
+            "map":(localization_csv_path, localization_template_path),
+            "citgo":(citgo_csv_path, citgo_template_path)})
+        swap = False
+        args = sys.argv[1:3]
+        if args[0] in {"cone", "map", "citgo"} and args[1] in {"color", "template", "sift"}:
+            if args[0] == "map":
+                swap = True
+            scores = test_algorithm(algo_dict[args[1]],data_dict[args[0]][0],data_dict[args[0]][1], swap=swap,visual=sys.argv[3])
+        else:
+            print("Argument/s not recognized")
+
+        if scores:
+            for (img, val) in scores.items():
+                print((img, val))
+        
+
+
     else:
         print("too many arguments")
