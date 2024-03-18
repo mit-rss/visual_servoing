@@ -98,7 +98,7 @@ class ParkingController(Node):
         drive_cmd.drive.steering_angle = u_steering
         self.delta = u_steering
 
-        
+        self.get_logger().info(f"speed: {u_speed}  |  steering: {u_steering}")
 
         #################################
 
