@@ -50,7 +50,7 @@ class ConeDetector(Node):
 
         image = self.bridge.imgmsg_to_cv2(image_msg, "bgr8")
 
-        bounding_box = cd_color_segmentation(image)
+        bounding_box = cd_color_segmentation(image,None) #pass None because template does nothing
 
         #If valid bounding box send message, invalid bounding box is ((0,0),(0,0))
         if (bounding_box[0][0] + bounding_box[0][1] + bounding_box[1][0] + bounding_box[1][1]) !=0:
