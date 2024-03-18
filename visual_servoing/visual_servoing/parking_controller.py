@@ -21,6 +21,11 @@ class ParkingController(Node):
         self.declare_parameter("drive_topic")
         DRIVE_TOPIC = self.get_parameter("drive_topic").value # set in launch file; different for simulator vs racecar
 
+        self.declare_parameter("p0", "default")
+        self.declare_parameter("p1", "default")
+        self.P_0 = self.get_parameter('p0').get_parameter_value().double_value
+        self.P_1 = self.get_parameter('p1').get_parameter_value().double_value
+
         self.drive_pub = self.create_publisher(AckermannDriveStamped, DRIVE_TOPIC, 10)
         self.error_pub = self.create_publisher(ParkingError, "/parking_error", 10)
 
@@ -35,8 +40,8 @@ class ParkingController(Node):
         self.v = 0.0 #velocity of the car
         self.delta = 0.0 #steering angle
 
-        self.theta_controller = PID(self, 0.5, 0, 0)
-        self.speed_controller = PID(self, 0.2, 0, 0)
+        self.theta_controller = PID(self, self.P_0, 0, 0)
+        self.speed_controller = PID(self, self.P_1, 0, 0)
 
         self.get_logger().info("Parking Controller Initialized")
 
