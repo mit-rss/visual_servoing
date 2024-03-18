@@ -4,7 +4,7 @@
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
 | Briefing    | Wednesday, March 20th 3:00 - 5:00 PM EST     |
-| [Team Member Assessment]() | Friday, March 22th at 11:59PM EST |
+| [Team Member Assessment](https://docs.google.com/forms/d/e/1FAIpQLSfxNm0h0f3fDOY3_hEm_MRlWVm2kYex5NjhRUbauTe4U4gwzw/viewform) | Friday, March 22th at 11:59PM EST |
 
 ## Introduction
 
@@ -29,7 +29,7 @@ Here’s how they fit together. Modules 1 and 2 cover object detection algorithm
 
 ## Submission and Grading
 
-Lab 4 will require a briefing and **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](). See the deliverables chart at the top of this page for due dates and times.
+Lab 4 will require a briefing and **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](https://docs.google.com/forms/d/e/1FAIpQLSfxNm0h0f3fDOY3_hEm_MRlWVm2kYex5NjhRUbauTe4U4gwzw/viewform). See the deliverables chart at the top of this page for due dates and times.
 
 You can view the rubric for the [briefing](https://docs.google.com/document/d/1dGBsSiT4_HnIwpF9Xghsw_nbOH6Ebm37) for more details on specific grading criteria. You will receive a grade out of 10 points. Your final lab grade will also be out of 10 points, based on the following weights:
 
@@ -225,14 +225,14 @@ With your modules in hand, it is time to make your robot park in front of a cone
 
 You can see how your modules will fit together in the following rqt graphs --
 
-**Simulation** (after launching `parking_sim.launch`):
+**Simulation** (after launching `parking_sim.launch.xml`):
 ![](media/sim_graph.png)
 - When you use the PublishPoint tool in RViz, a global location is published to `/clicked_point`.
 - The `/cone_sim_marker` node converts `/clicked_point` to the robot frame and publishes it to `/relative_cone`.
 - The `/parking_controller` node converts the cone location `/relative_cone` into an appropriate drive command.
 - _Simulated parking only requires completion of module 4 (control)_
 
-**Deployment** (after launching `parking_deploy.launch`):
+**Deployment** (after launching `parking_deploy.launch.xml`):
 ![](media/deployment_graph.png)
 - Now, the cone is localized relative to the real car using your vision algorithm and homography transform.
 - The `/cone_detector` node reads frames from the Zed camera; copy over your color segmentation algorithm to extract a cone location in pixels. The pixel cone location is published to `/relative_cone_px`.
@@ -255,8 +255,8 @@ There will be several tape "courses" set up throughout the lab. Your racecar sho
 
 ### General Suggestions
 1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
-2. You can verify your parking controller independently as well by running `parking_sim.launch` and placing cones in RViz using the PublishPoint tool. In simulation, your car may observe that a cone is behind it or off to the side; in practice, the car will only know the cone's location when it is in the camera frame. You should design a parking controller that works in all cases!
-3. When both perception and control work independently, run them together on the car using `parking_deployment.launch`. Congratulations are in order when you can park successfully.
+2. You can verify your parking controller independently as well by running `parking_sim.launch.xml` and placing cones in RViz using the PublishPoint tool. In simulation, your car may observe that a cone is behind it or off to the side; in practice, the car will only know the cone's location when it is in the camera frame. You should design a parking controller that works in all cases!
+3. When both perception and control work independently, run them together on the car using `parking_deployment.launch.xml`. Congratulations are in order when you can park successfully.
 5. Modify module 1 such that your robot can follow a line instead of a cone -- this should require minimal modification to your parking code! Some suggestions are in the module 1 section below.
 6. Improve your line following controller to see how fast you can navigate a circular track.
 
@@ -264,7 +264,7 @@ There will be several tape "courses" set up throughout the lab. Your racecar sho
 ### Other Tips/FAQ:
 
 **Debugging cone detection on the car**  
-The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. We have included a basic debug pipeline already in the template code. We also have included a node in the `parking_deploy.launch` file that compresses the image so it can streamed to your computer at a **much** higher rate. In `rqt image view` select `cone_debug_img_compressed/compressed` to view the compressed topic.
+The actual cones and orange tape tracks != dataset cones. One useful debug step is to publish live pictures (particularly, the HSV mask). This should let you debug in realtime. We have included a basic debug pipeline already in the template code. We also have included a node in the `parking_deploy.launch.xml` file that compresses the image so it can streamed to your computer at a **much** higher rate. In `rqt image view` select `cone_debug_img_compressed/compressed` to view the compressed topic.
 
 **Fixing missing packages**
 If you get errors about certain packages not existing in Docker or that OpenCV doesn't have certain objects, methods, or attributes that our code skeleton assumes exists, run the following:
