@@ -104,7 +104,8 @@ class ParkingController(Node):
 
         #################################
 
-        self.drive_pub.publish(drive_cmd)
+        if drive_cmd.drive.speed > 0.01:
+            self.drive_pub.publish(drive_cmd)
         self.error_publisher()
         self.start_time = time.time()
 
