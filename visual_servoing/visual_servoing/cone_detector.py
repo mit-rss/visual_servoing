@@ -49,17 +49,18 @@ class ConeDetector(Node):
         #################################
 
         image = self.bridge.imgmsg_to_cv2(image_msg, "bgr8")
+        
 
-        bounding_box = cd_color_segmentation(image)
-
+        bounding_box = cd_color_segmentation(image,None) #pass None because template does nothing
+        cv2.rectangle(image, (bounding_box[0][0], bounding_box[0][1]), (bounding_box[1][0], bounding_box[1][1]), (0, 255, 0), 2)
         #If valid bounding box send message, invalid bounding box is ((0,0),(0,0))
         if (bounding_box[0][0] + bounding_box[0][1] + bounding_box[1][0] + bounding_box[1][1]) !=0:
             bot_y = bounding_box[1][1]
             center_bot_x = int((bounding_box[0][0]+bounding_box[1][0])/2)
 
             pixel_msg = ConeLocationPixel()
-            pixel_msg.u = center_bot_x
-            pixel_msg.v = bot_y
+            pixel_msg.u = float(center_bot_x)
+            pixel_msg.v = float(bot_y)
 
             self.cone_pub.publish(pixel_msg)
 
