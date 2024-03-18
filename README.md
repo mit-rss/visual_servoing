@@ -131,9 +131,17 @@ Note: The templates are all greyscale. We are not doing anything with color in t
 ## Module 3: Locating the cone via **Homography Transformation** <a name="module3"></a>
 In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car.
 ### Launching the ZED Camera
-- On the car, use `ros2 launch zed_wrapper zed.launch` to launch ZED. Make sure to follow the setup instructions at the top of this page to ensure the zed camera works.
+- On the car, use the following command to launch the ZED:
+```
+# for ZED:
+ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
+
+# for ZED2:
+ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2
+``` 
+Make sure to follow the setup instructions at the top of this page to ensure the zed camera works.  If you get an error regarding a missing display, run `unset DISPLAY` before launching the zed. 
 - Use the image view plugin of rqt to view the camera feed. Alternatively, you can use rviz and add in a camera topic.
-The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/rgb/image_rect_color`.
+The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: /zed/zed_node/rgb/image_rect_color`.
 
 ### Accessing Image Data
 The ZED camera publishes message of type [Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) from sensor_msgs.
@@ -168,7 +176,7 @@ Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/ca
 `rqt image view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name), then you can publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`. Publish a marker to RVIZ using this pixel (we've provided you with a function `draw_marker` in `visual_servoing/homography_transformer.py`), and you should be able to quickly tell if your homography matrix is doing its job. You may wish to record a ROS bag of camera data and do this testing locally.
 
 ## Module 4: Controller for Parking and Line Following <a name="module4"></a>
-While your teammates are putting together the computer vision algorithms and localizing the cone, you will also implement a parking controller for the robot. We want you to implement a parking controller that parks your robot in front of a cone at a given distance. The robot will start with the cone in the field of view of the camera and should drive directly to the cone and park in front of it (1.5 - 2 feet from the front). Parking means facing the cone at the correct distance, not just stopping at the correct distance. See an example video [here](https://gfycat.com/ObeseVioletIcelandicsheepdog).
+While your teammates are putting together the computer vision algorithms and localizing the cone, you will also implement a parking controller for the robot. We want you to implement a parking controller that parks your robot in front of a cone at a given distance. The robot will start with the cone in the field of view of the camera and should drive directly to the cone and park in front of it (1.5 - 2 feet from the front). Parking means facing the cone at the correct distance, not just stopping at the correct distance. See an example video [here](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXUxY3R6dXhnanFjM3lmNnBoeXU1NTEybWE2YjdpMG5mYmNwbnR0ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qELfxUeziNmCWUj7fm/giphy-downsized-large.gif).
 
 ![](media/parking_controller_diagram.jpg)
 
@@ -176,7 +184,11 @@ The distance and angle don’t act independently so consider carefully how you s
 
 Whenever possible, we want to develop controllers in simulation before deploying on real (breakable) hardware. That is what we’ll do here. After you download (and make) the lab 4 ros package, fire up your **simulator**, and **rviz**.
 
-Now run `ros2 launch visual_servoing parking_sim.launch`
+First, run racecar simulator:
+
+`ros2 launch racecar_simulator simulate.launch.xml`.
+
+Now run `ros2 launch visual_servoing parking_sim.launch.xml`
 
 In rviz, press **publish point**(top options bar) and watch our representation of a cone appear.
 Notes
@@ -256,6 +268,6 @@ The actual cones and orange tape tracks != dataset cones. One useful debug step 
 
 **Fixing missing packages**
 If you get errors about certain packages not existing in Docker or that OpenCV doesn't have certain objects, methods, or attributes that our code skeleton assumes exists, run the following:
-1. `sudo apt install python-pip` (if you haven't already)
+1. `sudo apt install python3-pip` (if you haven't already)
 2. `pip install imutils` (and any other packages that are missing)
-3. `pip install opencv-python==3.3.0.10 opencv-contrib-python==3.3.0.10`  (solution from https://stackoverflow.com/questions/37039224/attributeerror-module-object-has-no-attribute-xfeatures2d-python-opencv-2, fixes xfeatures2d attribute not existing)
+3. `pip install opencv-python opencv-contrib-python`  (solution from https://stackoverflow.com/questions/37039224/attributeerror-module-object-has-no-attribute-xfeatures2d-python-opencv-2, fixes xfeatures2d attribute not existing, you might need to use other versions of these packages)
