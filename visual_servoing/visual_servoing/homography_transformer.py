@@ -92,7 +92,7 @@ class HomographyTransformer(Node):
         u, v = msg.x, msg.y
         x, y = self.transformUvToXy(u, v)
 
-        self.get_logger().info(f"({x}m, {y}m)")
+        self.get_logger().info(f"({u}px, {v}px) -> ({x}m, {y}m)")
 
         self.draw_marker(x, y, "map")
 
