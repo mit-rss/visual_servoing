@@ -58,8 +58,8 @@ class ConeDetector(Node):
             center_bot_x = int((bounding_box[0][0]+bounding_box[1][0])/2)
 
             pixel_msg = ConeLocationPixel()
-            pixel_msg.u = center_bot_x
-            pixel_msg.v = bot_y
+            pixel_msg.u = float(center_bot_x)
+            pixel_msg.v = float(bot_y)
 
             self.cone_pub.publish(pixel_msg)
 
