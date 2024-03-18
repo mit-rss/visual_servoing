@@ -45,6 +45,8 @@ class ParkingController(Node):
         self.relative_y = msg.y_pos
         drive_cmd = AckermannDriveStamped()
 
+        drive_cmd.header.stamp = self.get_clock().now().to_msg()
+
         #################################
 
         # YOUR CODE HERE
