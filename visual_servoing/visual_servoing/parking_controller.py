@@ -87,10 +87,10 @@ class ParkingController(Node):
 
 
             # speedcontroller = PIDController(-1,0,0,self.parking_distance)
-            u_speed = self.speed_controller(d)
+            u_speed = self.speed_controller(1 - d)
 
         #publish drive command
-        u_speed = np.clip(u_speed,-1.,1.) #limit the speed setting
+        u_speed = np.clip(u_speed,-2.,2.) #limit the speed setting
         drive_cmd.drive.speed = u_speed
         self.v = u_speed
 
