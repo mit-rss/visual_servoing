@@ -7,6 +7,8 @@
 
   <node pkg="visual_servoing" name="parking_controller" exec="parking_controller" output="screen">
   	<param name="drive_topic" value="/vesc/input/navigation" />
+    <param name="p0" value="0.75" />
+    <param name="p1" value="0.5" />
   </node>
 
   <node pkg="visual_servoing" name="cone_detector" exec="cone_detector" output="screen">
