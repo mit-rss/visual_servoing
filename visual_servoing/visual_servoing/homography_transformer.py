@@ -14,6 +14,8 @@ from visualization_msgs.msg import Marker
 from vs_msgs.msg import ConeLocation, ConeLocationPixel
 from geometry_msgs.msg import Point
 
+from math import sqrt
+
 #The following collection of pixel locations and corresponding relative
 #ground plane locations are used to compute our homography matrix
 
@@ -79,6 +81,8 @@ class HomographyTransformer(Node):
         relative_xy_msg = ConeLocation()
         relative_xy_msg.x_pos = x
         relative_xy_msg.y_pos = y
+
+        self.get_logger().info(f"Distance to cone @ ({x}, {y}): {sqrt(x**2 + y ** 2)}")
 
         self.cone_pub.publish(relative_xy_msg)
 
