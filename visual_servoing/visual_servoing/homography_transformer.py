@@ -24,10 +24,10 @@ from math import sqrt
 
 ######################################################
 ## DUMMY POINTS -- ENTER YOUR MEASUREMENTS HERE
-PTS_IMAGE_PLANE = [[354, 212],
-                   [242, 217],
-                   [354, 277],
-                   [565, 224]] # dummy points
+PTS_IMAGE_PLANE = [[364, 175],
+                   [623, 170],
+                   [585, 217],
+                   [133, 222]] # dummy points
 ######################################################
 
 # PTS_GROUND_PLANE units are in inches
@@ -35,10 +35,10 @@ PTS_IMAGE_PLANE = [[354, 212],
 
 ######################################################
 ## DUMMY POINTS -- ENTER YOUR MEASUREMENTS HERE
-PTS_GROUND_PLANE = [[36, 0],
-                    [37, 18],
-                    [15, 2],
-                    [30, -18]] # dummy points
+PTS_GROUND_PLANE = [[132.5, 3],
+                    [122, -97],
+                    [33.5, -25],
+                    [35, 35]] # dummy points
 ######################################################
 
 METERS_PER_INCH = 0.0254
@@ -82,7 +82,7 @@ class HomographyTransformer(Node):
         relative_xy_msg.x_pos = x
         relative_xy_msg.y_pos = y
 
-        # self.get_logger().info(f"Distance to cone @ ({x}, {y}): {sqrt(x**2 + y ** 2)}")
+        self.get_logger().info(f"Distance to cone @ ({x}, {y}): {sqrt(x**2 + y ** 2)}")
 
         self.draw_marker(x, y, "map")
         self.cone_pub.publish(relative_xy_msg)
