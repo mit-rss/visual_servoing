@@ -35,8 +35,8 @@ class ParkingController(Node):
         self.v = 0.0 #velocity of the car
         self.delta = 0.0 #steering angle
 
-        self.theta_controller = PID(self, 2, 0, 0)
-        self.speed_controller = PID(self, 1, 0, 0)
+        self.theta_controller = PID(self, 0.5, 0, 0)
+        self.speed_controller = PID(self, 0.2, 0, 0)
 
         self.get_logger().info("Parking Controller Initialized")
 
