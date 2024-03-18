@@ -84,6 +84,7 @@ class HomographyTransformer(Node):
 
         self.get_logger().info(f"Distance to cone @ ({x}, {y}): {sqrt(x**2 + y ** 2)}")
 
+        self.draw_marker(x, y, "map")
         self.cone_pub.publish(relative_xy_msg)
 
     
