@@ -35,6 +35,9 @@ class ParkingController(Node):
         self.v = 0.0 #velocity of the car
         self.delta = 0.0 #steering angle
 
+        self.theta_controller = PID(self, 2, 0, 0)
+        self.speed_controller = PID(self, 1, 0, 0)
+
         self.get_logger().info("Parking Controller Initialized")
 
     def relative_cone_callback(self, msg):
@@ -60,10 +63,9 @@ class ParkingController(Node):
         if ((x**2 + (y-min_turning_radius)**2) < critical_radius**2) or (x**2 + (y+min_turning_radius**2) < critical_radius**2): #handles the case where the cone is in the dead area
             u_speed = -0.5
 
-            thetacontroller = PIDController(2,0,0,0)
-            end_time = time.time()
-            dt = self.start_time-end_time
-            u_steering = thetacontroller.compute_control_signal(theta,dt)
+            # end_time = time.time()
+            # dt = self.start_time-end_time
+            u_steering = self.theta_controller(theta)
             #this section helps fix the annoying spots where it gets confused
             if y > 0:
                 u_steering = -abs(u_steering)
@@ -71,10 +73,10 @@ class ParkingController(Node):
                 u_steering = abs(u_steering)
 
         else:
-            thetacontroller = PIDController(-2,0,0,0)
-            end_time = time.time()
-            dt = self.start_time-end_time
-            u_steering = thetacontroller.compute_control_signal(theta,dt)
+            # thetacontroller = PIDController(-2,0,0,0)
+            # end_time = time.time()
+            # dt = self.start_time-end_time
+            u_steering = -self.theta_controller(theta)
 
             #this section helps fix the annoying spots where it gets confused
             if y > 0:
@@ -84,8 +86,8 @@ class ParkingController(Node):
             
 
 
-            speedcontroller = PIDController(-1,0,0,self.parking_distance)
-            u_speed = speedcontroller.compute_control_signal(d,dt)
+            # speedcontroller = PIDController(-1,0,0,self.parking_distance)
+            u_speed = self.speed_controller(d)
 
         #publish drive command
         u_speed = np.clip(u_speed,-1.,1.) #limit the speed setting
