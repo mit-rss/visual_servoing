@@ -46,6 +46,7 @@ class ParkingController(Node):
         drive_cmd = AckermannDriveStamped()
 
         drive_cmd.header.stamp = self.get_clock().now().to_msg()
+        drive_cmd.header.frame_id = "ITS_ME"
 
         #################################
 
