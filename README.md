@@ -256,7 +256,7 @@ There will be several tape "courses" set up throughout the lab. Your racecar sho
 ### General Suggestions
 1. Verify your perception system independently after implementing modules 1 and 3 before trying to run it together with the controller. You should be able to move the cone around on the floor and accurately determine its position relative to the car using just the camera. Make sure to visualize the published Marker representing the cone in RViz. The rviz cone should appear where the real cone does.
 2. You can verify your parking controller independently as well by running `parking_sim.launch.xml` and placing cones in RViz using the PublishPoint tool. In simulation, your car may observe that a cone is behind it or off to the side; in practice, the car will only know the cone's location when it is in the camera frame. You should design a parking controller that works in all cases!
-3. When both perception and control work independently, run them together on the car using `parking_deployment.launch.xml`. Congratulations are in order when you can park successfully.
+3. When both perception and control work independently, run them together on the car using `parking_deploy.launch.xml`. Congratulations are in order when you can park successfully.
 5. Modify module 1 such that your robot can follow a line instead of a cone -- this should require minimal modification to your parking code! Some suggestions are in the module 1 section below.
 6. Improve your line following controller to see how fast you can navigate a circular track.
 
