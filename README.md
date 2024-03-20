@@ -4,7 +4,7 @@
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
 | Briefing    | Wednesday, March 20th 3:00 - 5:00 PM EST     |
-| [Team Member Assessment](https://docs.google.com/forms/d/e/1FAIpQLSfxNm0h0f3fDOY3_hEm_MRlWVm2kYex5NjhRUbauTe4U4gwzw/viewform) | Friday, March 22th at 11:59PM EST |
+| [Team Member Assessment](https://forms.gle/3sNPPpyss3KGtPWNA) | Friday, March 22th at 11:59PM EST |
 
 ## Introduction
 
