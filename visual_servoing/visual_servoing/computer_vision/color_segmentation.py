@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import imutils
+# import imutils
 
 #################### X-Y CONVENTIONS #########################
 # 0,0  X  > > > > >
@@ -59,6 +59,12 @@ def cd_color_segmentation(img, template):
 	print(f'h {H_min},s {S_min},v {V_min},h {H_max},s{S_max},v {V_max}')
 	frame_to_mask = cv2.cvtColor(img , cv2.COLOR_BGR2HSV)
 	mask = cv2.inRange(frame_to_mask , (H_min , S_min , V_min), (H_max , S_max , V_max))
+# want to remove everything except a bar in the middle
+    # robot frame (1, 0) is (350, 244)
+	mask_height, mask_width = mask.shape[:2]
+	visible_bar_height = 10
+	mask = cv2.rectangle(mask, (0, 217), (mask_width-1, mask_height-1), (0,0,0), -1)
+	mask = cv2.rectangle(mask, (0, 0), (mask_width-1, 244-visible_bar_height), (0,0,0), -1)
 		
 	contr, heir = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 	c = max(contr, key = cv2.contourArea)

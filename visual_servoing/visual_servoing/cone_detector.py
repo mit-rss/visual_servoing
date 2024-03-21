@@ -12,7 +12,7 @@ from geometry_msgs.msg import Point #geometry_msgs not in CMake file
 from vs_msgs.msg import ConeLocationPixel
 
 # import your color segmentation algorithm; call this function in ros_image_callback!
-from computer_vision.color_segmentation import cd_color_segmentation
+# from computer_vision.color_segmentation import cd_color_segmentation
 
 
 class ConeDetector(Node):
@@ -49,9 +49,48 @@ class ConeDetector(Node):
         #################################
 
         image = self.bridge.imgmsg_to_cv2(image_msg, "bgr8")
+        img = np.array(image, dtype=np.uint8)
 
-        debug_msg = self.bridge.cv2_to_imgmsg(image, "bgr8")
-        self.debug_pub.publish(debug_msg)
+        #cv2.namedWindow("original", cv2.WINDOW_NORMAL)
+        #cv2.namedWindow("hsv", cv2.WINDOW_NORMAL)
+        #cv2.namedWindow("mask", cv2.WINDOW_NORMAL)
+        # cv2.namedWindow("trackbars", 0)
+        # create_trackbars()
+        # while True:
+            
+        H_min ,S_min ,V_min ,H_max ,S_max ,V_max = [5,120,20,40,255,255] #[5,150,70,30,255,255]#get_trackbar_values()#
+        frame_to_mask = cv2.cvtColor(img , cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(frame_to_mask , (H_min , S_min , V_min), (H_max , S_max , V_max))
+        kernel = np.ones((5, 5), np.uint8)
+        mask = cv2.dilate(mask, kernel, iterations = 2)
+        mask_height, mask_width = mask.shape[:2]
+        visible_bar_height = 40
+        mask = cv2.rectangle(mask, (0, 300), (mask_width-1, mask_height-1), (0,0,0), -1)
+        mask = cv2.rectangle(mask, (0, 0), (mask_width-1, 300-visible_bar_height), (0,0,0), -1)
+            
+        contr, heir = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        if (len(contr) != 0):
+            c = max(contr, key = cv2.contourArea)
+            x, y, w, h = cv2.boundingRect(c)
+        # cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+        
+
+            
+        # cv2.imshow("original", img)
+        # cv2.imshow("hsv", frame_to_mask)
+        # cv2.imshow("mask", mask)
+        # cv2.waitKey(0)
+
+            cone_location = ConeLocationPixel()
+            cone_location.u = (x+w/2.0)
+            cone_location.v = float(y+h)
+            self.cone_pub.publish(cone_location)
+    
+            new_img = cv2.bitwise_and(img, img, mask=mask)
+            cv2.rectangle(new_img,(x,y),(x+w,y+h),(0,255,0),2)
+
+            debug_msg = self.bridge.cv2_to_imgmsg(new_img, "bgr8")
+            self.debug_pub.publish(debug_msg)
 
 def main(args=None):
     rclpy.init(args=args)

@@ -47,6 +47,7 @@ class HomographyTransformer(Node):
         super().__init__("homography_transformer")
 
         self.cone_pub = self.create_publisher(ConeLocation, "/relative_cone", 10)
+        self.debug_pub = self.create_publisher(Point, "/relative_cone_debug", 10)
         self.marker_pub = self.create_publisher(Marker, "/cone_marker", 1)
         self.cone_px_sub = self.create_subscription(ConeLocationPixel, "/relative_cone_px", self.cone_detection_callback, 1)
         self.click_px_sub = self.create_subscription(Point, "/zed/zed_node/rgb/image_rect_color_mouse_left", self.click_callback, 1)
@@ -80,8 +81,12 @@ class HomographyTransformer(Node):
         relative_xy_msg = ConeLocation()
         relative_xy_msg.x_pos = x
         relative_xy_msg.y_pos = y
+        debug_msg = Point()
+        debug_msg.x = u
+        debug_msg.y = v
 
         self.cone_pub.publish(relative_xy_msg)
+        # self.debug_pub.publish(debug_msg)
 
     def click_callback(self, msg):
         #Extract information from message

@@ -2,11 +2,9 @@
 
   <!-- Launch the parking controller on the real robot. Launches safety controller, controller node, cone detection node, and the homography transformer -->
   <!-- Edit this to launch your safety controller you implemented in Lab 3! -->
-  <node pkg="wall_follower" name="safety_controller" exec="safety_controller" output="screen">
-  </node>
 
   <node pkg="visual_servoing" name="parking_controller" exec="parking_controller" output="screen">
-  	<param name="drive_topic" value="/vesc/low_level/input/navigation" />
+  	<param name="drive_topic" value="/vesc/high_level/input/nav_0" />
   </node>
 
   <node pkg="visual_servoing" name="cone_detector" exec="cone_detector" output="screen">
