@@ -271,3 +271,25 @@ If you get errors about certain packages not existing in Docker or that OpenCV d
 1. `sudo apt install python3-pip` (if you haven't already)
 2. `pip install imutils` (and any other packages that are missing)
 3. `pip install opencv-python opencv-contrib-python`  (solution from https://stackoverflow.com/questions/37039224/attributeerror-module-object-has-no-attribute-xfeatures2d-python-opencv-2, fixes xfeatures2d attribute not existing, you might need to use other versions of these packages)
+
+**Racecar switching between zero command**
+We always publish a stream of zeros to the controller at some rate for safety reasons. However, this sometimes causes some "stuttering" when you are running your controller, since it is periodically switching between your commands and a zero command. This usually happens when your callback is happening too slowly due to delays in the data stream (especially with cameras) . As data is always susceptible to latency, in many robotics settings you do want to make sure that your commands are being published at a fixed rate instead of awaiting an incoming message.
+
+If you are affected by this, you should first make sure your callbacks are not taking an excessive amount of time. Otherwise, you can address this by maintaining a stateful variable $x$ containing the previous drive message. Then, instead of publishing the drive command, your sensor callback can just modify $x$. You can then have a separate timer callback that publishes $x$ at a fixed Hz. For example:
+
+```python
+class MyNode(Node):
+	def __init__(self, *args, **kwargs):
+		# ...
+		initial_drive_kwargs = dict(...)
+		self.drive_cmd = AckermanDriveStamped(**inital_drive_kwargs)
+		hz = 20 # this should be sufficient, but you can go higher
+		self.timer = self.create_timer(1 / hz, self.node_callback)
+	def lidar_callback(self, msg):
+		cmd = self.process_lidar(msg) # handle lidar data
+		self.drive_cmd = cmd
+	def timer_callback(self):
+		self.drive_pub.publish(self.drive_cmd)
+```
+
+Note that this should only affect the real racecar. In sim, the previous drive command is always assumed. 
