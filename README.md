@@ -3,8 +3,8 @@
 
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Briefing    | Wednesday, March 20th 3:00 - 5:00 PM EST     |
-| [Team Member Assessment](https://forms.gle/3sNPPpyss3KGtPWNA) | Friday, March 22th at 11:59PM EST |
+| Briefing    | Monday, March 17th 3:00 - 5:00 PM EST     |
+| [Team Member Assessment](https://docs.google.com/forms/d/e/1FAIpQLSfnnSIP1FSbPQzoFKLAvxCpH1qmOnCrfsf6qtVDNdU5lJED9Q/viewform?usp=dialog) | Friday, March 21th at 11:59PM EST |
 
 ## Introduction
 
@@ -12,24 +12,24 @@ Welcome to Lab 4, where you will learn how to use the camera to allow the raceca
 
 In this lab, your team will do the following:
 - Experiment/Prototype with several types of **object detection** algorithms
-- Learn how to transform a pixel from an image to a real world plane using **homography**
+- Learn how to transform a pixel from an image to a real world plane using **homography matrices**
 - Develop a **parking controller** to park your robot in front of an orange cone
 - Extend your parking controller into a **line following controller**
 
 ### Lab Modules
-This lab has a lot in it, so we are encouraging parallelization by breaking up the components of the lab into 4 distinct modules, which you will combine together. Each module tackles an interesting problem in computer vision/controls, and is designed to be implemented (initially) by itself, then finally combined into a working visual navigation algorithm.  
+This lab has a lot. We encourage parallelization by breaking up the components of the lab into 4 distinct modules, which you will combine. Each module tackles an interesting problem in computer vision/controls, and is designed to be implemented (initially) by itself. Afterward, we can combine all parts into a working visual navigation algorithm!  
 
 - [Module 1](#module1): Cone Detection via Color Segmentation
 - [Module 2](#module2): Object Detection via Template Matching and SIFT
-- [Module 3](#module3): Transforming pixels to a plane via Homography
+- [Module 3](#module3): Transforming pixels to a plane via Homography Matrices
 - [Module 4](#module4): Writing a parking controller.
 - [Synthesis](#synthesis): Deploying all components together; Application to line following.
 
-Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Comparing different algorithms will give you a better feel for what is out there. Module 3 will teach you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park a robot in front of a simulated cone. Bring in modules 1 and 3 and put it on hardware to park in real life. Now make some modifications to follow a line instead!
+Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Module 3 teaches you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park your robot in front of a simulated cone. Combine modules 1,3 and 4 to park in real life. Now make some modifications to follow a line instead!
 
 ## Submission and Grading
 
-Lab 4 will require a briefing and **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](https://docs.google.com/forms/d/e/1FAIpQLSfxNm0h0f3fDOY3_hEm_MRlWVm2kYex5NjhRUbauTe4U4gwzw/viewform). See the deliverables chart at the top of this page for due dates and times.
+Lab 4 will require a briefing and **no report**. You will deliver an 8-minute briefing presentation (plus 3 minutes Q&A) together with your team, upload the briefing slides to your github pages website, and submit a [team member assessment form](https://docs.google.com/forms/d/e/1FAIpQLSfnnSIP1FSbPQzoFKLAvxCpH1qmOnCrfsf6qtVDNdU5lJED9Q/viewform?usp=dialog). See the deliverables chart at the top of this page for due dates and times.
 
 You can view the rubric for the [briefing](https://docs.google.com/document/d/1dGBsSiT4_HnIwpF9Xghsw_nbOH6Ebm37) for more details on specific grading criteria. You will receive a grade out of 10 points. Your final lab grade will also be out of 10 points, based on the following weights:
 
@@ -42,7 +42,7 @@ The elements you should include in your Lab 4 presentation include:
 - Explanation of vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
 - Explanation of the homography transformation. How do we convert pixels to plane coordinates?
 - Demonstration of parking controller performance. Make sure you explain and justify the design choices you made in your controller. Hint: include error plots from **rqt plot**
-- Demonstration of the line-follower. Describe any adjustments you needed to make to your perception and control modules in order to follow lines. Hint: include error plots from **rqt plot**
+- Demonstration of the line-follower. Describe any adjustments you needed to make to your perception and control modules to follow lines. Hint: include error plots from **rqt plot**
 
 Please include video, screen shots, data visualizations, etc. in your presentation as evidence of these deliverables. A good presentation will make quantitative and qualitative evaluations of your results.
 
@@ -57,7 +57,7 @@ To test all three of your algorithms against our citgo, cone, and stata basement
 
 ### Controller Analysis
 When you write the parking controller (module 4), you will publish provided error messages. Use **rqt plot** to generate some plots. Try running the following experiments:
-- Put a cone directly in front of the car, ~3-5 meters away. Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error over time, and be prepared to discuss.
+- Put a cone directly in front of the car (~3-5 meters away). Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error (x and y error) over time, and be prepared to discuss.
 - Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
 
 ## Setup
@@ -65,17 +65,18 @@ When you write the parking controller (module 4), you will publish provided erro
 Before you begin, let's set up the ZED camera on the car. Please follow the instructions in the README [here](https://github.com/alany1/rss-hardware/tree/main/zed_settings). If you need, the `.conf` files are located there too. 
 
 ## Module 1: Cone Detection Via Color Segmentation <a name="module1"></a>
-In lecture we learned lots of different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
+In lecture, we learned different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
 
-But sometimes simple algorithms are the correct choice, and for our purposes, identifying the cone by its distinctive color will prove most effective. Your job in this module will be identify cones (and other orange objects) and output bounding boxes containing them.
+Sometimes simple algorithms are the correct choice. For our purposes, identifying the cone by its distinctive color will prove most effective. Your job in this module will be to identify cones (and other orange objects) and output bounding boxes containing them.
 
 Take a peek at `visual_servoing/computer_vision/color_segmentation.py`. Here you will find your starter code, though there is very little of it. There is a considerable degree of freedom in implementing your segmentation algorithm, and we will try to guide you at a high level. When it comes to opencv functions and examples, googling will not disappoint. Keywords like “python” and “opencv3” will help you avoid c++ and older opencv versions of functions.
 
 The cool thing about this module is that you can build up your algorithm incrementally. Display the original image. Modify, convert, filter, etc. and see what it looks like. Try a different opencv function. See what that does to the already changed image.
 
 Here are some helpful hints:
-- As we’ve seen in lecture, there are different color spaces. You are probably used to RGB/BGR, but you’ll find the HUE in HSV to vary less with lighting. Try cvtColor. Speaking of, the images here are BGR, not RBG.
-- Use cv2.inRange to apply a mask over your image, keeping just what you want.
+- As we’ve seen in lecture, there are different color spaces. You are probably used to RGB/BGR, but you’ll find the HUE in HSV varies less with lighting. Try cvtColor.
+- The images here are BGR, not RBG.
+- Use cv2.inRange to apply a mask over your image, keeping the colors you want.
 - Erosion and dilation are a great way to remove outliers and give your cone a bit more of a defined shape.
 - OpenCV contour functions can prove very helpful. cv2.findContours + cv2.boundingRect are a powerful combination. Just saying.
 
@@ -84,12 +85,12 @@ Don’t forget conventions! Image indexing works like this (in this lab):
 ![](media/image_axis_convention.jpg)
 
 ### Evaluation:
-We are using the Intersection Over Union metric for evaluating bounding box success. Run **python cv_test.py cone color** to test your algorithm against our dataset. We print out the IOU values for you. We expect some sort of analysis involving this metric in your presentation.
+We are using the Intersection Over Union (IOU) metric for evaluating bounding box success. Run **python cv_test.py cone color** to test your algorithm against our dataset. We print out the IOU values for you. We expect some sort of analysis involving this metric in your presentation.
 By the way- you won’t get them all (probably). But 100% accuracy is not necessary for a great parking controller.
 
 
 ## Module 2: Object Detection via **SIFT** and **Template Matching** <a name="module2"></a>
-We’ve taught you some interesting ways to discover objects, and now it’s time to play with them. We want you walking away (to present to us) with two critical pieces of information from this module:
+We’ve taught you some interesting ways to discover objects, and now it’s time to play with them. We want you understanding two critical pieces of information from this module:
 - Why these two algorithms are super useful
 - Why these two algorithms fail to detect the cone super well
 
@@ -103,7 +104,7 @@ Since the best learning comes from doing, we will be having you use each algorit
 
 **STATA:** A wheeled robot needs to find its location on a map. It takes a laser scan, and comes up with a local view of what it can see. It tries to locate the local (template) scan on a big map, knowing that the center pixel of the highest scoring bounding box will correspond to its current location. By converting from pixels to meters, the robot will know where it is.
 
-We have two algorithms to implement, SIFT and Template Matching. Each algorithm has strengths and weaknesses, and the goal for this lab will be to get a better feel for what they are.
+We have two algorithms to implement, SIFT and Template Matching. The goal for this lab will be to get a better feel of the strengths and weaknesses of each algorithm. 
 
 Check out **computer_vision/sift_template.py** in the `visual_servoing` folder. In there you will find two partially completed functions. Each function tries to find a templated image in a larger background image, and returns the bounding box coordinates of the target object in the background.
 
@@ -114,7 +115,7 @@ Test your algorithm against the CITGO dataset. This dataset should give you the 
 Test your algorithm against the STATA dataset. Run **python3 cv_test.py map template**        
 
 **Testing on Datasets**         
-We have implemented a few datasets for you to test your algorithms with.  To run the Sift tests, type in (inside the **computer_vision** folder):
+We have implemented a few datasets for you to test your algorithms.  To run the SIFT tests, type in (inside the **computer_vision** folder):
 - **python3 cv_test.py cone sift**
 - **python3 cv_test.py citgo sift**
 - **python3 cv_test.py map sift**            
@@ -129,7 +130,7 @@ Some of these algorithm + dataset combinations will not produce good results. Ea
 Note: The templates are all greyscale. We are not doing anything with color in these algorithms.  
 
 ## Module 3: Locating the cone via **Homography Transformation** <a name="module3"></a>
-In this section you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car.
+In this section, you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car.
 ### Launching the ZED Camera
 - On the car, use the following command to launch the ZED:
 ```
@@ -139,14 +140,14 @@ ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
 # for ZED2:
 ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2
 ``` 
-Make sure to follow the setup instructions at the top of this page to ensure the zed camera works.  If you get an error regarding a missing display, run `unset DISPLAY` before launching the zed. 
+Make sure to follow the [setup instructions](https://github.com/alany1/rss-hardware/tree/main/zed_settings) to ensure the zed camera works.  If you get an error regarding a missing display, run `unset DISPLAY` before launching the zed. 
 - Use the image view plugin of rqt to view the camera feed. Alternatively, you can use rviz and add in a camera topic.
-The ZED publishes to a number of topics topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: /zed/zed_node/rgb/image_rect_color`.
+The ZED publishes to many topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: /zed/zed_node/rgb/image_rect_color`.
 
 ### Accessing Image Data
-The ZED camera publishes message of type [Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) from sensor_msgs.
+The ZED camera publishes messages of type [Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) from sensor_msgs.
 Learn about this message with the  command, `ros2 interface show sensor_msgs/msg/Image`.
-The image data is in ROS message data-structure which is not directly recognized by OpenCV, you might have also learned that OpenCV image representations are sometimes unique and bizarre(e.g. BGR instead of RGB). To convert between CV image data structures(mat) to ROS image representations(ROS Message structures) you may find [CV bridge](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython) helpful.
+The image data is in ROS message data-structure, which is not directly recognized by OpenCV. You might have also learned that OpenCV image representations are sometimes unique (e.g. BGR instead of RGB). To convert between CV image data structures(mat) to ROS image representations(ROS Message structures) you may find [CV bridge](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython) helpful.
 
 ### Converting pixel coordinates to x-y coordinates
 If you recall from lecture, a camera is a sensor that converts 3D points (x,y,z) into 2D pixels (u,v). If we put on our linear algebra hats, we can project a 3D point onto a 2D plane as follows:
@@ -154,13 +155,12 @@ If you recall from lecture, a camera is a sensor that converts 3D points (x,y,z)
 ![](media/homography.jpg)
 
 In robotics, we are generally concerned with the inverse problem. Given a 2D (image) point, how can we extract a 3D (world) point?
-We need some tools and tricks to make that sort of calculation, as we lost (depth) information projecting down to our 2D pixel. Stereo cameras, for example, coordinate points seen from two cameras to add information and retrieve the X-Y-Z coordinates.
-In this lab, we will use another interesting fact about linear transformations for back out X-Y positions of pixels.
+We need some tools and tricks to make that sort of calculation, as we lost (depth) information projecting down to our 2D pixel. In this lab, we will use another interesting fact about linear transformations to find the X-Y positions of pixels.
 
 ### Coordinate space conversion
-The racecar can’t roll over or fly (no matter how cool it might look), so the ZED camera will always have a fixed placement with respect to the ground plane. By determining exactly what that placement is, we can compute a function that takes in image pixel coordinates (u, v) and returns the coordinates of the point on the floor (x, y) relative to the car that projects onto the pixel (u, v).
+The racecar can’t roll over or fly (no matter how cool it might look), so the ZED camera will always have a fixed placement with respect to the ground plane. By determining the exact placement, we can compute a function that takes in image pixel coordinates (u, v) and returns the coordinates of the point on the floor (x, y) relative to the car. In other words, the (x,y) coordinate projects onto the pixel (u, v).
 
-This “function” is called a homography. Even though we can’t determine arbitrary 3D points from 2D pixels without lots of extra work, we can back out 2D world points if those points lie on a plane (and can therefore be thought of as 2D) that is fixed with respect to our camera.
+This “function” is called a homography. We can’t determine arbitrary 3D points from 2D pixels without lots of extra work. But, we can find 2D world points if those points lie on a plane (and can therefore be thought of as 2D) that is fixed with respect to our camera.
 
 Check out this illustration of a camera and world plane. There exists a linear transformation between the camera projection and the world plane, since the world plane has two dimensions like an image plane.
 
@@ -180,7 +180,7 @@ While your teammates are putting together the computer vision algorithms and loc
 
 ![](media/parking_controller_diagram.jpg)
 
-The distance and angle don’t act independently so consider carefully how you should make them work together.
+The distance and angle don’t act independently, so consider carefully how you should make them work together.
 
 Whenever possible, we want to develop controllers in simulation before deploying on real (breakable) hardware. That is what we’ll do here. After you download (and make) the lab 4 ros package, fire up your **simulator**, and **rviz**.
 
