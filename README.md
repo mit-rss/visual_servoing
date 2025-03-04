@@ -4,7 +4,7 @@
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
 | Briefing    | Monday, March 17th 3:00 - 5:00 PM EST     |
-| [Team Member Assessment](https://docs.google.com/forms/d/e/1FAIpQLSfnnSIP1FSbPQzoFKLAvxCpH1qmOnCrfsf6qtVDNdU5lJED9Q/viewform?usp=dialog) | Friday, March 21th at 11:59PM EST |
+| [Team Member Assessment](https://docs.google.com/forms/d/e/1FAIpQLSfnnSIP1FSbPQzoFKLAvxCpH1qmOnCrfsf6qtVDNdU5lJED9Q/viewform?usp=dialog) | Wednesday, March 19th at 11:59PM EST |
 
 ## Table of Contents
 - [Introduction](https://github.com/mit-rss/visual_servoing#introduction)
