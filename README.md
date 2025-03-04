@@ -165,7 +165,7 @@ ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2
 ``` 
 Make sure to follow the [setup instructions](https://github.com/alany1/rss-hardware/tree/main/zed_settings) to ensure the zed camera works.  If you get an error regarding a missing display, run `unset DISPLAY` before launching the zed. 
 - Use the image view plugin of rqt to view the camera feed. Alternatively, you can use rviz and add in a camera topic.
-The ZED publishes to many topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: /zed/zed_node/rgb/image_rect_color`.
+The ZED publishes to many topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/zed_node/rgb/image_rect_color`.
 
 ### Accessing Image Data
 The ZED camera publishes messages of type [Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) from sensor_msgs.
