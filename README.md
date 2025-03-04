@@ -25,7 +25,7 @@ This lab has a lot. We encourage parallelization by breaking up the components o
 - [Module 4](#module4): Writing a parking controller.
 - [Synthesis](#synthesis): Deploying all components together; Application to line following.
 
-Here’s how they fit together. Modules 1 and 2 cover object detection algorithms. Module 3 teaches you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park your robot in front of a simulated cone. Combine modules 1,3 and 4 to park in real life. Now make some modifications to follow a line instead!
+Here’s how they fit together: Modules 1 and 2 cover object detection algorithms. Module 3 teaches you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park your robot in front of a simulated cone. Combine modules 1, 3, and 4 to park in real life. Now make some modifications to follow a line instead!
 
 ## Submission and Grading
 
