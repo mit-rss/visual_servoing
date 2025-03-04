@@ -6,6 +6,29 @@
 | Briefing    | Monday, March 17th 3:00 - 5:00 PM EST     |
 | [Team Member Assessment](https://docs.google.com/forms/d/e/1FAIpQLSfnnSIP1FSbPQzoFKLAvxCpH1qmOnCrfsf6qtVDNdU5lJED9Q/viewform?usp=dialog) | Friday, March 21th at 11:59PM EST |
 
+## Table of Contents
+- [Introduction](https://github.com/mit-rss/visual_servoing#introduction)
+	- [Lab Modules](https://github.com/mit-rss/visual_servoing#lab-modules)
+	- [Submission and Grading](https://github.com/mit-rss/visual_servoing#submission-and-grading)
+ 	- [Vision Analysis](https://github.com/mit-rss/visual_servoing#vision-analysis)
+ 	- [Controller Analysis](https://github.com/mit-rss/visual_servoing#controller-analysis)
+- [Setup](https://github.com/mit-rss/visual_servoing#setup)
+- [Module 1](https://github.com/mit-rss/visual_servoing#module1)
+- [Module 2](https://github.com/mit-rss/visual_servoing#module2)
+- [Module 3](https://github.com/mit-rss/visual_servoing#module3)
+	- [Launching ZED Camera](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera)
+ 	- [Accessing Image Data](https://github.com/mit-rss/visual_servoing#accessing-image-data)
+  	- [Converting pixel coordinates to x-y coordinates](https://github.com/mit-rss/visual_servoing#converting-pixel-coordinates-to-x-y-coordinates)
+  	- [Coordinate Space Conversion](https://github.com/mit-rss/visual_servoing#coordinate-space-conversion)
+  	- [Find the Homography Matrix](https://github.com/mit-rss/visual_servoing#find-the-homography-matrix)
+- [Module 4](https://github.com/mit-rss/visual_servoing#module-4-controller-for-parking-and-line-following)
+- [Synthesis: Bringing it all Together](https://github.com/mit-rss/visual_servoing#synthesis-bringing-it-together-line-following)
+  	- [Line Following](https://github.com/mit-rss/visual_servoing#line-following)
+- [General Suggestions](https://github.com/mit-rss/visual_servoing?tab=readme-ov-file#general-suggestions)
+- [Tips & FAQ](https://github.com/mit-rss/visual_servoing?tab=readme-ov-file#other-tipsfaq)
+<br />
+
+
 ## Introduction
 
 Welcome to Lab 4, where you will learn how to use the camera to allow the racecar to park in front of a colored cone and follow a line.
