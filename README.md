@@ -17,7 +17,6 @@
 - [Module 2](https://github.com/mit-rss/visual_servoing#module2)
 - [Module 3](https://github.com/mit-rss/visual_servoing#module3)
 	- [Launching ZED Camera](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera)
-   
    		- [First Time Launching ZED Camera](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera-for-the-first-time)
    		- [Launching ZED After Initialization](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera-after-first-initialization)
  	- [Accessing Image Data](https://github.com/mit-rss/visual_servoing#accessing-image-data)
