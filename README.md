@@ -17,6 +17,8 @@
 - [Module 2](https://github.com/mit-rss/visual_servoing#module2)
 - [Module 3](https://github.com/mit-rss/visual_servoing#module3)
 	- [Launching ZED Camera](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera)
+    		- [First Time Launching ZED Camera](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera-for-the-first-time)
+   		- [Launching ZED After Initialization](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera-after-initialization)
  	- [Accessing Image Data](https://github.com/mit-rss/visual_servoing#accessing-image-data)
   	- [Converting pixel coordinates to x-y coordinates](https://github.com/mit-rss/visual_servoing#converting-pixel-coordinates-to-x-y-coordinates)
   	- [Coordinate Space Conversion](https://github.com/mit-rss/visual_servoing#coordinate-space-conversion)
