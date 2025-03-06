@@ -17,8 +17,6 @@
 - [Module 2](https://github.com/mit-rss/visual_servoing#module2)
 - [Module 3](https://github.com/mit-rss/visual_servoing#module3)
 	- [Launching ZED Camera](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera)
-   		- [First Time Launching ZED Camera](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera-for-the-first-time)
-   		- [Launching ZED After Initialization](https://github.com/mit-rss/visual_servoing#launching-the-zed-camera-after-first-initialization)
  	- [Accessing Image Data](https://github.com/mit-rss/visual_servoing#accessing-image-data)
   	- [Converting pixel coordinates to x-y coordinates](https://github.com/mit-rss/visual_servoing#converting-pixel-coordinates-to-x-y-coordinates)
   	- [Coordinate Space Conversion](https://github.com/mit-rss/visual_servoing#coordinate-space-conversion)
@@ -26,9 +24,6 @@
 - [Module 4](https://github.com/mit-rss/visual_servoing#module-4-controller-for-parking-and-line-following)
 - [Synthesis: Bringing it all Together](https://github.com/mit-rss/visual_servoing#synthesis-bringing-it-together-line-following)
   	- [Line Following](https://github.com/mit-rss/visual_servoing#line-following)
-- [General Suggestions](https://github.com/mit-rss/visual_servoing?tab=readme-ov-file#general-suggestions)
-- [Tips & FAQ](https://github.com/mit-rss/visual_servoing?tab=readme-ov-file#other-tipsfaq)
-<br />
 
 
 ## Introduction
