@@ -71,9 +71,9 @@ We provide you with some resources to help you present an effective analysis of 
 
 ### Vision Analysis
 We've provided some code to test the Intersection over Union (IOU) scores of your vision algorithms on the three datasets provided. IOU is a measure of how accurate bounding boxes are, and is a choice metric for analysis of object detection algorithms. Go into **visual_servoing/computer_vision/**  and run:
-- python cv_test.py citgo
-- python cv_test.py cone
-- python cv_test.py map  
+- python3 cv_test.py citgo
+- python3 cv_test.py cone
+- python3 cv_test.py map  
 To test all three of your algorithms against our citgo, cone, and stata basement datasets respectively. Results will be outputted to .csv files in **scores/**. Some algorithms on some datasets won’t get any/good results. This is expected, and we would like to know why each works for what it does in your presentation.
 
 ### Controller Analysis
