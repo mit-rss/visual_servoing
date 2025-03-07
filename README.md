@@ -313,7 +313,7 @@ You can see how your modules will fit together in the following rqt graphs --
 
 Now that you and your team have put your modules together to park in front of a cone, a quick modification of your code will create a line follower. The idea is to make the parking controller think that there is always a cone a fixed distance ahead, positioned on the line you want to follow! Like a donkey chasing a carrot, if you restrict the view of your robot to what is a little ahead of it, your parking controller will follow an orange line.
 
-This works by setting a lookahead distance that is greater than your desired parking distance. See an example [here](https://gfycat.com/SeveralQueasyAmberpenshell).
+This works by setting a lookahead distance that is greater than your desired parking distance.
 
 ![](media/orange_circle.jpg)
 ![](media/blacked_out_circle.jpg)
