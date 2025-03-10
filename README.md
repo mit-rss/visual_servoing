@@ -62,8 +62,8 @@ You can view the rubric for the [briefing](https://docs.google.com/document/d/1d
 The elements you should include in your Lab 4 presentation include:
 - Explanation of vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
 - Explanation of the homography transformation. How do we convert pixels to plane coordinates?
-- Demonstration of parking controller performance. Make sure you explain and justify the design choices you made in your controller. Hint: include error plots from **rqt plot**
-- Demonstration of the line-follower. Describe any adjustments you needed to make to your perception and control modules to follow lines. Hint: include error plots from **rqt plot**
+- Demonstration of parking controller performance. Make sure you explain and justify the design choices you made in your controller. _Hint: include error plots from **rqt plot**_
+- Demonstration of the line-follower. Describe any adjustments you needed to make to your perception and control modules to follow lines. _Hint: include error plots from **rqt plot**_
 
 Please include video, screen shots, data visualizations, etc. in your presentation as evidence of these deliverables. A good presentation will make quantitative and qualitative evaluations of your results.
 
@@ -209,7 +209,7 @@ ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2
 - If you see red or an error that there is no config file, call over a TA.  
 - If you get an error regarding a missing display, run `unset DISPLAY` before launching the zed. 
 - Verifying that the camera is working
-	- Use the image view plugin of rqt to view the camera feed.
+	- Open RQT by running `rqt`; use the image view plugin to view the camera feed.
 	- Alternatively, you can use rviz and add in a camera topic.
  - The ZED publishes to many topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/zed_node/rgb/image_rect_color`.
 
@@ -259,14 +259,14 @@ First, run racecar simulator:
 
 Now run `ros2 launch visual_servoing parking_sim.launch.xml`
 
-In rviz, press **publish point**(top options bar) and watch our representation of a cone appear.
+In rviz, press **publish point** (top options bar) and watch our representation of a cone appear.
 Notes
 - Make sure to add the marker “/cone_marker” to rviz
-- In this lab, make sure you are in the “Map” frame or things might get weird.
+- Mke sure you are in the “Map” frame in rviz
 
-If you `ros2 topic echo /relative_cone`, you should be able to see the relative coordinates of the cone in the 'base_link' (control) frame.
+If you `ros2 topic echo /relative_cone`, you should be able to see the relative coordinates of the cone in the 'base_link' frame.
 
-Open up `visual_servoing/parking_controller.py`, We’ve subscribed to the “/relative_cone” topic for you, and have set up the publisher/callback as well. Your job is to take the ConeLocation message (either print or use a `ros2 interface show vs_msgs/msg/ConeLocation` to find out what is in it), and write a control policy that parks in front of the cone. Publish desired steering angles and velocity just like in lab2.
+Open up `visual_servoing/parking_controller.py`, We’ve subscribed to the “/relative_cone” topic for you, and have set up the publisher/callback as well. Your job is to take the `ConeLocation` message (either print or use a `ros2 interface show vs_msgs/msg/ConeLocation` to find out what is in it), and write a control policy that parks in front of the cone. Publish desired steering angles and velocity just like in lab2.
 
 We aren’t aiming to give you a specific algorithm to run your controller, and we encourage you to play around. Try answering these questions:
 - What should the robot do if the cone is far in front?
