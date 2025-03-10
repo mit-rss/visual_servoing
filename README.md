@@ -170,7 +170,7 @@ Before launching the camera, we need to add two lines to the `run_rostorch.sh` f
 4. Run `unset DISPLAY`. Additionally, add the line `unset DISPLAY` to your `~/.bashrc` file (i.e. using `nano ~/.bashrc`), to prevent having to run this command every time you open a new terminal and want to use the ZED. This command unsets the `DISPLAY` environment variable, which is necessary for running the ZED in a "headless" environment (i.e. via SSH without display port forwrding).
 5. Run the respective command for your camera. For silver cameras use `zed`, for black cameras use `zed2`.
 
-```
+```bash
 # for ZED:
 ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
 
@@ -181,7 +181,7 @@ ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2
 7. After that, the camera should turn on! 
 
 ## Launching the ZED Camera AFTER first Initialization 
-```
+```bash
 # on the car
 
 ./run_rostorch.sh
