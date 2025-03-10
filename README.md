@@ -13,7 +13,6 @@
 	- [Submission and Grading](https://github.com/mit-rss/visual_servoing#submission-and-grading)
  	- [Vision Analysis](https://github.com/mit-rss/visual_servoing#vision-analysis)
  	- [Controller Analysis](https://github.com/mit-rss/visual_servoing#controller-analysis)
-- [Setup](https://github.com/mit-rss/visual_servoing#setup)
 - [Module 1](https://github.com/mit-rss/visual_servoing#module1)
 - [Module 2](https://github.com/mit-rss/visual_servoing#module2)
 - [Module 3](https://github.com/mit-rss/visual_servoing#module3)
@@ -80,10 +79,6 @@ To test all three of your algorithms against our citgo, cone, and stata basement
 When you write the parking controller (module 4), you will publish provided error messages. Use **rqt plot** to generate some plots. Try running the following experiments:
 - Put a cone directly in front of the car (~3-5 meters away). Your car should drive straight forward and stop in front of the cone. Show us plots of x-error and total-error (x and y error) over time, and be prepared to discuss.
 - Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds, and see how error signals change with speed.
-
-## Setup
-
-Before you begin, let's set up the ZED camera on the car. Please follow the instructions in the README [here](https://github.com/alany1/rss-hardware/tree/main/zed_settings). If you need, the `.conf` files are located there too. 
 
 ## Module 1: Cone Detection Via Color Segmentation <a name="module1"></a>
 In lecture, we learned different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job. Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
