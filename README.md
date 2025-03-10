@@ -167,7 +167,8 @@ Before launching the camera, we need to add two lines to the `run_rostorch.sh` f
 
 	
 3. Spin up the docker using `./run_rostorch.sh`
-4. Run the respective command for your camera. For silver cameras use `zed`, for black cameras use `zed2`.
+4. Run `unset DISPLAY`. Additionally, add the line `unset DISPLAY` to your `~/.bashrc` file (i.e. using `nano ~/.bashrc`), to prevent having to run this command every time you open a new terminal and want to use the ZED. This command unsets the `DISPLAY` environment variable, which is necessary for running the ZED in a "headless" environment (i.e. via SSH without display port forwrding).
+5. Run the respective command for your camera. For silver cameras use `zed`, for black cameras use `zed2`.
 
 ```
 # for ZED:
@@ -176,8 +177,7 @@ ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
 # for ZED2:
 ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2
 ``` 
-5. It might take up to 15 minutes for the camera to download the files it needs and optimize. This only happens once.
-6. Run `unset DISPLAY`. Additionally, add the line `unset DISPLAY` to your `~/.bashrc` file (i.e. using `nano ~/.bashrc`), to prevent having to run this command every time you open a new terminal and want to use the ZED. This command unsets the `DISPLAY` environment variable, which is necessary for running the ZED in a "headless" environment (i.e. via SSH without display port forwrding).
+6. It might take up to 15 minutes for the camera to download the files it needs and optimize. This only happens once.
 7. After that, the camera should turn on! 
 
 ## Launching the ZED Camera AFTER first Initialization 
