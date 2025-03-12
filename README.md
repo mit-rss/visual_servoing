@@ -169,8 +169,8 @@ Before launching the camera, we need to add two lines to the `run_rostorch.sh` f
 
 	
 3. Spin up the docker using `./run_rostorch.sh`
-4. Run `unset DISPLAY` in the terminal that you will use to run camera 
-7. Run the respective command for your camera. For silver cameras use `zed`, for black cameras use `zed2`.
+4. \[redacted\] 
+5. Run the respective command for your camera. For silver cameras use `zed`, for black cameras use `zed2`.
 
 ```bash
 # for ZED:
