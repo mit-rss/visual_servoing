@@ -159,7 +159,7 @@ Before launching the camera, we need to add two lines to the `run_rostorch.sh` f
 
 	a. Once in vim press `i` to edit
 
-	b. At the bottom of the file insert the following lines: (Note: Some cars already have these lines, if so skip this step.)
+	b. At the bottom of the file (but *before* the  'staffmitrss/racecar-real:latest' line insert the following lines: (Note: Some cars already have these lines, if so skip this step.)
 
  	```
   	-v /usr/local/zed/resources:/usr/local/zed/resources \
