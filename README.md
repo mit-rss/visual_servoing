@@ -192,8 +192,6 @@ ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2
 
 connect
 
-unset DISPLAY
-
 #For silver cameras use `zed`, for black cameras use `zed2`
 
 # for ZED:
