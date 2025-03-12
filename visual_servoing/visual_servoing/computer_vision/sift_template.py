@@ -27,14 +27,15 @@ def image_print(img):
 	cv2.destroyAllWindows()
 
 def cd_sift_ransac(img, template):
-	"""
-	Implement the cone detection using SIFT + RANSAC algorithm
-	Input:
-		img: np.3darray; the input image with a cone to be detected
-	Return:
-		bbox: ((x1, y1), (x2, y2)); the bounding box of the cone, unit in px
-				(x1, y1) is the bottom left of the bbox and (x2, y2) is the top right of the bbox
-	"""
+    """
+    Implement the cone detection using SIFT + RANSAC algorithm.
+    Input:
+        img: np.3darray; the input image with a cone to be detected
+    Return:
+        bbox: ((x1, y1), (x2, y2)); the bounding box in image coordinates (Y increasing downwards),
+            where (x1, y1) is the top-left pixel of the box
+            and (x2, y2) is the bottom-right pixel of the box.
+    """
 	# Minimum number of matching features
 	MIN_MATCH = 10 # Adjust this value as needed
 	# Create SIFT
@@ -82,14 +83,14 @@ def cd_sift_ransac(img, template):
 		return ((0,0), (0,0))
 
 def cd_template_matching(img, template):
-	"""
-	Implement the cone detection using template matching algorithm
-	Input:
-		img: np.3darray; the input image with a cone to be detected
-	Return:
-		bbox: ((x1, y1), (x2, y2)); the bounding box of the cone, unit in px
-				(x1, y1) is the bottom left of the bbox and (x2, y2) is the top right of the bbox
-	"""
+    """
+    Implement the cone detection using template matching algorithm.
+    Input:
+        img: np.3darray; the input image with a cone to be detected
+    Return:
+        bbox: ((x1, y1), (x2, y2)); the bounding box in px (Y increases downward),
+            where (x1, y1) is the top-left corner and (x2, y2) is the bottom-right corner.
+    """
 	template_canny = cv2.Canny(template, 50, 200)
 
 	# Perform Canny Edge detection on test image
