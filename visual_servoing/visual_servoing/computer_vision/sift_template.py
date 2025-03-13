@@ -137,8 +137,7 @@ def cd_template_matching(img, template, visualize=True):
 		########## YOUR CODE STARTS HERE ##########
 		# Use OpenCV template matching functions to find the best match
 		# across template scales.
-		edged = cv2.Canny(resized_template, 50, 200)
-		result = cv2.matchTemplate(img_canny, edged, cv2.TM_CCOEFF_NORMED)
+		result = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCOEFF_NORMED)
 		(_, maxVal, _, maxLoc) = cv2.minMaxLoc(result)
 
 		# draw a bounding box around the detected region
