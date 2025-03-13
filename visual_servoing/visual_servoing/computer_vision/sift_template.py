@@ -26,7 +26,7 @@ def image_print(img):
 	cv2.waitKey()
 	cv2.destroyAllWindows()
 
-def cd_sift_ransac(img, template):
+def cd_sift_ransac(img, template, visualize=True):
 	"""
 	Implement the cone detection using SIFT + RANSAC algorithm
 	Input:
@@ -68,12 +68,34 @@ def cd_sift_ransac(img, template):
 
 		########## YOUR CODE STARTS HERE ##########
 
-		x_min = y_min = x_max = y_max = 0
+		dst = cv2.perspectiveTransform(pts,M)
+		dst += (w, 0)  # adding offset
+
+		draw_params = dict(matchColor = (0,255,0), # draw matches in green color
+					singlePointColor = None,
+					matchesMask = matchesMask, # draw only inliers
+					flags = 2)
+
+		img3 = cv2.drawMatches(template,kp1,img,kp2,good, None,**draw_params)
+		dst=dst.squeeze()
+
+		x_min, x_max = int(np.min(dst[:,0])), int(np.max(dst[:,0]))
+		y_min, y_max = int(np.min(dst[:,1])), int(np.max(dst[:,1]))
+		# draw boxy box
+		if visualize:
+			box = np.array([[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max],], dtype='object')
+
+			img3 = cv2.polylines(img3, [np.int32(box)], True, (0,0,255),3, cv2.LINE_AA)
+			# perspectived box
+			# img3 = cv2.polylines(img3, [np.int32(dst)], True, (0,0,255),3, cv2.LINE_AA)
+
+			cv2.imshow("result", img3)
+			cv2.waitKey()
 
 		########### YOUR CODE ENDS HERE ###########
 
 		# Return bounding box
-		return ((x_min, y_min), (x_max, y_max))
+		return ((x_min-w, y_min), (x_max-w, y_max))
 	else:
 
 		print(f"[SIFT] not enough matches; matches: ", len(good))
@@ -81,7 +103,7 @@ def cd_sift_ransac(img, template):
 		# Return bounding box of area 0 if no match found
 		return ((0,0), (0,0))
 
-def cd_template_matching(img, template):
+def cd_template_matching(img, template, visualize=True):
 	"""
 	Implement the cone detection using template matching algorithm
 	Input:
@@ -100,13 +122,14 @@ def cd_template_matching(img, template):
 	(img_height, img_width) = img_canny.shape[:2]
 
 	# Keep track of best-fit match
-	best_match = None
+	found = None
 
 	# Loop over different scales of image
 	for scale in np.linspace(1.5, .5, 50):
 		# Resize the image
 		resized_template = imutils.resize(template_canny, width = int(template_canny.shape[1] * scale))
 		(h,w) = resized_template.shape[:2]
+		
 		# Check to see if test image is now smaller than template image
 		if resized_template.shape[0] > img_height or resized_template.shape[1] > img_width:
 			continue
@@ -114,10 +137,37 @@ def cd_template_matching(img, template):
 		########## YOUR CODE STARTS HERE ##########
 		# Use OpenCV template matching functions to find the best match
 		# across template scales.
+		edged = cv2.Canny(resized_template, 50, 200)
+		result = cv2.matchTemplate(img_canny, edged, cv2.TM_CCOEFF_NORMED)
+		(_, maxVal, _, maxLoc) = cv2.minMaxLoc(result)
 
-		# Remember to resize the bounding box using the highest scoring scale
-		# x1,y1 pixel will be accurate, but x2,y2 needs to be correctly scaled
-		bounding_box = ((0,0),(0,0))
-		########### YOUR CODE ENDS HERE ###########
+		# draw a bounding box around the detected region
+		# clone = np.dstack([img_canny, img_canny, img_canny])
+		# cv2.rectangle(clone, (maxLoc[0], maxLoc[1]),
+		# 	(maxLoc[0] + w, maxLoc[1] + h), (0, 0, 255), 2)
+		# cv2.imshow("Visualize", clone)
+		# cv2.waitKey(0)
+		if found is None or maxVal > found[0]:
+			found = (maxVal, maxLoc, h,w)
 
-	return bounding_box
+	(_, maxLoc, h, w) = found
+	(startX, startY) = (maxLoc[0], maxLoc[1])
+	(endX, endY) = ((maxLoc[0] + w), (maxLoc[1] + h))
+	if visualize:
+		# draw a bounding box around the detected result and display the image
+		cv2.rectangle(img, (startX, startY), (endX, endY), (0, 0, 255), 2)
+		cv2.imshow("Image", img)
+		cv2.waitKey(0)
+
+
+	return ((startX, startY), (endX, endY))
+
+# template = cv2.imread('C:\\Users\\study\\Documents\\racecar_staging\\visual_servoing\\visual_servoing\\visual_servoing\\computer_vision\\test_images_citgo\\citgo_template.png',  cv2.IMREAD_GRAYSCALE)
+# img = cv2.imread('C:\\Users\\study\\Documents\\racecar_staging\\visual_servoing\\visual_servoing\\visual_servoing\\computer_vision\\test_images_citgo\\citgo1.jpeg')
+# res=cd_sift_ransac(img,template)
+# print(res)
+
+# template = cv2.imread('C:\\Users\\study\\Documents\\racecar_staging\\visual_servoing\\visual_servoing\\visual_servoing\\computer_vision\\test_images_localization\\map_scrap2.png',  cv2.IMREAD_GRAYSCALE)
+# img = cv2.imread('C:\\Users\\study\\Documents\\racecar_staging\\visual_servoing\\visual_servoing\\visual_servoing\\computer_vision\\test_images_localization\\basement_fixed.png')
+# res = cd_template_matching(img, template)
+# print(res)
