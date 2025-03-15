@@ -1,3 +1,4 @@
+
 import cv2
 import imutils
 import numpy as np
@@ -170,3 +171,4 @@ def cd_template_matching(img, template, visualize=True):
 # img = cv2.imread('C:\\Users\\study\\Documents\\racecar_staging\\visual_servoing\\visual_servoing\\visual_servoing\\computer_vision\\test_images_localization\\basement_fixed.png')
 # res = cd_template_matching(img, template)
 # print(res)
+
