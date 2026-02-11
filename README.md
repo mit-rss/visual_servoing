@@ -153,60 +153,25 @@ In this section, you will use the camera to determine the position of a cone rel
 ## Launching the ZED Camera for the first time: 
 If you have any trouble please ask a TA! We are here to help. 
 
-Before launching the camera, we need to add two lines to the `run_rostorch.sh` file:
-1. ssh into the racecar, but do not spin up the docker.
-2. Open the `run_rostorch.sh` file using vim: `vim run_rostorch.sh`
-
-	a. Once in vim press `i` to edit
-
-	b. At the bottom of the file (but *before* the  'staffmitrss/racecar-real:latest' line) insert the following lines: (Note: Some cars already have these lines, if so skip this step.)
-
- 	```
-  	-v /usr/local/zed/resources:/usr/local/zed/resources \
-  	-v /usr/local/zed/settings:/usr/local/zed/settings \
-  	```
-  	c. To save and exit, press `ESC` and type `:wq`
-
 	
-3. Spin up the docker using `./run_rostorch.sh`
-4. \[redacted\] 
-5. Run the respective command for your camera. For silver cameras use `zed`, for black cameras use `zed2`.
+1. Spin up the docker using `./run_rostorch.sh`, and connect to a terminal either through the noVNC page or using the "connect" command.
 
+2. Run the respective command for your camera. For the camera_model argument, silver cameras use `zed`, and black cameras use `zed2` like so.
 ```bash
 # for ZED:
 ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
 
-# for ZED2:
-ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2
 ``` 
-6. It might take up to 15 minutes for the camera to download the files it needs and optimize. This only happens once.
-7. After that, the camera should turn on! 
+3. It might take up to 15 minutes for the camera to optimize and download the files it needs. This only happens once.
+4. After that, the camera should be streaming images. The terminal where you ran this command should be occupied by the ZED processes and should be left running until you want to stop streaming. 
 
-## Launching the ZED Camera AFTER first Initialization 
-```bash
-# on the car
-
-./run_rostorch.sh
-
-# in another terminal
-
-connect
-
-#For silver cameras use `zed`, for black cameras use `zed2`
-
-# for ZED:
-ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
-
-# for ZED2:
-ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2
-```
 
 ## Debugging the Camera
 - If you see red or an error that there is no config file, call over a TA.  
 - If you get an error regarding a missing display, run `unset DISPLAY` before launching the zed. 
 - Verifying that the camera is working
 	- Open RQT by running `rqt`; use the image view plugin to view the camera feed.
-	- Alternatively, you can use rviz and add in a camera topic.
+	- Alternatively, you can use rviz and add in an Image topic.
  - The ZED publishes to many topics which you can learn about [here](https://docs.stereolabs.com/integrations/ros/getting-started/#displaying-zed-data). To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is the default rectified camera: `/zed/zed_node/rgb/image_rect_color`.
 
 ### Accessing Image Data
