@@ -24,6 +24,7 @@
   	- [Coordinate Space Conversion](https://github.com/mit-rss/visual_servoing#coordinate-space-conversion)
   	- [Find the Homography Matrix](https://github.com/mit-rss/visual_servoing#find-the-homography-matrix)
 - [Module 4](https://github.com/mit-rss/visual_servoing#module-4-controller-for-parking-and-line-following)
+- [Module 5: Getting Yolo]()
 - [Synthesis: Bringing it all Together](https://github.com/mit-rss/visual_servoing#synthesis-bringing-it-together-line-following)
   	- [Line Following](https://github.com/mit-rss/visual_servoing#line-following)
 
@@ -45,6 +46,7 @@ This lab has a lot. We encourage parallelization by breaking up the components o
 - [Module 2](#module2): Object Detection via Template Matching and SIFT
 - [Module 3](#module3): Transforming pixels to a plane via Homography Matrices
 - [Module 4](#module4): Writing a parking controller.
+- [Module 5](#module5): Object Detection using YOLO (TODO: make this part of section 2)
 - [Synthesis](#synthesis): Deploying all components together; Application to line following.
 
 Here’s how they fit together: Modules 1 and 2 cover object detection algorithms. Module 3 teaches you how to convert a pixel to a plane in the real world. Combining 1 and 3 will tell you where a cone is relative to your robot. Module 4 will park your robot in front of a simulated cone. Combine modules 1, 3, and 4 to park in real life. Now make some modifications to follow a line instead!
@@ -249,6 +251,62 @@ Tips:
 - Adjust the axes with the icon that looks like a green checkmark (top left menu bar).
 
 You will be using these plots to demonstrate controller performance for your presentation.
+
+## Module 5: Object Decection with YOLO<a name="modeule5"></a>
+
+This module lets you run a modern object detector (YOLO) on the live ZED camera feed in ROS2 Humble and visualize the results as an annotated image. The goal is for you to learn what YOLO outputs look like and how to use detections in a robotics pipeline. 
+
+### What the TA/Starter Code Does
+
+- Subscribes to the ZED image topic:  
+  `/zed/zed_node/rgb/image_rect_color` (`sensor_msgs/msg/Image`)
+
+- Converts ROS images to OpenCV format using `cv_bridge`
+
+- Runs YOLO inference using the Ultralytics library on each incoming frame.
+
+- Converts YOLO outputs into detection format (class name, confidence, and bounding box pixel coordinates).
+
+- Publishes a debug/visualization image with bounding boxes drawn on it:  
+  `/yolo/annotated_image` (`sensor_msgs/msg/Image`)
+
+This means you can immediately view what YOLO is detecting in **RViz2** (Image display) or **rqt_image_view**.
+
+### What You Implement (You Only Edit One File)
+You will only edit:
+
+- `yolo_lab_ros2/student_yolo.py`
+
+Your job is to decide **what detections to keep** and **how they should be visualized**. Concretely, you will:
+
+1. **Choose object classes of interest**  
+   For example, “chair” and “dining table” (note: YOLO models trained on COCO typically use `"dining table"` rather than `"table"`).
+
+2. **Filter detections**  
+   Implement a policy like:
+   - keep only allowed classes
+   - keep only detections above a confidence threshold
+   - (optional extensions) remove boxes that are too small, keep top-k, highlight the “best” detection, etc.
+
+3. **Draw annotations**  
+   Customize how boxes and labels are drawn:
+   - colors per class
+   - label text format (class name, confidence, etc.)
+   - additional overlays (centers, counts per class, FPS, etc.)
+
+### How to Run and Debug
+- Run the node with the provided launch file.
+- View the annotated output topic:
+  - `/yolo/annotated_image`
+
+If you don’t see the class names you expect, print the model’s class list (`model.names`) and update your allowed set accordingly. Different models can have different label sets depending on training data.
+
+### Deliverable / Expected Outcome
+When you are done, you should be able to:
+- demonstrate YOLO detecting objects on the live ZED feed
+- show a clean annotated output image topic
+- explain (at a high level) how detections are represented: **class label + confidence + bounding box**
+- justify your filtering/visualization choices (thresholds, which classes, etc.)
 
 ## Synthesis: Bringing it together; Line Following<a name="synthesis"></a>
 With your modules in hand, it is time to make your robot park in front of a cone and follow a line.
