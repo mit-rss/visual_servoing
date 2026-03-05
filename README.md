@@ -24,7 +24,6 @@
   	- [Coordinate Space Conversion](https://github.com/mit-rss/visual_servoing#coordinate-space-conversion)
   	- [Find the Homography Matrix](https://github.com/mit-rss/visual_servoing#find-the-homography-matrix)
 - [Module 4](https://github.com/mit-rss/visual_servoing#module-4-controller-for-parking-and-line-following)
-- [Module 5: Getting Yolo]()
 - [Synthesis: Bringing it all Together](https://github.com/mit-rss/visual_servoing#synthesis-bringing-it-together-line-following)
   	- [Line Following](https://github.com/mit-rss/visual_servoing#line-following)
 
