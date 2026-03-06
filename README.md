@@ -203,7 +203,7 @@ The goal is for you to learn what YOLO outputs look like and how to use detectio
 
 ### What You Implement
 
-You only need to edit `yolo_lab_ros2/student_yolo.py`
+You only need to edit `visual_servoing/student_yolo.py`
 
 Your job is to decide **what detections to keep** and **how they should be visualized**.
 
