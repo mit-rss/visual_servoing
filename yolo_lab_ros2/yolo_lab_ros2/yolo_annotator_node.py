@@ -16,7 +16,8 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 from ultralytics import YOLO
 
-from yolo_lab_ros2.student_yolo import Detection, draw_detections, filter_detections, get_allowed_class_names
+from yolo_lab_ros2.student_yolo import (
+    Detection, draw_detections, filter_detections, get_allowed_class_names)
 
 
 class YoloAnnotatorNode(Node):

@@ -190,7 +190,7 @@ Note: The templates are all greyscale. We are not doing anything with color in t
 
 ### Part 2: Object Decection with YOLO
 
-This module lets you run a modern object detector (YOLO) on the live ZED camera feed in ROS2 Humble and visualize the results as an annotated image.
+This module lets you run a modern object detector (YOLO) on the live ZED camera feed in ROS2 and visualize the results as an annotated image.
 The goal is for you to learn what YOLO outputs look like and how to use detections in a robotics pipeline. 
 
 ### What the TA/Starter Code Does
@@ -199,7 +199,7 @@ The goal is for you to learn what YOLO outputs look like and how to use detectio
 - Converts ROS images to OpenCV format using `cv_bridge`
 - Runs YOLO inference
 - Converts YOLO outputs into detection format (class name, confidence, and bounding box pixel coordinates).
-- Publishes a debug/visualization image: `/yolo/annotated_image`
+- Publishes a `debug/visualization` image: `/yolo/annotated_image`
 
 ### What You Implement
 

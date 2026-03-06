@@ -12,7 +12,7 @@ from geometry_msgs.msg import Point #geometry_msgs not in CMake file
 from vs_msgs.msg import ConeLocationPixel
 
 # import your color segmentation algorithm; call this function in ros_image_callback!
-from computer_vision.color_segmentation import cd_color_segmentation
+from visual_servoing.computer_vision.color_segmentation import cd_color_segmentation
 
 
 class ConeDetector(Node):

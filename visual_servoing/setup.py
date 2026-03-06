@@ -9,13 +9,15 @@ setup(
     version='0.0.0',
     packages=[package_name],
     data_files=[
-        ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
+        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('lib/'+package_name+"/computer_vision", glob.glob(os.path.join('visual_servoing/computer_vision', '*.py'))),
-        ('share/visual_servoing/launch', glob.glob(os.path.join('launch', '*launch.xml'))),
-        ('share/visual_servoing/launch', glob.glob(os.path.join('launch', '*launch.py')))
-    ],  
+        ('lib/' + package_name + "/computer_vision",
+            glob.glob(os.path.join('visual_servoing/computer_vision', '*.py'))),
+        ('share/visual_servoing/launch',
+            glob.glob(os.path.join('launch', '*launch.xml'))),
+        ('share/visual_servoing/launch',
+            glob.glob(os.path.join('launch', '*launch.py')))
+    ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='Jospeh',
