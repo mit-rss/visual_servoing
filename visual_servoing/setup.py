@@ -31,6 +31,7 @@ setup(
             'cone_detector = visual_servoing.cone_detector:main',
             'cone_sim_marker = visual_servoing.cone_sim_marker:main',
             'homography_transformer = visual_servoing.homography_transformer:main',
+            'yolo_annotator = visual_servoing.yolo_annotator:main',
         ],
     },
 )

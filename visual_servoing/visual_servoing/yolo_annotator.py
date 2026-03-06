@@ -16,7 +16,7 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 from ultralytics import YOLO
 
-from yolo_lab_ros2.student_yolo import (
+from visual_servoing.student_yolo import (
     Detection, draw_detections, filter_detections, get_allowed_class_names)
 
 
@@ -33,7 +33,7 @@ class YoloAnnotatorNode(Node):
         self.image_topic = self.get_parameter("image_topic").get_parameter_value().string_value
         self.annotated_topic = self.get_parameter("annotated_topic").get_parameter_value().string_value
         self.model_name = self.get_parameter("model").get_parameter_value().string_value
-        self.conf_threshold = float(self.get_parameter("conf_threshold").get_parameter_value().double_value)
+        self.conf_threshold = self.get_parameter("conf_threshold").get_parameter_value().double_value
 
         self.get_logger().info(f"Subscribing to: {self.image_topic}")
         self.get_logger().info(f"Publishing annotated images to: {self.annotated_topic}")
@@ -43,8 +43,8 @@ class YoloAnnotatorNode(Node):
         self.model = YOLO(self.model_name)
         self.class_names = self.model.names
 
-        allowed = get_allowed_class_names()
-        self.get_logger().info(f"You've chosen to keep these classes: {allowed}")
+        self.allowed = get_allowed_class_names()
+        self.get_logger().info(f"You've chosen to keep these classes: {self.allowed}")
 
         self.bridge = CvBridge()
         self.sub = self.create_subscription(Image, self.image_topic, self.on_image, 10)
@@ -69,8 +69,8 @@ class YoloAnnotatorNode(Node):
             return
 
         dets = self.results_to_detections(results[0])
-        allowed = get_allowed_class_names()
-        dets = filter_detections(dets, conf_threshold=self.conf_threshold, allowed=allowed)
+        dets = filter_detections(
+            dets, conf_threshold=self.conf_threshold, allowed=self.allowed)
 
         annotated = draw_detections(bgr, dets)
 
@@ -109,10 +109,10 @@ class YoloAnnotatorNode(Node):
                     class_id=class_id,
                     class_name=class_name,
                     confidence=float(c),
-                    x1=int(round(x1)),
-                    y1=int(round(y1)),
-                    x2=int(round(x2)),
-                    y2=int(round(y2)),
+                    x1=round(x1),
+                    y1=round(y1),
+                    x2=round(x2),
+                    y2=round(y2),
                 )
             )
         return detections

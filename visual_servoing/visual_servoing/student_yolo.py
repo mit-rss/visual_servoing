@@ -104,6 +104,6 @@ def draw_detections(
 
         # TODO: Label the box with the class name and confidence
 
-        # TODO: Put the bounding box and label on the output image, using a color based on the class
+        # TODO: Put the bounding box and label on the output image, using class_color
 
     return out_image_copy
