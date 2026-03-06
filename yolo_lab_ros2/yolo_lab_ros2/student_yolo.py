@@ -7,10 +7,8 @@ Learn how to use YOLO outputs:
 - how to draw annotated outputs
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Sequence, Set, Tuple
+from typing import List, Sequence, Set, Tuple
 
 import cv2
 import numpy as np
@@ -32,7 +30,6 @@ class Detection:
     y2: int
 
 
-
 def get_allowed_class_names() -> Set[str]:
     """
     Return the set of COCO class names you want to keep.
@@ -51,12 +48,11 @@ def should_keep_detection(det: Detection, conf_threshold: float, allowed: Set[st
     TODO: Adjust filtering logic
     - Keep only allowed classes
     - Keep only confidence > threshold
-    - keep boxes above a minimum area
-    - come up with your own logic!
+    - Keep boxes above a minimum area
+    - Come up with your own logic!
     """
     raise NotImplementedError
-    return False 
-
+    return False
 
 
 def filter_detections(
@@ -66,8 +62,8 @@ def filter_detections(
 ) -> List[Detection]:
     """
     Filter detections based on student policy.
-    - sort by confidence by using your should_keep_detection function
-    - pick top-k per class
+    - Sort by confidence by using your should_keep_detection function
+    - Pick top-k per class
     """
     raise NotImplementedError
     kept = detections
@@ -78,17 +74,15 @@ def class_color(class_name: str) -> Tuple[int, int, int]:
     """
     Return a BGR color for a given class name.
 
-    Update colors  and make a mapping based on the objects you picked 
+    TODO: Update colors and make a mapping based on the objects you picked
     """
     if class_name == "chair":
-        return (255, 0, 0)      
+        return (255, 0, 0)
     if class_name == "dining table":
         return (0, 255, 0)
-
-    else: 
-        #TODO: ... 
-    return 
-    
+    else:
+        raise NotImplementedError
+    return
 
 
 def draw_detections(
@@ -97,19 +91,19 @@ def draw_detections(
 ) -> np.ndarray:
     """
     Draw bounding boxes and labels on the image.
-    - change label format
-    - draw center points
-    - highlight "best" detection
+    - Change label format
+    - Draw center points
+    - Highlight "best" detection
     """
     out_image_copy = bgr_image.copy()
 
     for det in detections:
+        pass
 
         # TODO: Get a bounding box for the detection
 
         # TODO: Label the box with the class name and confidence
 
         # TODO: Put the bounding box and label on the output image, using a color based on the class
-
 
     return out_image_copy

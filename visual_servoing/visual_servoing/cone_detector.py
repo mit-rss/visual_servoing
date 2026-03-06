@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rclpy
 from rclpy.node import Node
@@ -21,6 +21,7 @@ class ConeDetector(Node):
     Subscribes to: /zed/zed_node/rgb/image_rect_color (Image) : the live RGB image from the onboard ZED camera.
     Publishes to: /relative_cone_px (ConeLocationPixel) : the coordinates of the cone in the image frame (units are pixels).
     """
+
     def __init__(self):
         super().__init__("cone_detector")
         # toggle line follower vs cone parker
@@ -30,7 +31,7 @@ class ConeDetector(Node):
         self.cone_pub = self.create_publisher(ConeLocationPixel, "/relative_cone_px", 10)
         self.debug_pub = self.create_publisher(Image, "/cone_debug_img", 10)
         self.image_sub = self.create_subscription(Image, "/zed/zed_node/rgb/image_rect_color", self.image_callback, 5)
-        self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
+        self.bridge = CvBridge()  # Converts between ROS images and OpenCV Images
 
         self.get_logger().info("Cone Detector Initialized")
 
@@ -53,11 +54,13 @@ class ConeDetector(Node):
         debug_msg = self.bridge.cv2_to_imgmsg(image, "bgr8")
         self.debug_pub.publish(debug_msg)
 
+
 def main(args=None):
     rclpy.init(args=args)
     cone_detector = ConeDetector()
     rclpy.spin(cone_detector)
     rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
