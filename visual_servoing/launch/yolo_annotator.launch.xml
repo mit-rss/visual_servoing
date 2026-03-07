@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="visual_servoing" name="yolo_annotator" exec="yolo_annotator" output="screen">
+    <param name="model" value="yolo11n.pt" />
+    <param name="conf_threshold" value="0.5" />
+    <param name="iou_threshold" value="0.7" />
+  </node>
+</launch>

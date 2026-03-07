@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rclpy
 from rclpy.node import Node
@@ -11,17 +11,19 @@ from vs_msgs.msg import ConeLocation
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import PointStamped
 
+
 class SimMarker(Node):
     """
-    Rosnode for handling simulated cone. Listens for clicked point
+    ROS node for handling simulated cone. Listens for clicked point
     in rviz and publishes a marker. Publishes position of cone
     relative to robot for Parking Controller to park in front of.
     """
+
     def __init__(self):
         super().__init__("cone_sim_marker")
-        # Subscribe to clicked point messages from rviz    
-        self.create_subscription(PointStamped,
-            "/clicked_point", self.clicked_callback, 1)
+        # Subscribe to clicked point messages from RViz
+        self.create_subscription(
+            PointStamped, "/clicked_point", self.clicked_callback, 1)
 
         self.message_x = None
         self.message_y = None
@@ -51,9 +53,9 @@ class SimMarker(Node):
             msg_frame_pos = t.transform.translation
             msg_frame_quat = t.transform.rotation
             msg_frame_quat = [msg_frame_quat.x, msg_frame_quat.y,
-                            msg_frame_quat.z, msg_frame_quat.w]
+                              msg_frame_quat.z, msg_frame_quat.w]
             msg_frame_pos = [msg_frame_pos.x, msg_frame_pos.y, msg_frame_pos.z]
-        except:
+        except Exception as e:
             # print("no transform")
             return
 
@@ -64,7 +66,7 @@ class SimMarker(Node):
             msg_frame_pos[0]+np.cos(yaw)*self.message_x-np.sin(yaw)*self.message_y 
         cone_relative_baselink_y =\
             msg_frame_pos[1]+np.cos(yaw)*self.message_y+np.sin(yaw)*self.message_x
-        
+
         # Publish relative cone location
         relative_cone = ConeLocation()
         relative_cone.x_pos = cone_relative_baselink_x
@@ -90,36 +92,37 @@ class SimMarker(Node):
         marker.pose.position.y = self.message_y
         self.marker_pub.publish(marker)
 
-
     def clicked_callback(self, msg):
         # Store clicked point in the map frame
         t = self.tfBuffer.lookup_transform(
             self.message_frame, msg.header.frame_id, rclpy.time.Time())
-        
+
         msg_frame_pos = t.transform.translation
         msg_frame_quat = t.transform.rotation
         msg_frame_quat = [msg_frame_quat.x, msg_frame_quat.y,
                           msg_frame_quat.z, msg_frame_quat.w]
         msg_frame_pos = [msg_frame_pos.x, msg_frame_pos.y, msg_frame_pos.z]
-        
+
         (roll, pitch, yaw) = euler_from_quaternion(msg_frame_quat)
 
         self.message_x = \
             msg_frame_pos[0]+np.cos(yaw)*msg.point.x\
-            -np.sin(yaw)*msg.point.y
-        
+            - np.sin(yaw)*msg.point.y
+
         self.message_y = \
             msg_frame_pos[1]+np.cos(yaw)*msg.point.y\
-            +np.sin(yaw)*msg.point.x
-        
+            + np.sin(yaw)*msg.point.x
+
         # Draw a marker for visualization
         self.draw_marker()
+
 
 def main(args=None):
     rclpy.init(args=args)
     sim_marker = SimMarker()
     rclpy.spin(sim_marker)
     rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
