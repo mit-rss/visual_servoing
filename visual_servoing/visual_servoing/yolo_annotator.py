@@ -9,7 +9,7 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 from dataclasses import dataclass
 from rclpy.node import Node
-from typing import List, Set
+from typing import List
 from ultralytics import YOLO
 
 
@@ -50,9 +50,10 @@ class YoloAnnotatorNode(Node):
         self.model = YOLO(self.model_name)
         self.model.to(self.device)
 
+        self.class_color_map = self.get_class_color_map()
         self.allowed_cls = [
             i for i, name in self.model.names.items()
-            if name in self.get_allowed_class_names()
+            if name in self.class_color_map
         ]
 
         self.get_logger().info(f"Running {self.model_name} on device {self.device}")
@@ -69,13 +70,20 @@ class YoloAnnotatorNode(Node):
         self.pub = self.create_publisher(
             Image, "/yolo/annotated_image", 10)
 
-    def get_allowed_class_names(self) -> Set[str]:
+    def get_class_color_map(self) -> dict[str, tuple[int, int, int]]:
         """
-        Return the set of COCO class names you want to keep.
-        examples: "chair", "couch", "tv", "laptop", "dining table",...
+        Return a dictionary mapping a list of COCO class names you want to keep
+        to the detection BGR colors in the annotated image. COCO class names include
+        "chair", "couch", "tv", "laptop", "dining table", and many more. The list
+        of available classes can be found in `self.model.names`.
         """
-        # TODO: Customize this set for the lab
-        return {"chair", "dining table"}
+        # TODO: Customize this dictionary for the lab. Choose a subset of
+        #       COCO class names to detect and their corresponding colors
+        #       in the annotated image.
+        return {
+            "chair": (255, 0, 0),
+            "dining table": (0, 255, 0),
+        }
 
     def on_image(self, msg: Image) -> None:
         # Convert ROS -> OpenCV (BGR)
@@ -112,11 +120,11 @@ class YoloAnnotatorNode(Node):
         out_msg.header = msg.header
         self.pub.publish(out_msg)
 
-    def results_to_detections(self, result):
+    def results_to_detections(self, result) -> List[Detection]:
         """
         Convert an Ultralytics result into a Detection list.
 
-        Ultralytics v8:
+        YOLOv11 outputs:
           result.boxes.xyxy: (N, 4) tensor
           result.boxes.conf: (N,) tensor
           result.boxes.cls:  (N,) tensor
@@ -135,20 +143,12 @@ class YoloAnnotatorNode(Node):
         conf_np = conf.detach().cpu().numpy() if hasattr(conf, "detach") else np.asarray(conf)
         cls_np = cls.detach().cpu().numpy() if hasattr(cls, "detach") else np.asarray(cls)
 
-        for (x1, y1, x2, y2), c, k in zip(xyxy_np, conf_np, cls_np):
-            class_id = int(k)
-            class_name = self.model.names.get(class_id, str(class_id))
-            detections.append(
-                Detection(
-                    class_id=class_id,
-                    class_name=class_name,
-                    confidence=float(c),
-                    x1=round(x1),
-                    y1=round(y1),
-                    x2=round(x2),
-                    y2=round(y2),
-                )
-            )
+        # TODO: Store YOLO outputs as Detections. Iterate through xyxy_np, conf_np, and cls_np
+        #       to append a Detection with all its instance variables filled in to the
+        #       detections List.
+        #
+        # Hint: use Python's zip keyword to iterate through the three arrays in a single for loop.
+
         return detections
 
     def draw_detections(
@@ -157,20 +157,23 @@ class YoloAnnotatorNode(Node):
         detections: List[Detection],
     ) -> np.ndarray:
 
-        out_image_copy = bgr_image.copy()
+        out_image = bgr_image.copy()
 
         for det in detections:
-            pass
+            # TODO: Get the bounding box for the detection
 
-            # TODO: Get a bounding box for the detection
+            # TODO: Draw the bounding box around the detection to the output image.
+            #       Use the colors you specified per class in `get_class_color_map`
+            #       by accessing the self.class_color_map dictionary.
+            #
+            # Hint: Use cv2's `rectangle` function to draw a rectangle on the annotated image.
 
-            # TODO: Label the box with the class name and confidence
+            # TODO: Label the box with the class name and confidence.
+            #
+            # Hint: Use cv2's `putText` function to put text on the annotated image.
+            raise NotImplementedError
 
-            # TODO: Put the bounding box and label on the output image.
-            #       Make sure to color the bounding boxes for different
-            #       classes using different colors
-
-        return out_image_copy
+        return out_image
 
 
 def main() -> None:

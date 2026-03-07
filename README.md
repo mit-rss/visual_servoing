@@ -71,7 +71,7 @@ The elements you should include in your Lab 4 presentation include:
 - Demonstration of parking controller performance. Make sure you explain and justify the design choices you made in your controller.
     *Hint: include error plots from `rqt_plot`*
 - Demonstration of the line-follower. Describe any adjustments you needed to make to your perception and control modules to follow lines.
-    *Hint: include error plots from `rqt plot`*
+    *Hint: include error plots from `rqt_plot`*
 
 Please include video, screen shots, data visualizations, etc. in your presentation as evidence of these deliverables.
 A good presentation will make quantitative and qualitative evaluations of your results.
@@ -190,68 +190,47 @@ Note: The templates are all greyscale. We are not doing anything with color in t
 
 ### Part 2: Object Decection with YOLO
 
-This module lets you run a modern object detector (YOLO) on the live ZED camera feed in ROS2 and visualize the results as an annotated image.
-The goal is for you to learn what YOLO outputs look like and how to use detections in a robotics pipeline. 
+This module lets you run YOLO, a modern machine learning object detection model, on the live ZED camera feed in ROS2.
+The goal is for you to learn what YOLO detection outputs look like and how to use detections in a robotics pipeline.
 
-### What the TA/Starter Code Does
+#### What You Will Implement
 
-- Subscribes to the ZED image topic:   
+In this part, you will implement a ROS node that performs the following:
+
+- Subscribes to the ZED image topic: `/zed/zed_node/rgb/image_rect_color`
 - Converts ROS images to OpenCV format using `cv_bridge`
-- Runs YOLO inference
-- Converts YOLO outputs into detection format (class name, confidence, and bounding box pixel coordinates).
-- Publishes a `debug/visualization` image: `/yolo/annotated_image`
+- Runs YOLO inference on the input camera feed
+- Converts YOLO outputs into a Detection format (class name, confidence, and bounding box pixel coordinates)
+- Publishes an annotated image showing the detections to `/yolo/annotated_image`
 
-### What You Implement
+The code is located in `visual_servoing/yolo_annotator.py`, and the launch script is located in `launch/yolo_annotator.launch.xml`.
+Missing pieces of code are highlighted in `# TODO:` comments:
 
-You only need to edit `visual_servoing/student_yolo.py`
+1. **Choose object classes of interest**. Modify `get_class_color_map()` to choose a custom set of classes to detect
+    and their corresponding colors in the detected image.
+2. **Convert the YOLO model outputs into a List of Detections**. Modify `results_to_detections()` to convert the YOLO model
+    outputs into a List of `Detection` dataclasses defined at the top of `yolo_annotator.py`.
+3. **Draw annotations**. Modify `draw_detections()` to draw bounding boxes and their corresponding class names and confidence
+    values to the output image.
 
-Your job is to decide **what detections to keep** and **how they should be visualized**.
+You may also modify the `conf_threshold` and `iou_threshold` parameter values in `launch/yolo_annotator.launch.xml`.
+Feel free to experiment! How do these values affect the output detections?
 
-1. **Choose object classes of interest**
-
-> Note: YOLO models are trained on are trained on COCO objects.
-
-2. **Filter detections**
-
-Implement a policy like:
-- Keep only allowed classes
-- Keep only detections above a confidence threshold
-- Use your own idea for filter
-
-3. **Draw annotations**  
-
-### How to Run and Debug
-
-- View the annotated output topic: `/yolo/annotated_image`
-
-### Deliverables / Expected Outcome
-
-- Demonstrate YOLO detecting objects on the live ZED feed
-- Show a clean annotated output image topic
-- Explain (at a high level) how detections are represented
-
-## Module 3: Locating the cone via **Homography Transformation** <a name="module3"></a>
-
-In this section, you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car.
-
-### Launching the ZED Camera
-
-## Launching the ZED Camera for the first time: 
+#### Launching the ZED Camera
 
 If you have any trouble please ask a TA! We are here to help. 
 
-	
 1. Spin up the Docker using `./run_rostorch.sh`, and connect to a terminal either through the noVNC page or using the `connect` command.
 2. Run the respective command for your camera. For the `camera_model` argument, silver cameras use `zed`, and black cameras use `zed2`:
 ```bash
 # for ZED:
 ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
-``` 
+```
 3. It might take up to 15 minutes for the camera to optimize and download the files it needs. This only happens once.
 4. After that, the camera should be streaming images. The terminal where you ran this command should be occupied by the ZED
     processes and should be left running until you want to stop streaming. 
 
-## Debugging the Camera
+#### Debugging the Camera
 
 - If you see red or an error that there is no config file, call over a TA.  
 - If you get an error regarding a missing display, run `unset DISPLAY` before launching the zed. 
@@ -262,13 +241,42 @@ ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
     To view them, select the topic name through the dropdown menu. Do not use the depth image for this lab. The one you probably want to use is
     the default rectified camera: `/zed/zed_node/rgb/image_rect_color`.
 
-### Accessing Image Data
+#### Accessing Image Data
 
 The ZED camera publishes messages of type [Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) from `sensor_msgs`.
 Learn about this message with the command, `ros2 interface show sensor_msgs/msg/Image`.
 The image data is in ROS message data-structure, which is not directly recognized by OpenCV. You might have also learned that OpenCV image representations are
 sometimes unique (e.g. BGR instead of RGB). To convert between CV image data structures(mat) to ROS image representations(ROS Message structures)
 you may find [CV bridge](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython) helpful.
+
+#### Running Your YOLO Annotator
+
+First, launch the ZED camera as described in the section above.
+
+```bash
+ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
+```
+
+Then, launch the YOLO annotator node using
+
+```bash
+ros2 launch visual_servoing yolo_annotator.launch.xml
+```
+
+Note that your racecar may need to be connected to the internet during the first launch to download the YOLO model.
+
+Now, on RViz or `rqt_image_view`, you should be able to view the annotated image on the topic `/yolo/annotated_image`.
+
+#### Deliverables / Expected Outcome
+
+- Demonstrate YOLO detecting objects on the live ZED feed
+- Show a clean annotated output image topic
+- A high level explanation of how the detections are represented
+- An understanding of how YOLO's confidence and IOU thresholds affect the output detections
+
+## Module 3: Locating the cone via **Homography Transformation** <a name="module3"></a>
+
+In this section, you will use the camera to determine the position of a cone relative to the racecar. This module of the lab involves working on the car.
 
 ### Converting pixel coordinates to x-y coordinates
 
@@ -297,13 +305,17 @@ since the world plane has two dimensions like an image plane.
 ![](media/camera_diagram.jpg)
 
 ### Find the Homography Matrix
+
 To find the homography matrix, you should first determine the pixel coordinates of several real world points. You should then measure the physical
 coordinates of these points on the 2D ground plane. If you gather enough of these point correspondences (at least 4), you have enough information
 to compute a homography matrix:
 
 ![](media/homography2.jpg)
 
-Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findhomography) can be used to compute homography matrices. In `visual_servoing/homography_transformer.py`, you've been provided a node that calls this function for you and makes the conversion between pixel-frame and robot-frame coordinates. You just need to fill in the point correspondences measured from your system.
+Many existing packages including [OpenCV](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#findhomography)
+can be used to compute homography matrices. In `visual_servoing/homography_transformer.py`, you've been provided a node that calls this function
+for you and makes the conversion between pixel-frame and robot-frame coordinates. You task is to fill in the point correspondences measured from
+your system.
 
 `rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name),
 then you can publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`.
