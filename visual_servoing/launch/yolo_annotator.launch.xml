@@ -1,8 +1,7 @@
 <launch>
   <node pkg="visual_servoing" name="yolo_annotator" exec="yolo_annotator" output="screen">
-  	<param name="image_topic" value="/zed/zed_node/rgb/image_rect_color" />
-    <param name="annotated_topic" value="/yolo/annotated_image" />
     <param name="model" value="yolo11n.pt" />
     <param name="conf_threshold" value="0.5" />
+    <param name="iou_threshold" value="0.7" />
   </node>
 </launch>

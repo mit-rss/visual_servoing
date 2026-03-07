@@ -1,54 +1,81 @@
-"""
-Instructor-provided ROS2 node.
+#!/usr/bin/env python3
 
-- Subscribes to a camera Image topic
-- Runs Ultralytics YOLO on each frame
-- Converts YOLO results -> a simple Detection list
-- Calls student code to filter + draw
-- Publishes an annotated Image topic
-"""
-
+import cv2
 import numpy as np
 import rclpy
-from rclpy.node import Node
-from sensor_msgs.msg import Image
+import torch
 
+from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
+from dataclasses import dataclass
+from rclpy.node import Node
+from typing import List, Set
 from ultralytics import YOLO
 
-from visual_servoing.student_yolo import (
-    Detection, draw_detections, filter_detections, get_allowed_class_names)
+
+@dataclass(frozen=True)
+class Detection:
+    class_id: int
+    class_name: str
+    confidence: float
+    # Bounding box coordinates in the original image:
+    x1: int
+    y1: int
+    x2: int
+    y2: int
 
 
 class YoloAnnotatorNode(Node):
     def __init__(self) -> None:
         super().__init__("yolo_annotator")
 
-        # ---- Parameters
-        self.declare_parameter("image_topic", "/zed/zed_node/rgb/image_rect_color")
-        self.declare_parameter("annotated_topic", "/yolo/annotated_image")
-        self.declare_parameter("model", "yolo11n.pt")
-        self.declare_parameter("conf_threshold", 0.5)
+        # Declare and get ROS parameters
+        self.model_name = (
+            self.declare_parameter("model", "yolo11n.pt")
+            .get_parameter_value()
+            .string_value
+        )
+        self.conf_threshold = (
+            self.declare_parameter("conf_threshold", 0.5)
+            .get_parameter_value()
+            .double_value
+        )
+        self.iou_threshold = (
+            self.declare_parameter("iou_threshold", 0.7)
+            .get_parameter_value()
+            .double_value
+        )
 
-        self.image_topic = self.get_parameter("image_topic").get_parameter_value().string_value
-        self.annotated_topic = self.get_parameter("annotated_topic").get_parameter_value().string_value
-        self.model_name = self.get_parameter("model").get_parameter_value().string_value
-        self.conf_threshold = self.get_parameter("conf_threshold").get_parameter_value().double_value
-
-        self.get_logger().info(f"Subscribing to: {self.image_topic}")
-        self.get_logger().info(f"Publishing annotated images to: {self.annotated_topic}")
-        self.get_logger().info(f"YOLO model: {self.model_name}")
-        self.get_logger().info(f"Confidence threshold: {self.conf_threshold}")
-
+        self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
         self.model = YOLO(self.model_name)
-        self.class_names = self.model.names
+        self.model.to(self.device)
 
-        self.allowed = get_allowed_class_names()
-        self.get_logger().info(f"You've chosen to keep these classes: {self.allowed}")
+        self.allowed_cls = [
+            i for i, name in self.model.names.items()
+            if name in self.get_allowed_class_names()
+        ]
 
+        self.get_logger().info(f"Running {self.model_name} on device {self.device}")
+        self.get_logger().info(f"Confidence threshold: {self.conf_threshold}")
+        if self.allowed_cls:
+            self.get_logger().info(f"You've chosen to keep these class IDs: {self.allowed_cls}")
+        else:
+            self.get_logger().warn("No allowed classes matched the model's class list.")
+
+        # Create publisher and subscribers
         self.bridge = CvBridge()
-        self.sub = self.create_subscription(Image, self.image_topic, self.on_image, 10)
-        self.pub = self.create_publisher(Image, self.annotated_topic, 10)
+        self.sub = self.create_subscription(
+            Image, "/zed/zed_node/rgb/image_rect_color", self.on_image, 10)
+        self.pub = self.create_publisher(
+            Image, "/yolo/annotated_image", 10)
+
+    def get_allowed_class_names(self) -> Set[str]:
+        """
+        Return the set of COCO class names you want to keep.
+        examples: "chair", "couch", "tv", "laptop", "dining table",...
+        """
+        # TODO: Customize this set for the lab
+        return {"chair", "dining table"}
 
     def on_image(self, msg: Image) -> None:
         # Convert ROS -> OpenCV (BGR)
@@ -60,7 +87,13 @@ class YoloAnnotatorNode(Node):
 
         # Run YOLO inference
         try:
-            results = self.model.predict(source=bgr, verbose=False)
+            results = self.model(
+                bgr,
+                classes=self.allowed_cls,
+                conf=self.conf_threshold,
+                iou=self.iou_threshold,
+                verbose=False,
+            )
         except Exception as e:
             self.get_logger().error(f"YOLO inference failed: {e}")
             return
@@ -68,19 +101,20 @@ class YoloAnnotatorNode(Node):
         if not results:
             return
 
+        # Convert results to Detection List
         dets = self.results_to_detections(results[0])
-        dets = filter_detections(
-            dets, conf_threshold=self.conf_threshold, allowed=self.allowed)
 
-        annotated = draw_detections(bgr, dets)
+        # Draw detections on BGR image
+        annotated = self.draw_detections(bgr, dets)
 
+        # Publish annotated BGR image
         out_msg = self.bridge.cv2_to_imgmsg(annotated, encoding="bgr8")
         out_msg.header = msg.header
         self.pub.publish(out_msg)
 
     def results_to_detections(self, result):
         """
-        Convert an Ultralytics result into our simple Detection list.
+        Convert an Ultralytics result into a Detection list.
 
         Ultralytics v8:
           result.boxes.xyxy: (N, 4) tensor
@@ -103,7 +137,7 @@ class YoloAnnotatorNode(Node):
 
         for (x1, y1, x2, y2), c, k in zip(xyxy_np, conf_np, cls_np):
             class_id = int(k)
-            class_name = self._class_names.get(class_id, str(class_id))
+            class_name = self.model.names.get(class_id, str(class_id))
             detections.append(
                 Detection(
                     class_id=class_id,
@@ -116,6 +150,27 @@ class YoloAnnotatorNode(Node):
                 )
             )
         return detections
+
+    def draw_detections(
+        self,
+        bgr_image: np.ndarray,
+        detections: List[Detection],
+    ) -> np.ndarray:
+
+        out_image_copy = bgr_image.copy()
+
+        for det in detections:
+            pass
+
+            # TODO: Get a bounding box for the detection
+
+            # TODO: Label the box with the class name and confidence
+
+            # TODO: Put the bounding box and label on the output image.
+            #       Make sure to color the bounding boxes for different
+            #       classes using different colors
+
+        return out_image_copy
 
 
 def main() -> None:
