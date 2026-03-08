@@ -65,8 +65,8 @@ grading criteria. You will receive a grade out of 10 points for each. Your final
 | Technical Grade (satisfactory completion of all modules) | 20%       |
 
 The elements you should include in your Lab 4 presentation include:
-- Explanation of vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
-- Explanation of the homography transformation. How do we convert pixels to plane coordinates?
+- Explanation and analysis of vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
+- Explanation and analysis of the homography transformation. How do we convert pixels to plane coordinates? What is the error metric that you used to assess performance, and what is the error of your homography? 
 - Demonstration of parking controller performance. Make sure you explain and justify the design choices you made in your controller.
     *Hint: include error plots from `rqt_plot`*
 - Demonstration of the line-follower. Describe any adjustments you needed to make to your perception and control modules to follow lines.
@@ -96,14 +96,14 @@ to know why each works for what it does in your presentation.
 When you write the parking controller (module 4), you will publish provided error messages. Use `rqt_plot` to generate some plots.
 Try running the following experiments:
 - Put a cone directly in front of the car (~3-5 meters away). Your car should drive straight forward and stop in front of the cone.
-    Show us plots of x-error and total-error (x and y error) over time, and be prepared to discuss.
+    Show us plots (and not just the result of a single run!) of x-error and total-error (x and y error) over time, and be prepared to discuss.
 - Run the car on one of our tracks, and check out the plots for any interesting error signals. Compare plots at different speeds,
     and see how error signals change with speed.
 
 ## Module 1: Cone Detection Via Color Segmentation <a name="module1"></a>
 
 In lecture, we learned different ways to detect objects. Sometimes it pays to train a fancy neural net to do the job.
-Sometimes we are willing to wait and let SIFT find it. Template matching is cool too.
+Sometimes we are willing to trust SIFT features to find the object. Template matching can be cool too.
 
 Sometimes simple algorithms are the correct choice. For our purposes, identifying the cone by its distinctive color will prove most
 effective. Your job in this module will be to identify cones (and other orange objects) and output bounding boxes containing them.
@@ -130,9 +130,7 @@ Don't forget conventions! Image indexing works like this (in this lab):
 
 ### Evaluation:
 
-We are using the Intersection Over Union (IOU) metric for evaluating bounding box success. Run `python3 cv_test.py cone color` to test your
-algorithm against our dataset. We print out the IOU values for you. We expect some sort of analysis involving this metric in your presentation.
-Don't worry if you don't get them all. 100% accuracy is not necessary for a great parking controller.
+We will use the Intersection Over Union (IOU) metric for own evaluation of your bounding box detector. Run `python3 cv_test.py cone color` to test your algorithm against our dataset. We print out the IOU values for you. We expect some sort of analysis involving this metric in your presentation. Don't worry if you don't get them all. 100% accuracy is not necessary for a great parking controller.
 
 ## Module 2: Object Detection <a name="module2"></a>
 
@@ -187,7 +185,7 @@ Some of these algorithm + dataset combinations will not produce good results. Ea
 
 Note: The templates are all greyscale. We are not doing anything with color in these algorithms.  
 
-### Part 2: Object Decection with YOLO
+### Part 2: Object Detection with YOLO
 
 This module lets you run YOLO, a modern machine learning object detection model, on the live ZED camera feed in ROS2.
 The goal is for you to learn what YOLO detection outputs look like and how to use detections in a robotics pipeline.
@@ -318,9 +316,7 @@ your system.
 
 `rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name),
 then you can publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`.
-Publish a marker to RViz using this pixel (we've provided you with a function `draw_marker` in `visual_servoing/homography_transformer.py`),
-and you should be able to quickly tell if your homography matrix is doing its job. You may wish to record a ROS bag of camera data and do this
-testing locally.
+Publish a marker in the world frame to RViz using this pixel (we've provided you with a function `draw_marker` in `visual_servoing/homography_transformer.py` that adds a marker in world coordinates to the visualisation), and you should be able to quickly eyeball the result if your homography matrix is doing its job. You should also record a ROS bag of camera data and write a script to automatically compute a metric for your homography matrix from the camera data in the bag. Please report what this accuracy is in your briefing and report. 
 
 ## Module 4: Controller for Parking and Line Following <a name="module4"></a>
 
@@ -383,7 +379,7 @@ Tips:
 - Type in the topic you want to graph in the top left of the GUI.
 - Adjust the axes with the icon that looks like a green checkmark (top left menu bar).
 
-You will be using these plots to demonstrate controller performance for your presentation.
+You will be using these plots to demonstrate controller performance for your presentation, and remember that we'll be looking for evaluation on multiple trials. 
 
 ## Synthesis: Bringing it together; Line Following<a name="synthesis"></a>
 
