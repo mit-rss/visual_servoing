@@ -316,7 +316,7 @@ your system.
 
 `rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name),
 then you can publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`.
-Publish a marker in the world frame to RViz using this pixel (we've provided you with a function `draw_marker` in `visual_servoing/homography_transformer.py` that adds a marker in world coordinates to the visualisation), and you should be able to quickly eyeball the result if your homography matrix is doing its job. You should also record a ROS bag of camera data and write a script to automatically compute a metric for your homography matrix from the camera data in the bag. Please report what this accuracy is in your briefing and report. 
+Publish a marker in the world frame to RViz computed from this pixel (we've provided you with a function `draw_marker` in `visual_servoing/homography_transformer.py` that adds a marker in world coordinates to the visualisation), and you should be able to quickly eyeball the result if your homography matrix is doing its job. You should also record a ROS bag of camera data and write a script to automatically compute a metric for your homography matrix from the camera data in the bag. Please report what this accuracy is in your briefing and report. 
 
 ## Module 4: Controller for Parking and Line Following <a name="module4"></a>
 
