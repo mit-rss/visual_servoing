@@ -40,8 +40,7 @@ In this lab, your team will do the following:
 ### Lab Modules
 
 This lab has a lot. We encourage parallelization by breaking up the components of the lab into 4 distinct modules, which you will combine.
-Each module tackles an interesting problem in computer vision/controls, and is designed to be implemented (initially) by itself.
-Afterward, we can combine all parts into a working visual navigation algorithm!  
+Each module tackles an interesting problem in computer vision/controls, and is designed to be implemented (initially) by itself. You should be thinking ahead to what data you will need to bag, what metrics you will use to characterise the performance of each module, and automated tests that let you verify that the module is working correctly. Afterward, we can combine all parts into a working visual navigation algorithm!  
 
 - [Module 1](#module1): Cone detection via color segmentation
 - [Module 2](#module2): Object detection via template matching, SIFT, and YOLO
