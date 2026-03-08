@@ -6,7 +6,7 @@
 | Briefing (8 min presentation + 3 min Q&A)                                                                                                | Monday, March 16th during Lab Hours  |
 | Pushed code to Git                                                                                                                       | Monday, March 16th at 11:59PM EST    |
 | TA Checkoff                                                                                                                              | Wedensday, March 18th at 11:59PM EST |
-| [Team Member Assessment](https://docs.google.com/forms/d/e/1FAIpQLSfnnSIP1FSbPQzoFKLAvxCpH1qmOnCrfsf6qtVDNdU5lJED9Q/viewform?usp=dialog) | Wednesday, March 18th at 11:59PM EST |
+| [Team Member Assessment](https://docs.google.com/forms/d/e/1FAIpQLSdgN2V6x-ztcavU3kqwBlOjupgI8eJ2r3fFe0rLd0VVRLAvwg/viewform?usp=dialog) | Wednesday, March 18th at 11:59PM EST |
 
 ## Table of Contents
 
