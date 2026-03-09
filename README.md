@@ -291,7 +291,7 @@ we will use another interesting fact about linear transformations to find the X-
 The racecar can't roll over or fly (no matter how cool it might look), so the ZED camera will always have a fixed placement with
 respect to the ground plane. By determining the exact placement, we can compute a function that takes in image pixel coordinates
 `(u,v)` and returns the coordinates of the point on the floor `(x,y)` relative to the car. In other words, the `(x,y)` coordinate
-projects onto the pixel `(u,v)`.
+projects onto the pixel `(u,v)`. It's important to remember that the `(x, y)` is relative to the car, i.e., the base_link frame. To know the coordinates of the point in some global reference frame, we'll need to know where the car is! 
 
 This function is called a homography. We can't determine arbitrary 3D points from 2D pixels without lots of extra work.
 But, we can find 2D world points if those points lie on a plane (and can therefore be thought of as 2D) that is fixed with respect to our camera.
@@ -316,7 +316,7 @@ your system.
 
 `rqt_image_view` will be a useful debugging tool here. If you enable mouse clicking (there is a checkbox next to the topic name),
 then you can publish the pixel coordinates of points you click on in the image to a topic like this: `/zed/rgb/image_rect_color_mouse_left`.
-Publish a marker in the world frame to RViz computed from this pixel (we've provided you with a function `draw_marker` in `visual_servoing/homography_transformer.py` that adds a marker in world coordinates to the visualisation), and you should be able to quickly eyeball the result if your homography matrix is doing its job. You should also record a ROS bag of camera data and write a script to automatically compute a metric for your homography matrix from the camera data in the bag. Please report what this accuracy is in your briefing and report. 
+Publish a marker in the robot frame to RViz computed from this pixel (we've provided you with a function `draw_marker` in `visual_servoing/homography_transformer.py` that adds a marker in robot coordinates to the visualisation), and you should be able to quickly eyeball the result if your homography matrix is doing its job. You should also record a ROS bag of camera data and write a script to automatically compute a metric for your homography matrix from the camera data in the bag. Please report what this accuracy is in your briefing and lab report. 
 
 ## Module 4: Controller for Parking and Line Following <a name="module4"></a>
 
