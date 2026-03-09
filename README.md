@@ -27,11 +27,23 @@
 - [Synthesis: Bringing it all Together](https://github.com/mit-rss/visual_servoing#synthesis-bringing-it-together-line-following)
   	- [Line Following](https://github.com/mit-rss/visual_servoing#line-following)
 
-## Pull New Docker: 
+## TODO: Students
+### Pull New Docker: 
 
 From outside the Docker container on your laptop run: `docker compose pull`
 
 From outside the Docker contain on the car run: `docker compose pull staffmitrss/racecar2026`
+
+### On racecar but not in Docker: 
+Run these two commands in the home directory on the racecar (but not in the Docker) 
+- `touch constantBashRC`
+-  `touch .tmux.conf`
+
+Please add the highlighted lines in the `run_rostorch` 
+![](media/to_add_student.jpg)
+
+
+
 
 ## Introduction
 
