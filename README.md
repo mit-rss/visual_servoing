@@ -32,7 +32,7 @@
 
 From outside the Docker container on your laptop run: `docker compose pull`
 
-From outside the Docker contain on the car run: `docker compose pull staffmitrss/racecar2026`
+From outside the Docker contain on the car run: `sudo docker pull staffmitrss/racecar2026`
 
 ### On racecar but not in Docker: 
 Run these two commands in the home directory on the racecar (but not in the Docker) 
