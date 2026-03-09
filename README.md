@@ -43,6 +43,8 @@ Please add the highlighted lines in the `run_rostorch`
 ![](media/to_add_student.jpg)
 
 
+Anything you would have done in a `.bashrc` **inside the Docker** (i.e., adding aliases, sources, etc.) you should instead put in the file titled `tempBashRC`. `tempBashRC` lives **inside the Docker** on the same level as `racecar_ws`. If you want to make modifications to `.tmux.conf`, it should remain consistent throughout Docker sessions. 
+
 
 
 ## Introduction
