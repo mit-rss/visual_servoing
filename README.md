@@ -27,6 +27,12 @@
 - [Synthesis: Bringing it all Together](https://github.com/mit-rss/visual_servoing#synthesis-bringing-it-together-line-following)
   	- [Line Following](https://github.com/mit-rss/visual_servoing#line-following)
 
+## Pull New Docker: 
+
+From outside the Docker container on your laptop run: `docker compose pull`
+
+From outside the Docker contain on the car run: `docker compose pull staffmitrss/racecar2026`
+
 ## Introduction
 
 Welcome to Lab 4, where you will learn how to use the camera to allow the racecar to park in front of a colored cone and follow a line.
