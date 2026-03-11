@@ -56,6 +56,8 @@ class YoloAnnotatorNode(Node):
             if name in self.class_color_map
         ]
 
+        self.get_logger().info(f"Model classes: {self.model.names}")
+
         self.get_logger().info(f"Running {self.model_name} on device {self.device}")
         self.get_logger().info(f"Confidence threshold: {self.conf_threshold}")
         if self.allowed_cls:
@@ -83,6 +85,7 @@ class YoloAnnotatorNode(Node):
         return {
             "chair": (255, 0, 0),
             "dining table": (0, 255, 0),
+            "laptop": (255, 255, 0), # Cyan
         }
 
     def on_image(self, msg: Image) -> None:
@@ -149,6 +152,17 @@ class YoloAnnotatorNode(Node):
         #
         # Hint: use Python's zip keyword to iterate through the three arrays in a single for loop.
 
+        for xys, confs, clss in zip(xyxy_np, conf_np, cls_np):
+            detection = Detection()
+            detection.class_id = clss
+            detection.class_name= self.model.names[int(clss)]
+            detection.confidence= confs
+            # Bounding box coordinates in the original image:
+            detection.x1, detection.y1, detection.x2, detection.y2 = xys
+
+            detections.append(detection)
+           
+
         return detections
 
     def draw_detections(
@@ -161,17 +175,38 @@ class YoloAnnotatorNode(Node):
 
         for det in detections:
             # TODO: Get the bounding box for the detection
+            top_left = (det.x1, det.y1)
+            bottom_right = (det.x2, det.y2)
 
             # TODO: Draw the bounding box around the detection to the output image.
             #       Use the colors you specified per class in `get_class_color_map`
             #       by accessing the self.class_color_map dictionary.
             #
             # Hint: Use cv2's `rectangle` function to draw a rectangle on the annotated image.
+            
+            color = self.class_color_map[det.class_name]
+            cv2.rectangle(out_image, top_left, bottom_right, color, 2) # rectangle of edge thickness = 2
 
             # TODO: Label the box with the class name and confidence.
             #
             # Hint: Use cv2's `putText` function to put text on the annotated image.
-            raise NotImplementedError
+            # raise NotImplementedError
+
+            label = f"{det.class_name} {det.confidence:.2f}"
+            text_x = int(det.x1)
+            text_y = max(int(det.y1) - 10, 10)   # ensures text stays inside the image
+            cv2.putText(
+                out_image,
+                label,
+                (text_x, text_y),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,                     # font scale
+                color,                   # same color as the box
+                2,                       # thickness
+                cv2.LINE_AA              # anti-aliased text
+            )
+
+
 
         return out_image
 
