@@ -48,6 +48,8 @@ class HomographyTransformer(Node):
         self.cone_pub = self.create_publisher(ConeLocation, "/relative_cone", 10)
         self.marker_pub = self.create_publisher(Marker, "/cone_marker", 1)
         self.cone_px_sub = self.create_subscription(ConeLocationPixel, "/relative_cone_px", self.cone_detection_callback, 1)
+        # added
+        self.click_px_sub = self.create_subscription(ConeLocationPixel, "/zed/zed_node/rgb/image_rect_color_mouse_left", self.cone_detection_callback, 1)
 
         if not len(PTS_GROUND_PLANE) == len(PTS_IMAGE_PLANE):
             rclpy.logerr("ERROR: PTS_GROUND_PLANE and PTS_IMAGE_PLANE should be of same length")
@@ -80,6 +82,7 @@ class HomographyTransformer(Node):
         relative_xy_msg.y_pos = y
 
         self.cone_pub.publish(relative_xy_msg)
+        self.draw_marker(x, y, "/zed_camera_link")
 
     def transformUvToXy(self, u, v):
         """
