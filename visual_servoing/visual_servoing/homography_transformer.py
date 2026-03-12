@@ -86,6 +86,7 @@ class HomographyTransformer(Node):
     
     def click_callback(self, msg):
         self.get_logger().info("Click detected")
+        self.get_logger().info(f'{msg=}')
         u = msg.x
         v = msg.y
         
