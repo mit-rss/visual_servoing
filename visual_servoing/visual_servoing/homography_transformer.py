@@ -22,10 +22,10 @@ from geometry_msgs.msg import Point
 
 ######################################################
 # DUMMY POINTS -- ENTER YOUR MEASUREMENTS HERE
-PTS_IMAGE_PLANE = [[-1, -1],
-                   [-1, -1],
-                   [-1, -1],
-                   [-1, -1]]  # dummy points
+PTS_IMAGE_PLANE = [[339, 215],
+                   [312, 234],
+                   [190, 253],
+                   [251, 281]]  # dummy points
 ######################################################
 
 # PTS_GROUND_PLANE units are in inches
@@ -86,9 +86,11 @@ class HomographyTransformer(Node):
     
     def click_callback(self, msg):
         self.get_logger().info("Click detected")
-        self.get_logger().info(f'{msg=}')
         u = msg.x
         v = msg.y
+        
+        self.get_logger().info(f'{msg=}')
+        self.get_logger().info(f'{u=}, {v=}')
         
         x, y = self.transformUvToXy(u, v)
         self.draw_marker(x, y, "/zed_camera_link")
