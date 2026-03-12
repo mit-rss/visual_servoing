@@ -69,6 +69,7 @@ class HomographyTransformer(Node):
         self.get_logger().info("Homography Transformer Initialized")
 
     def cone_detection_callback(self, msg):
+        self.get_logger().info("Click detected")
         # Extract information from message
         u = msg.u
         v = msg.v
