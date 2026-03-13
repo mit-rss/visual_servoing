@@ -83,15 +83,15 @@ class HomographyTransformer(Node):
         relative_xy_msg.y_pos = y
 
         self.cone_pub.publish(relative_xy_msg)
-    
+
     def click_callback(self, msg):
         self.get_logger().info("Click detected")
         u = msg.x
         v = msg.y
-        
+
         self.get_logger().info(f'{msg=}')
         self.get_logger().info(f'{u=}, {v=}')
-        
+
         x, y = self.transformUvToXy(u, v)
         self.draw_marker(x, y, "/zed_camera_link")
 
@@ -109,6 +109,7 @@ class HomographyTransformer(Node):
         Units are in meters.
         """
         homogeneous_point = np.array([[u], [v], [1]])
+        self.get_logger().info(f"{self.h}")
         xy = np.dot(self.h, homogeneous_point)
         scaling_factor = 1.0 / xy[2, 0]
         homogeneous_xy = xy * scaling_factor
