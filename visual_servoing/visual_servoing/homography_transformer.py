@@ -22,10 +22,10 @@ from geometry_msgs.msg import Point
 
 ######################################################
 # DUMMY POINTS -- ENTER YOUR MEASUREMENTS HERE
-PTS_IMAGE_PLANE = [[339, 215],
-                   [312, 234],
-                   [190, 253],
-                   [251, 281]]  # dummy points
+PTS_IMAGE_PLANE = [[199, 196], # avg over 5 clicks (199 196, 199 196, 199 195, 200 197, 200 197, 198 195, 199 196 )
+                   [373, 209], # avg over 5 clicks (373 209, 373 209, 374 209, 374 208, 373 209)
+                   [171, 249], # avg over 5 clicks  (171 249, 171 249, 170 250, 170 249, 171 250)
+                   [409, 315]]  # avg over 5 clicks (409 315, 409 315, 407 314, 409 315, 409 315)
 ######################################################
 
 # PTS_GROUND_PLANE units are in inches
@@ -33,10 +33,10 @@ PTS_IMAGE_PLANE = [[339, 215],
 
 ######################################################
 # DUMMY POINTS -- ENTER YOUR MEASUREMENTS HERE
-PTS_GROUND_PLANE = [[-1, -1],
-                    [-1, -1],
-                    [-1, -1],
-                    [-1, -1]]  # dummy points
+PTS_GROUND_PLANE = [[46.375, 17.25], # avg over 3 measurements
+                    [37.5, -7.75], # avg over 3 measurements
+                    [24, 12.0], # avg over 3 measurements
+                    [13.25, -1.625]]  # avg over 3 measurements
 ######################################################
 
 METERS_PER_INCH = 0.0254
