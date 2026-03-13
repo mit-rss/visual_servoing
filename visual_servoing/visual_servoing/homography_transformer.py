@@ -109,12 +109,12 @@ class HomographyTransformer(Node):
         Units are in meters.
         """
         homogeneous_point = np.array([[u], [v], [1]])
-        self.get_logger().info(f"{self.h}")
         xy = np.dot(self.h, homogeneous_point)
         scaling_factor = 1.0 / xy[2, 0]
         homogeneous_xy = xy * scaling_factor
         x = homogeneous_xy[0, 0]
         y = homogeneous_xy[1, 0]
+        self.get_logger().info(f"x-value: {x} \n y-value: {y}")
         return x, y
 
     def draw_marker(self, cone_x, cone_y, message_frame):
