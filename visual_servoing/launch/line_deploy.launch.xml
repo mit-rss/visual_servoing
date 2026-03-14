@@ -2,7 +2,7 @@
 
   <!-- Launch the parking controller on the real robot. Launches safety controller, controller node, cone detection node, and the homography transformer -->
   <!-- Edit this to launch your safety controller you implemented in Lab 3! -->
-  <rosparam command="load" file="$(find visual_servoing)/visual_servoing/params_parking.yaml" />
+  <rosparam command="load" file="$(find visual_servoing)/visual_servoing/params_line.yaml" />
 
   <node pkg="wall_follower_rover" name="safety_controller" exec="safety_controller" output="screen">
   </node>

@@ -1,0 +1,4 @@
+cone_detector:
+  ros__parameters:
+    y_min: 0.1
+    y_max: 0.2
