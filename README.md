@@ -37,7 +37,7 @@ From outside the Docker contain on the car run: `sudo docker pull staffmitrss/ra
 ### On racecar but not in Docker: 
 Run these two commands in the home directory on the racecar (but not in the Docker) 
 - `touch constantBashRC`
--  `touch .tmux.conf`
+-  `touch tmux.conf`
 
 Please add the highlighted lines in the `run_rostorch` 
 ![](media/to_add_student.jpg)
