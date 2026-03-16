@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-import rclpy
-from rclpy.node import Node
 import numpy as np
+import rclpy
 
-from vs_msgs.msg import ConeLocation, ParkingError
 from ackermann_msgs.msg import AckermannDriveStamped
+from rclpy.node import Node
+from rclpy.parameter import Parameter
+from vs_msgs.msg import ConeLocation, ParkingError
 
 
 class ParkingController(Node):
@@ -18,8 +19,9 @@ class ParkingController(Node):
     def __init__(self):
         super().__init__("parking_controller")
 
-        self.declare_parameter("drive_topic")
-        DRIVE_TOPIC = self.get_parameter("drive_topic").value  # set in launch file; different for simulator vs racecar
+        # Set the drive topic in the launch file, as they are different for simulator vs racecar
+        self.declare_parameter("drive_topic", Parameter.Type.STRING)
+        DRIVE_TOPIC = self.get_parameter("drive_topic").value
 
         self.drive_pub = self.create_publisher(AckermannDriveStamped, DRIVE_TOPIC, 10)
         self.error_pub = self.create_publisher(ParkingError, "/parking_error", 10)
