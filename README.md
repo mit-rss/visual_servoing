@@ -82,7 +82,7 @@ grading criteria. You will receive a grade out of 10 points for each. Your final
 | Deliverable Grade                                        | Weighting |
 |----------------------------------------------------------|-----------|
 | Briefing grade (out of 10)                               | 80%       |
-| Technical Grade (satisfactory completion of all modules) | 20%       |
+| Technical completion of lab | 20%       |
 
 The elements you should include in your Lab 4 presentation include:
 - Explanation and analysis of vision algorithm strengths and weaknesses. Why does each algorithm perform as it does on each dataset?
